@@ -42,6 +42,15 @@
 
     <fieldset>
       <legend>Nabe</legend>
+      <!-- Katalog zuerst: meist wählt man eine Nabe, statt Maße zu tippen. -->
+      <div class="zeile zwei">
+        <select id="nabenart" aria-label="Bauart oder Ritzelaufnahme"></select>
+        <select id="nabenhersteller" aria-label="Hersteller"></select>
+      </div>
+      <input type="search" id="nabensuche" class="voll" placeholder="Nabe suchen …"
+             aria-label="Nabe suchen">
+      <select id="nabenliste" class="voll" aria-label="Nabe aus dem Katalog"></select>
+      <p class="klein" id="nabeninfo"></p>
       <div class="zeile kopf"><span></span><span>links</span><span>rechts</span></div>
       <label class="zeile">
         <span>Flansch-Ø</span>
@@ -64,6 +73,7 @@
 
     <fieldset>
       <legend>Felge</legend>
+      <select id="felgenvorlage" class="voll" aria-label="Felgengröße als Vorlage"></select>
       <label class="zeile">
         <span>ERD</span>
         <input type="number" id="erd" inputmode="decimal" step="0.5" min="100" max="800" value="600">
@@ -74,6 +84,11 @@
         <input type="number" id="versatz" inputmode="decimal" step="0.5" min="-15" max="15" value="0">
         <span class="einheit-feld">mm</span>
       </label>
+      <div class="zeile zwei">
+        <select id="felgenkategorie" aria-label="Kategorie des Felgentyps"></select>
+        <select id="felgentyp" aria-label="Felgentyp"></select>
+      </div>
+      <p class="klein" id="felgeninfo"></p>
       <p class="klein">ERD von Nippelsitz zu Nippelsitz, nicht bis zum Reifensitz.
         Versatz: minus = Speichenbett nach links.</p>
     </fieldset>
@@ -116,9 +131,9 @@
 
   <footer>
     <p class="klein">
-      Gerüst der Handy-Fassung. Die Rechnung ist dieselbe wie am PC – geprüft
-      gegen 14 Prüffälle aus der Python-Fassung. Nabenkatalog, Felgentypen und
-      die Skizzen fehlen noch.
+      Dieselbe Rechnung wie am PC und derselbe Katalog: 230 Naben, 17
+      Felgentypen. Beide Fassungen werden gegen 2841 Werte aus der
+      Python-Fassung geprüft. Die Skizzen fehlen noch.
     </p>
     <p class="klein">
       Angaben ohne Gewähr – ERD und Nabenmaße vor dem Bestellen nachmessen.

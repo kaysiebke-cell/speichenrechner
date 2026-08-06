@@ -1,12 +1,24 @@
 # Speichenrechner
 
-Speichenlängen für Fahrradlaufräder berechnen. Zwei Fassungen, ein Repo:
+Speichenlängen für Fahrradlaufräder berechnen. Zwei Fassungen, ein Repo,
+**getrennte Ordner**:
+
+```
+pc/        PC-Anwendung (GTK für Linux Mint)
+app/       Handy-Fassung – public/ als Web-App, android/ als APK-Hülle
+data/      gemeinsame Daten: Nabenkatalog, Felgentypen, Prüfwerte
+werkzeuge/ erzeugen und prüfen die Daten für beide Fassungen
+tests/     prüfen beide Fassungen
+```
+
+Die Daten liegen **einmal** in `data/` und versorgen beide Seiten – doppelt
+gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 
 * **PC** – eine GTK-3-Anwendung in Python für Linux Mint (Cinnamon), in
-  `speichenrechner/`. Sie bringt bewusst kein eigenes Farbschema mit: Schrift,
+  `pc/speichenrechner/`. Sie bringt bewusst kein eigenes Farbschema mit: Schrift,
   Farben, Icons und die Hell/Dunkel-Variante kommen aus den
   System-Einstellungen, sie passt sich also dem eingestellten Mint-Theme an.
-* **Handy** – eine Web-Fassung in `public/`, die ohne Netz läuft und sich auf
+* **Handy** – eine Web-Fassung in `app/public/`, die ohne Netz läuft und sich auf
   dem Startbildschirm ablegen lässt, plus eine Android-App darum herum.
   **[Aufs Handy holen → APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
 
@@ -25,20 +37,20 @@ Menüeintrag und Schreibtisch-Icon anlegen (ohne `sudo`, nur für den aktuellen
 Benutzer):
 
 ```bash
-./install.sh
+pc/install.sh
 ```
 
 Danach liegt der Speichenrechner im Menü unter *Zubehör*, zusätzlich als
 anklickbares Icon auf dem Schreibtisch. Wieder entfernen:
 
 ```bash
-./install.sh --entfernen
+pc/install.sh --entfernen
 ```
 
 Direkt starten geht auch ohne Installation:
 
 ```bash
-python3 speichenrechner.py
+python3 pc/speichenrechner.py
 ```
 
 ### Wenn nichts passiert
@@ -47,7 +59,7 @@ Erst den Selbsttest laufen lassen – er startet keine Oberfläche, sondern meld
 was fehlt:
 
 ```bash
-python3 speichenrechner.py --pruefen
+python3 pc/speichenrechner.py --pruefen
 ```
 
 Der Speichenrechner ist eine **Einzelinstanz-Anwendung**: Läuft schon ein
@@ -61,12 +73,12 @@ pgrep -af speichenrechner.py
 Für eine Fehlermeldung im Klartext hilft der Start aus dem Terminal:
 
 ```bash
-python3 /home/kaysiebke/Downloads/Speichenrechner/speichenrechner.py
+python3 /home/kaysiebke/Downloads/Speichenrechner/pc/speichenrechner.py
 ```
 
 ### Wo das Icon liegt
 
-`./install.sh` legt drei Dinge an:
+`pc/install.sh` legt drei Dinge an:
 
 | Was | Wo |
 |---|---|
@@ -442,7 +454,7 @@ Antriebsseite immer **innen** liegen. Die drei Beispiele stehen als Tests in
 
 ## Handy-Version
 
-In `public/` liegt eine Web-Fassung: eine Seite, ein Stylesheet, zwei
+In `app/public/` liegt eine Web-Fassung: eine Seite, ein Stylesheet, zwei
 JavaScript-Dateien. **Kein Bauschritt, keine Abhängigkeiten, nichts von einem
 fremden Server** – dieselbe Regel wie bei der PC-Anwendung. Ein Service Worker
 legt die ganze Anwendung in den Cache, damit sie ohne Empfang rechnet; in der
@@ -451,7 +463,7 @@ Werkstatt ist das der Normalfall.
 Zum Ansehen genügt ein Ordner-Server:
 
 ```bash
-python3 -m http.server 8765 --directory public
+python3 -m http.server 8765 --directory app/public
 ```
 
 Zwei Wege aufs Handy, beide in **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
@@ -463,7 +475,7 @@ Im Browser läuft sie über GitHub Pages:
 
 **https://kaysiebke-cell.github.io/speichenrechner/**
 
-`.github/workflows/pages.yml` legt `public/` bei jedem Push auf `main` auf den
+`.github/workflows/pages.yml` legt `app/public/` bei jedem Push auf `main` auf den
 Branch `gh-pages`, von dem Pages ausliefert. Auf dem Handy dann
 „Zum Startbildschirm hinzufügen“ – danach startet sie wie eine App, im
 Vollbild und ohne Adresszeile, und rechnet auch ohne Empfang weiter.
@@ -473,8 +485,8 @@ dunkel – wie am PC das Mint-Theme.
 
 ### Dieselbe Rechnung zweimal – und wie sie zusammenbleibt
 
-Die Formeln gibt es in Python (`speichenrechner/berechnung.py`) und in
-JavaScript (`public/js/rechnen.js`). Zwei Fassungen driften auseinander, wenn
+Die Formeln gibt es in Python (`pc/speichenrechner/berechnung.py`) und in
+JavaScript (`app/public/js/rechnen.js`). Zwei Fassungen driften auseinander, wenn
 nichts sie zusammenhält. Das Band dazwischen sind gemeinsame Prüfwerte:
 
 ```bash
@@ -482,11 +494,21 @@ python3 werkzeuge/pruefwerte_erzeugen.py   # Python rechnet 14 Fälle vor
 node werkzeuge/pruefwerte_js.mjs           # JavaScript muss dieselben Zahlen liefern
 ```
 
-`data/pruefwerte.json` enthält Eingaben und erwartete Ergebnisse – Längen,
-Speichen- und Felgenwinkel, Sehnenwinkel, Lochabstand, Spannungsverhältnis –
-für symmetrische und unsymmetrische Naben, radial bis 4-fach, 2:1-Verteilung,
-Felgenversatz, ein 12-Zoll-Kinderrad und den Spokomat-Abgleich. Das sind 224
-Einzelwerte. Beide Fassungen müssen sie auf neun Stellen gleich treffen.
+`data/pruefwerte.json` enthält zwei Sorten Prüfwerte:
+
+* **14 Rechenfälle** mit Längen, Speichen- und Felgenwinkel, Sehnenwinkel,
+  Lochabstand und Spannungsverhältnis – symmetrisch und unsymmetrisch, radial
+  bis 4-fach, 2:1-Verteilung, Felgenversatz, ein 12-Zoll-Kinderrad und der
+  Spokomat-Abgleich.
+* **den ausgewerteten Katalog**: für *jede* der 230 Naben und *jeden* der 17
+  Felgentypen die gelesenen Werte – Flanschmaße, Speichenloch, Lochzahlen,
+  Ritzelaufnahme, Merkmale – dazu die Zähler der Filterlisten.
+
+Zusammen **2841 Einzelwerte**, die beide Fassungen auf neun Stellen gleich
+treffen müssen. Die Schreibweisen der Tabelle (`47,5 (22,5/25)`,
+`58 (symmetrisch)`, `Ø100`, `entfällt (Singlespeed, kein Freilauf)`) sind über
+Jahre gewachsen; liest JavaScript eine davon anders, stünde auf dem Handy eine
+falsche Nabe.
 
 `.github/workflows/tests.yml` fährt bei jedem Push alles zusammen: die
 Python-Tests, die Katalogprüfung gegen die Herstellertabelle und den Abgleich
@@ -494,12 +516,14 @@ der JavaScript-Rechnung. Die Prüfwerte werden dabei neu erzeugt und müssen
 unverändert bleiben – so fällt auf, wenn jemand nur eine der beiden Seiten
 anfasst.
 
-### Was noch fehlt
+### Was drin ist und was fehlt
 
-Der jetzige Stand ist ein Gerüst: Eingaben, Längen, Kennwerte und die
-dringendsten Hinweise. Nicht dabei sind Nabenkatalog und Felgentypen (die
-JSON-Daten liegen schon bereit und lassen sich unverändert übernehmen), die
-Skizzen und der Tabellen-Editor.
+Drin: Eingaben, Längen und Kennwerte, die dringendsten Hinweise, der
+**Nabenkatalog mit 230 Naben** samt Filtern und Suche, die **Felgentypen** mit
+Beschreibung und Spannungswarnung, und die Vorlagen.
+
+Es fehlen: die Skizzen, der Tabellen-Editor, der Kreuzungsvergleich und die
+Speichenphysik (Dehnung, Ton, Gewicht).
 
 ## Rechenweg
 
@@ -590,70 +614,48 @@ Naben und Felgen lassen sich als Vorlage speichern.
 Die Funktionen liegen in getrennten, kurzen Modulen:
 
 ```
-speichenrechner.py           Startskript
-speichenrechner/
-  modelle.py                 Datenklassen: Nabe, Felge, Einspeichung, Speichen …
-  berechnung.py              Geometrie, ohne GUI-Abhängigkeit
-  speiche.py                 Bauart, Dehnung, Gewicht, Speichenton
-  vorlagen.py                mitgelieferte und eigene Vorlagen
-  katalog.py                 Nabenmodelle vieler Hersteller
-  felgenkunde.py             Felgentypen: Profil, Ösung, Werkstoff, Spannung
-  tabelle.py                 Schreibweisen der Herstellertabelle auswerten
-  einstellungen.py           zuletzt benutzte Werte
-  bericht.py                 Ergebnis als Text
-  formatierung.py            Zahlen in deutscher Schreibweise
-  pfade.py                   Ablageorte nach XDG-Standard
-  ui/
-    anwendung.py             Gtk.Application
-    hauptfenster.py          Fenster, Kopfleiste, Verdrahtung
-    eingabe.py               linke Spalte (Formular)
-    ergebnis.py              rechte Spalte (Anzeige)
-    zeichnung.py             Zeichen-Werkzeugkasten, PNG/PDF/SVG-Export
-    schema.py                Speichenbild (Aufsicht aufs Rad)
-    querschnitt.py           Querschnitt durch den Nabenbereich
-    vergleich.py             Tabelle über die Kreuzungszahlen
-    bauteile.py              Nabe und Felgenprofil als Zeichnung
-    messen.py                bemaßte Skizzen mit den echten Werten
-    bauart_dialog.py         Speichenmaße und E-Modul
-    tabellen_fenster.py      Nabentabelle zum Nachtragen
-    vorlagen_leiste.py       Vorlagen wählen, speichern, löschen
-    nabe_hilfe.py            Umrechnung ab Kontermutter
-    vorlagen_dialog.py       Namensabfrage beim Speichern
-    stil.py                  Theme-Anbindung, minimales CSS
-    widgets.py               wiederverwendbare Bau-Helfer
-daten_quelle_naben.xlsx      Herstellertabelle – Quelle des Nabenkatalogs
-daten_quelle_felgen.xlsx     Felgentabelle – Quelle der Felgentypen
-android/                     dünne Android-Hülle um public/ (WebView, keine Rechte)
-  app/build.gradle           kopiert public/ in die App-Assets
-  …/MainActivity.kt          lädt die Seite über WebViewAssetLoader
-public/                      Handy-Version – ohne Bauschritt, ohne Fremdcode
-  index.html                 eine Seite, Ergebnis oben
-  css/stil.css               folgt hell/dunkel des Geräts
-  js/rechnen.js              dieselben Formeln wie berechnung.py
-  js/app.js                  Formular lesen, rechnen, anzeigen
-  sw.js                      Service Worker: läuft ohne Netz
-  manifest.json              Startbildschirm-Eintrag, Icons
+pc/                          PC-Anwendung
+  speichenrechner.py         Startskript
+  install.sh                 Menüeintrag und Icon anlegen
+  speichenrechner/
+    modelle.py               Datenklassen: Nabe, Felge, Einspeichung, Speichen …
+    berechnung.py            Geometrie, ohne GUI-Abhängigkeit
+    speiche.py               Bauart, Dehnung, Gewicht, Speichenton
+    vorlagen.py              mitgelieferte und eigene Vorlagen
+    katalog.py               Nabenmodelle vieler Hersteller
+    felgenkunde.py           Felgentypen: Profil, Ösung, Werkstoff, Spannung
+    tabelle.py               Schreibweisen der Herstellertabelle auswerten
+    einstellungen.py         zuletzt benutzte Werte
+    bericht.py               Ergebnis als Text
+    formatierung.py          Zahlen in deutscher Schreibweise
+    pfade.py                 Ablageorte nach XDG-Standard
+    ui/                      GTK-Oberfläche und alle Zeichnungen
+app/                         Handy-Fassung
+  public/                    Web-App – ohne Bauschritt, ohne Fremdcode
+    index.html               eine Seite, Ergebnis oben
+    css/stil.css             folgt hell/dunkel des Geräts
+    js/rechnen.js            dieselben Formeln wie berechnung.py
+    js/katalog.js            dieselbe Auswertung wie tabelle.py und katalog.py
+    js/daten.js              erzeugt aus data/ – nicht von Hand ändern
+    js/app.js                Oberfläche verdrahten
+    sw.js                    Service Worker: läuft ohne Netz
+  android/                   dünne Hülle um public/ (WebView, keine Rechte)
+data/                        gemeinsame Daten für beide Fassungen
+  naben_katalog.json         218 Naben aus der Herstellertabelle
+  naben_zusatz.json          12 nachgetragene Naben mit Quellenangabe
+  felgen_katalog.json        17 Felgentypen in drei Kategorien
+  pruefwerte.json            Prüfwerte – Band zwischen PC und Handy
+  speichenrechner.svg        Anwendungs-Icon
 werkzeuge/
   katalog_erzeugen.py        erzeugt den Nabenkatalog aus der Tabelle
   katalog_pruefen.py         vergleicht Katalog und Tabelle Zelle für Zelle
   felgen_erzeugen.py         erzeugt die Felgentypen aus der Tabelle
+  webdaten_erzeugen.py       erzeugt app/public/js/daten.js aus data/
   pruefwerte_erzeugen.py     rechnet die Prüffälle in Python vor
-  pruefwerte_js.mjs          hält die JavaScript-Rechnung darauf fest
-data/
-  naben_katalog.json         218 Naben von 14 Herstellern (aus der Tabelle)
-  naben_zusatz.json          12 nachgetragene Naben mit Quellenangabe
-  pruefwerte.json            14 Prüffälle, 224 Werte – Band zwischen PC und Handy
-  felgen_katalog.json        17 Felgentypen in drei Kategorien
-  speichenrechner.svg        Anwendungs-Icon
-  screenshot.png             Bildschirmfoto für diese Datei
-  querschnitt.png            Beispiel-Export einer Skizze
-  …desktop.in                Vorlage für den Menüeintrag
-tests/
-  test_berechnung.py         Tests der Mathematik (laufen ohne GTK)
-  test_vorlagen.py           Tests der Vorlagen und der Formatierung
-  test_speiche.py            Dehnung, Gewicht, Ton und Abgleich mit Spokomat
-  test_katalog.py            Katalog einlesen und durchsuchen
-  test_felgenkunde.py        Felgentypen, Profile und Abgleich mit der Tabelle
+  pruefwerte_js.mjs          hält die JavaScript-Fassung darauf fest
+tests/                       Tests beider Fassungen
+daten_quelle_naben.xlsx      Herstellertabelle – Quelle des Nabenkatalogs
+daten_quelle_felgen.xlsx     Felgentabelle – Quelle der Felgentypen
 ```
 
 Eigene Vorlagen und die zuletzt benutzten Werte liegen in
@@ -662,8 +664,8 @@ Eigene Vorlagen und die zuletzt benutzten Werte liegen in
 ## Tests
 
 ```bash
-python3 -m unittest discover -s tests      # PC-Anwendung
-node werkzeuge/pruefwerte_js.mjs           # Handy-Rechnung gegen dieselben Werte
+python3 -m unittest discover -s tests      # PC-Anwendung und die Daten
+node werkzeuge/pruefwerte_js.mjs           # Handy-Fassung gegen dieselben Werte
 ```
 
 Die Tests, die GTK brauchen, überspringen sich selbst, wenn keines da ist –

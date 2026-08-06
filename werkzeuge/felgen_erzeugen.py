@@ -23,7 +23,9 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+WURZEL = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(WURZEL))          # für werkzeuge.*
+sys.path.insert(0, str(WURZEL / "pc"))   # für speichenrechner.*
 
 from werkzeuge.katalog_erzeugen import NS, REL, _blatt_lesen  # noqa: E402
 

@@ -22,7 +22,9 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+WURZEL = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(WURZEL))          # für werkzeuge.*
+sys.path.insert(0, str(WURZEL / "pc"))   # für speichenrechner.*
 
 from speichenrechner import berechnung  # noqa: E402
 from speichenrechner.modelle import Einspeichung, Felge, Nabe  # noqa: E402
@@ -105,12 +107,59 @@ def _satz(name, nabe, felge, einspeichung, schritt) -> dict:
     }
 
 
+def _katalog() -> dict:
+    """Die ausgewerteten Angaben jeder Nabe und jedes Felgentyps.
+
+    Nicht nur ein paar Stichproben: die Schreibweisen der Herstellertabelle
+    sind über Jahre gewachsen (``47,5 (22,5/25)``, ``58 (symmetrisch)``,
+    ``Ø100``, ``entfällt (Singlespeed, kein Freilauf)``). Wenn die
+    JavaScript-Fassung eine davon anders liest als Python, steht in der
+    Handy-Fassung eine falsche Nabe – deshalb wird **jede** geprüft.
+    """
+    from speichenrechner import felgenkunde, katalog
+
+    naben = []
+    for eintrag in katalog.lade().naben:
+        naben.append({
+            "schluessel": eintrag.schluessel,
+            "flanschabstaende": list(eintrag.flanschabstaende or ()) or None,
+            "flanschdurchmesser_paar": list(eintrag.flanschdurchmesser_paar or ()) or None,
+            "speichenloch_mm": eintrag.speichenloch_mm,
+            "lochzahlen": eintrag.lochzahlen,
+            "einbaubreiten": eintrag.einbaubreiten,
+            "aufnahme": eintrag.aufnahme,
+            "merkmale": list(eintrag.merkmale),
+            "hat_flanschmasse": eintrag.hat_flanschmasse,
+            "einspeichbar": eintrag.einspeichbar,
+            "bezeichnung": eintrag.bezeichnung,
+        })
+
+    felgen = []
+    for typ in felgenkunde.lade().typen:
+        bereich = typ.spannungsbereich
+        felgen.append({
+            "name": typ.name,
+            "materialien": list(typ.materialien),
+            "oesen_stufe": typ.oesen_stufe,
+            "spannungsbereich": list(bereich) if bereich else None,
+            "nur_ab_20_zoll": typ.nur_ab_20_zoll,
+        })
+
+    return {
+        "naben": naben,
+        "felgen": felgen,
+        "arten": [list(paar) for paar in katalog.lade().arten_mit_anzahl()],
+        "hersteller": [list(paar) for paar in katalog.lade().hersteller_mit_anzahl()],
+    }
+
+
 def erzeugen() -> dict:
     return {
         "hinweis": ("Von werkzeuge/pruefwerte_erzeugen.py aus der Python-Rechnung "
                     "erzeugt. Die JavaScript-Fassung muss dieselben Zahlen liefern."),
         "stellen": STELLEN,
         "faelle": [_satz(*fall) for fall in FAELLE],
+        "katalog": _katalog(),
     }
 
 
@@ -118,7 +167,9 @@ def main() -> int:
     ziel = Path(__file__).resolve().parent.parent / "data" / "pruefwerte.json"
     daten = erzeugen()
     ziel.write_text(json.dumps(daten, indent=1, ensure_ascii=False), encoding="utf-8")
-    print(f"{len(daten['faelle'])} Prüffälle → {ziel}")
+    k = daten["katalog"]
+    print(f"{len(daten['faelle'])} Rechenfälle, {len(k['naben'])} Naben und "
+          f"{len(k['felgen'])} Felgentypen → {ziel}")
     for satz in daten["faelle"]:
         erwartet = satz["erwartet"]
         print(f"  {satz['name']:44} {erwartet['bestell_links']:6.1f} / "

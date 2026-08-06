@@ -22,7 +22,9 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+WURZEL = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(WURZEL))          # für werkzeuge.*
+sys.path.insert(0, str(WURZEL / "pc"))   # für speichenrechner.*
 
 from speichenrechner import katalog as nabenkatalog  # noqa: E402
 from speichenrechner import tabelle  # noqa: E402

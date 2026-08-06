@@ -10,6 +10,8 @@ set -euo pipefail
 
 APP_ID="de.speichenrechner.Speichenrechner"
 PROJEKT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Die gemeinsamen Daten (Icon, Menüvorlage) liegen neben pc/ und app/.
+WURZEL="$(cd "$PROJEKT/.." && pwd)"
 
 ANWENDUNGEN="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
 ICONS="${XDG_DATA_HOME:-$HOME/.local/share}/icons/hicolor/scalable/apps"
@@ -58,11 +60,11 @@ installieren() {
     chmod +x "$PROJEKT/speichenrechner.py"
 
     mkdir -p "$ANWENDUNGEN" "$ICONS"
-    install -m 644 "$PROJEKT/data/speichenrechner.svg" "$ICON_DATEI"
+    install -m 644 "$WURZEL/data/speichenrechner.svg" "$ICON_DATEI"
 
     sed -e "s|@EXEC@|python3 $PROJEKT/speichenrechner.py|" \
         -e "s|@ICON@|$APP_ID|" \
-        "$PROJEKT/data/$APP_ID.desktop.in" > "$DESKTOP_DATEI"
+        "$WURZEL/data/$APP_ID.desktop.in" > "$DESKTOP_DATEI"
     chmod 644 "$DESKTOP_DATEI"
 
     aktualisieren

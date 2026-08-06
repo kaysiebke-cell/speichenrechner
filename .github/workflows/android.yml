@@ -12,8 +12,8 @@ on:
   push:
     branches: [ "**" ]
     paths:
-      - "public/**"
-      - "android/**"
+      - "app/public/**"
+      - "app/android/**"
       - ".github/workflows/android.yml"
     tags:
       - "v*"
@@ -44,11 +44,11 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle', 'android/gradle/wrapper/gradle-wrapper.properties') }}
+          key: gradle-${{ runner.os }}-${{ hashFiles('app/android/**/*.gradle', 'app/android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: gradle-${{ runner.os }}-
 
       - name: APK bauen (Debug, ohne Signatur-Schlüssel installierbar)
-        working-directory: android
+        working-directory: app/android
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon assembleDebug
@@ -56,7 +56,7 @@ jobs:
       - name: APK umbenennen
         run: |
           mkdir -p apk
-          cp android/app/build/outputs/apk/debug/app-debug.apk \
+          cp app/android/app/build/outputs/apk/debug/app-debug.apk \
              "apk/Speichenrechner-${GITHUB_SHA:0:7}.apk"
           ls -la apk
 

@@ -4,7 +4,7 @@
     {
       "name": "handy",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "public"],
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "app/public"],
       "port": 8765
     }
   ]

@@ -31,7 +31,9 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+WURZEL = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(WURZEL))          # für werkzeuge.*
+sys.path.insert(0, str(WURZEL / "pc"))   # für speichenrechner.*
 
 from speichenrechner import tabelle  # noqa: E402
 

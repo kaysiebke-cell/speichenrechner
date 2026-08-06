@@ -144,6 +144,27 @@ input[type="number"], select {
 
 select { text-align: left; grid-column: 2 / 4; }
 
+/* Volle Breite für Katalog-Listen und die Suche. */
+.voll, select.voll, input.voll {
+  width: 100%;
+  grid-column: 1 / 4;
+  margin: 0.3rem 0 0;
+  text-align: left;
+}
+
+/* Zwei Listen nebeneinander – Filter über der Auswahl. */
+.zeile.zwei { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.zeile.zwei select { grid-column: auto; }
+
+input[type="search"] {
+  padding: 0.55rem 0.6rem;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--grund);
+  border: 1px solid var(--linie);
+  border-radius: 8px;
+}
+
 input:focus, select:focus, button:focus {
   outline: 2px solid var(--akzent);
   outline-offset: 1px;

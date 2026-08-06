@@ -492,5 +492,5477 @@
     "spannung_rechts_prozent": 100.0
    }
   }
- ]
+ ],
+ "katalog": {
+  "naben": [
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28",
+    "flanschabstaende": [
+     31.0,
+     31.0
+    ],
+    "flanschdurchmesser_paar": [
+     54.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28,
+     32,
+     36,
+     40,
+     48
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 12 110 disc 6-bolt",
+    "flanschabstaende": [
+     28.0,
+     28.0
+    ],
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 12 110 disc 6-bolt"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 12 110 disc center lock",
+    "flanschabstaende": [
+     28.0,
+     28.0
+    ],
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 12 110 disc center lock"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 12 disc 6-bolt",
+    "flanschabstaende": [
+     22.5,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     59.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     32
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 12 disc 6-bolt"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 12 disc center lock",
+    "flanschabstaende": [
+     23.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     54.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     32
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 12 disc center lock"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 135",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 135"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 135 VR",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 135 VR"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 15 110 disc 6-bolt",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 15 110 disc 6-bolt"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 15 110 disc center lock",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 15 110 disc center lock"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 15 150",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     150.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 15 150"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 15 disc 6-bolt",
+    "flanschabstaende": [
+     22.5,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     59.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 15 disc 6-bolt"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 disc 6-bolt",
+    "flanschabstaende": [
+     22.5,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     59.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 disc 6-bolt"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 28 disc center lock",
+    "flanschabstaende": [
+     23.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     54.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 28 disc center lock"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 29 S TR disc 6-bolt",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 29 S TR disc 6-bolt"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 29 S TR disc center lock",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 29 S TR disc center lock"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON 29 S disc center lock",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON 29 S disc center lock"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS für Brompton",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [
+     74.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS für Brompton"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS klassik für Brompton",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [
+     74.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS klassik für Brompton"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS-M für Aidoo Trailer",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS-M für Aidoo Trailer"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS-M für Anthrotech",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS-M für Anthrotech"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS-M für Catrike",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS-M für Catrike"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS-M für Christiania Cargo Bike",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS-M für Christiania Cargo Bike"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS-M für HP Velotechnik",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS-M für HP Velotechnik"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS-M für ICE Trike",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS-M für ICE Trike"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS-M für KMX",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS-M für KMX"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SON XS-M für Steintrike",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SON XS-M für Steintrike"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SONdelux",
+    "flanschabstaende": [
+     25.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     54.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SONdelux"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SONdelux 12 disc center lock",
+    "flanschabstaende": [
+     23.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     54.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     32
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SONdelux 12 disc center lock"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SONdelux disc center lock",
+    "flanschabstaende": [
+     23.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     54.0,
+     54.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SONdelux disc center lock"
+   },
+   {
+    "schluessel": "SON (Schmidt Maschinenbau)|SONdelux wide body",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SON (Schmidt Maschinenbau) SONdelux wide body"
+   },
+   {
+    "schluessel": "SRAM|i-Light D1 Series",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM i-Light D1 Series"
+   },
+   {
+    "schluessel": "SRAM|i-Light D3 Series",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM i-Light D3 Series"
+   },
+   {
+    "schluessel": "SRAM|i-Light D330",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM i-Light D330"
+   },
+   {
+    "schluessel": "SRAM|i-Light D7 Series",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM i-Light D7 Series"
+   },
+   {
+    "schluessel": "SRAM|i-Light D724",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM i-Light D724"
+   },
+   {
+    "schluessel": "SRAM|i-Light D730",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM i-Light D730"
+   },
+   {
+    "schluessel": "Shimano|Alfine DH-S501",
+    "flanschabstaende": [
+     29.85,
+     22.25
+    ],
+    "flanschdurchmesser_paar": [
+     70.0,
+     70.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Alfine DH-S501"
+   },
+   {
+    "schluessel": "Shimano|Alfine DH-S701",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Alfine DH-S701"
+   },
+   {
+    "schluessel": "Shimano|Alivio DH-T4000-1N",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Alivio DH-T4000-1N"
+   },
+   {
+    "schluessel": "Shimano|DH-3D30",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3D30"
+   },
+   {
+    "schluessel": "Shimano|DH-3D32",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3D32"
+   },
+   {
+    "schluessel": "Shimano|DH-3D35",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3D35"
+   },
+   {
+    "schluessel": "Shimano|DH-3D37",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3D37"
+   },
+   {
+    "schluessel": "Shimano|DH-3D72",
+    "flanschabstaende": [
+     29.85,
+     22.25
+    ],
+    "flanschdurchmesser_paar": [
+     70.0,
+     70.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3D72"
+   },
+   {
+    "schluessel": "Shimano|DH-3D80",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3D80"
+   },
+   {
+    "schluessel": "Shimano|DH-3N20",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3N20"
+   },
+   {
+    "schluessel": "Shimano|DH-3N30",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3N30"
+   },
+   {
+    "schluessel": "Shimano|DH-3N72",
+    "flanschabstaende": [
+     29.85,
+     22.25
+    ],
+    "flanschdurchmesser_paar": [
+     70.0,
+     70.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3N72"
+   },
+   {
+    "schluessel": "Shimano|DH-3N80",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-3N80"
+   },
+   {
+    "schluessel": "Shimano|DH-C3000-1N",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-C3000-1N"
+   },
+   {
+    "schluessel": "Shimano|DH-C3000-3N",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-C3000-3N"
+   },
+   {
+    "schluessel": "Shimano|DH-T4050-1D",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-T4050-1D"
+   },
+   {
+    "schluessel": "Shimano|DH-UR700-3D",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano DH-UR700-3D"
+   },
+   {
+    "schluessel": "Shimano|Deore LX DH-T670",
+    "flanschabstaende": [
+     29.85,
+     22.25
+    ],
+    "flanschdurchmesser_paar": [
+     70.0,
+     70.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Deore LX DH-T670"
+   },
+   {
+    "schluessel": "Shimano|Deore LX DH-T675",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Deore LX DH-T675"
+   },
+   {
+    "schluessel": "Shimano|Deore XT DH-T780",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Deore XT DH-T780"
+   },
+   {
+    "schluessel": "Shimano|Deore XT DH-T785",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Deore XT DH-T785"
+   },
+   {
+    "schluessel": "Shutter Precision (SP Dynamo)|P8X",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shutter Precision (SP Dynamo) P8X"
+   },
+   {
+    "schluessel": "Shutter Precision (SP Dynamo)|PD-7",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     100.0,
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shutter Precision (SP Dynamo) PD-7"
+   },
+   {
+    "schluessel": "Shutter Precision (SP Dynamo)|PD-8",
+    "flanschabstaende": [
+     25.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     58.0,
+     52.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shutter Precision (SP Dynamo) PD-8"
+   },
+   {
+    "schluessel": "Shutter Precision (SP Dynamo)|PL-7",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     100.0,
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shutter Precision (SP Dynamo) PL-7"
+   },
+   {
+    "schluessel": "Shutter Precision (SP Dynamo)|PL-8",
+    "flanschabstaende": [
+     25.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     58.0,
+     52.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shutter Precision (SP Dynamo) PL-8"
+   },
+   {
+    "schluessel": "Shutter Precision (SP Dynamo)|PV-8",
+    "flanschabstaende": [
+     25.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     52.0,
+     52.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shutter Precision (SP Dynamo) PV-8"
+   },
+   {
+    "schluessel": "Shutter Precision (SP Dynamo)|S8",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shutter Precision (SP Dynamo) S8"
+   },
+   {
+    "schluessel": "Sturmey-Archer|Dyno-Hub (historisch, klassisch)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer Dyno-Hub (historisch, klassisch)"
+   },
+   {
+    "schluessel": "Sturmey-Archer|X-FDD",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer X-FDD"
+   },
+   {
+    "schluessel": "Sturmey-Archer|XL-FDD",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer XL-FDD"
+   },
+   {
+    "schluessel": "Supernova|Infinity 8",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Supernova Infinity 8"
+   },
+   {
+    "schluessel": "Supernova|Infinity S",
+    "flanschabstaende": [
+     25.0,
+     25.0
+    ],
+    "flanschdurchmesser_paar": [
+     58.0,
+     58.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Dynamo",
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Supernova Infinity S"
+   },
+   {
+    "schluessel": "Classified|Powershift Hub (MTB, 2-Gang)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Nabenschaltung",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Classified Powershift Hub (MTB, 2-Gang)"
+   },
+   {
+    "schluessel": "Classified|Powershift Hub (Road/Gravel, 2-Gang)",
+    "flanschabstaende": [
+     31.75,
+     17.5
+    ],
+    "flanschdurchmesser_paar": [
+     50.0,
+     91.2
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     142.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Nabenschaltung",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Classified Powershift Hub (Road/Gravel, 2-Gang)"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|AUTOMATiQ (Automatik-Interface)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) AUTOMATiQ (Automatik-Interface)"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|CO (Cargo/Commercial)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     170.0
+    ],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) CO (Cargo/Commercial)"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|CVP Heavy Duty",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) CVP Heavy Duty"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|City (310%)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) City (310%)"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|Extreme (bis 500 kg Nutzlast)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     170.0,
+     198.0
+    ],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) Extreme (bis 500 kg Nutzlast)"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|Heavy Duty",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     170.0
+    ],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) Heavy Duty"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|Trekking / TR (380%)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     142.0
+    ],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) Trekking / TR (380%)"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|Urban (256%)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) Urban (256%)"
+   },
+   {
+    "schluessel": "Enviolo (ehem. NuVinci)|Utility",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckzahnkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckzahnkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Enviolo (ehem. NuVinci) Utility"
+   },
+   {
+    "schluessel": "Fichtel & Sachs|3x3 Triflex (historisch)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     126.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Fichtel & Sachs 3x3 Triflex (historisch)"
+   },
+   {
+    "schluessel": "Fichtel & Sachs|Elan 3-Gang (historisch)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     126.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Fichtel & Sachs Elan 3-Gang (historisch)"
+   },
+   {
+    "schluessel": "Fichtel & Sachs|Pentasport 5-Gang (historisch)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     126.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Fichtel & Sachs Pentasport 5-Gang (historisch)"
+   },
+   {
+    "schluessel": "Fichtel & Sachs|Torpedo 3-Gang (historisch)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36,
+     40
+    ],
+    "einbaubreiten": [
+     114.0,
+     119.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Fichtel & Sachs Torpedo 3-Gang (historisch)"
+   },
+   {
+    "schluessel": "Kindernay|Kindernay VII (7-Gang)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     142.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Nabenschaltung",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Kindernay VII (7-Gang)"
+   },
+   {
+    "schluessel": "Kindernay|Kindernay XIV (14-Gang)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     142.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Nabenschaltung",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Kindernay XIV (14-Gang)"
+   },
+   {
+    "schluessel": "Rohloff|E-14",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     142.0,
+     148.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff E-14"
+   },
+   {
+    "schluessel": "Rohloff|E-14 Solo",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     142.0,
+     148.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff E-14 Solo"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 A12 DB OEM2",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     142.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 A12 DB OEM2"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 A12 DB PM",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     142.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 A12 DB PM"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     145.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC DB",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC DB"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC DB OEM",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC DB OEM"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC DB OEM2",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC DB OEM2"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC EX",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC EX"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC EX OEM",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC EX OEM"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC EX OEM2",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC EX OEM2"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC OEM",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     145.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC OEM"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC OEM2",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     145.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC OEM2"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 CC PM",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 CC PM"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     145.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS DB",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS DB"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS DB OEM",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS DB OEM"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS DB OEM2",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS DB OEM2"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS EX",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS EX"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS EX OEM",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS EX OEM"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS EX OEM2",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS EX OEM2"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS OEM",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     145.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS OEM"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 TS OEM2",
+    "flanschabstaende": [
+     29.0,
+     29.0
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     145.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 TS OEM2"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 Tandem (T)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     40,
+     48
+    ],
+    "einbaubreiten": [
+     135.0,
+     145.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 Tandem (T)"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 XL (170/177mm)",
+    "flanschabstaende": [
+     46.5,
+     46.5
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     170.0,
+     177.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 XL (170/177mm)"
+   },
+   {
+    "schluessel": "Rohloff|SPEEDHUB 500/14 XXL (190/197mm)",
+    "flanschabstaende": [
+     46.5,
+     46.5
+    ],
+    "flanschdurchmesser_paar": [
+     100.0,
+     100.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     190.0,
+     197.0
+    ],
+    "aufnahme": "Schraubritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubritzel"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Rohloff SPEEDHUB 500/14 XXL (190/197mm)"
+   },
+   {
+    "schluessel": "SRAM|Automatix",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM Automatix"
+   },
+   {
+    "schluessel": "SRAM|DualDrive (inkl. Pulse System)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Nabenschaltung",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM DualDrive (inkl. Pulse System)"
+   },
+   {
+    "schluessel": "SRAM|E-Matic",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM E-Matic"
+   },
+   {
+    "schluessel": "SRAM|G8",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM G8"
+   },
+   {
+    "schluessel": "SRAM|G9",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM G9"
+   },
+   {
+    "schluessel": "SRAM|I-Motion 3",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM I-Motion 3"
+   },
+   {
+    "schluessel": "SRAM|I-Motion 9",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM I-Motion 9"
+   },
+   {
+    "schluessel": "SRAM|P5 (Spectro P5)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM P5 (Spectro P5)"
+   },
+   {
+    "schluessel": "SRAM|S7",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM S7"
+   },
+   {
+    "schluessel": "SRAM|T3",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     126.0,
+     135.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "SRAM T3"
+   },
+   {
+    "schluessel": "Shimano|Alfine 11 (SG-S700 / SG-S7001-11)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Alfine 11 (SG-S700 / SG-S7001-11)"
+   },
+   {
+    "schluessel": "Shimano|Alfine 8 (SG-S501 / SG-S7001-8)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Alfine 8 (SG-S501 / SG-S7001-8)"
+   },
+   {
+    "schluessel": "Shimano|Alfine Di2 11 (SG-S705)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Alfine Di2 11 (SG-S705)"
+   },
+   {
+    "schluessel": "Shimano|Alfine Di2 8 (SG-S505)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Alfine Di2 8 (SG-S505)"
+   },
+   {
+    "schluessel": "Shimano|Nexus Inter-3 (SG-3C41)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     126.0,
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Nexus Inter-3 (SG-3C41)"
+   },
+   {
+    "schluessel": "Shimano|Nexus Inter-4",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     126.0,
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Nexus Inter-4"
+   },
+   {
+    "schluessel": "Shimano|Nexus Inter-5 (SG-C3000-5)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Nexus Inter-5 (SG-C3000-5)"
+   },
+   {
+    "schluessel": "Shimano|Nexus Inter-5E (SG-C7000-5V, E-Bike)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     142.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Nexus Inter-5E (SG-C7000-5V, E-Bike)"
+   },
+   {
+    "schluessel": "Shimano|Nexus Inter-7 (SG-7C)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Nexus Inter-7 (SG-7C)"
+   },
+   {
+    "schluessel": "Shimano|Nexus Inter-8 (SG-8C31 / SG-C6000-8 / SG-C6010-8R)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano Nexus Inter-8 (SG-8C31 / SG-C6000-8 / SG-C6010-8R)"
+   },
+   {
+    "schluessel": "Shimano|STEPS SG-C7000-5 (E-Bike)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     142.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano STEPS SG-C7000-5 (E-Bike)"
+   },
+   {
+    "schluessel": "Sturmey-Archer|AW (klassische 3-Gang-Nabe)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36,
+     40
+    ],
+    "einbaubreiten": [
+     114.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Nabenschaltung",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer AW (klassische 3-Gang-Nabe)"
+   },
+   {
+    "schluessel": "Sturmey-Archer|CS-RF3 (9-fach Kassette)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer CS-RF3 (9-fach Kassette)"
+   },
+   {
+    "schluessel": "Sturmey-Archer|CS-RK3 (Disc, 9-fach Kassette)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer CS-RK3 (Disc, 9-fach Kassette)"
+   },
+   {
+    "schluessel": "Sturmey-Archer|S-RC3 (Rücktritt)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer S-RC3 (Rücktritt)"
+   },
+   {
+    "schluessel": "Sturmey-Archer|S-RF3",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer S-RF3"
+   },
+   {
+    "schluessel": "Sturmey-Archer|S3X (historisch)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     114.0,
+     120.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer S3X (historisch)"
+   },
+   {
+    "schluessel": "Sturmey-Archer|S5 (5-Gang, historisch)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     36
+    ],
+    "einbaubreiten": [
+     114.0,
+     120.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Nabenschaltung"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer S5 (5-Gang, historisch)"
+   },
+   {
+    "schluessel": "Sturmey-Archer|X-RD3",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer X-RD3"
+   },
+   {
+    "schluessel": "Sturmey-Archer|X-RF8 (8-Gang)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Steckritzel",
+    "merkmale": [
+     "Nabenschaltung",
+     "Steckritzel"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Sturmey-Archer X-RF8 (8-Gang)"
+   },
+   {
+    "schluessel": "Effigear|Effigear Mimic (9-Gang)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Effigear Mimic (9-Gang)"
+   },
+   {
+    "schluessel": "Effigear|Effigear Original",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Effigear Original"
+   },
+   {
+    "schluessel": "Pinion|C1.12",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion C1.12"
+   },
+   {
+    "schluessel": "Pinion|C1.12i (Smart.Shift)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion C1.12i (Smart.Shift)"
+   },
+   {
+    "schluessel": "Pinion|C1.6",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion C1.6"
+   },
+   {
+    "schluessel": "Pinion|C1.6i (Smart.Shift)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion C1.6i (Smart.Shift)"
+   },
+   {
+    "schluessel": "Pinion|C1.9",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion C1.9"
+   },
+   {
+    "schluessel": "Pinion|C1.9i (Smart.Shift)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion C1.9i (Smart.Shift)"
+   },
+   {
+    "schluessel": "Pinion|MGU E1.12",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion MGU E1.12"
+   },
+   {
+    "schluessel": "Pinion|MGU E1.9",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion MGU E1.9"
+   },
+   {
+    "schluessel": "Pinion|P1.12",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion P1.12"
+   },
+   {
+    "schluessel": "Pinion|P1.18",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion P1.18"
+   },
+   {
+    "schluessel": "Pinion|P1.9",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion P1.9"
+   },
+   {
+    "schluessel": "Pinion|P1.9CR",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion P1.9CR"
+   },
+   {
+    "schluessel": "Pinion|P1.9XR",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Tretlagergetriebe"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": false,
+    "bezeichnung": "Pinion P1.9XR"
+   },
+   {
+    "schluessel": "Hope|BMX Front Hub (2014–2017)",
+    "flanschabstaende": [
+     34.5,
+     34.5
+    ],
+    "flanschdurchmesser_paar": [
+     42.0,
+     42.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope BMX Front Hub (2014–2017)"
+   },
+   {
+    "schluessel": "Hope|Bulb Front Hub 20mm (1998–2005)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Bulb Front Hub 20mm (1998–2005)"
+   },
+   {
+    "schluessel": "Hope|Bulb Front Hub QR (1998–2005)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Bulb Front Hub QR (1998–2005)"
+   },
+   {
+    "schluessel": "Hope|Fatsno Front Hub (1996–2000)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Fatsno Front Hub (1996–2000)"
+   },
+   {
+    "schluessel": "Hope|Mono RS Front Hub (2014–2016)",
+    "flanschabstaende": [
+     34.5,
+     34.5
+    ],
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Mono RS Front Hub (2014–2016)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Evo Boost 110mm Front Hub (2011–2015)",
+    "flanschabstaende": [
+     25.0,
+     33.0
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Evo Boost 110mm Front Hub (2011–2015)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Evo Fatsno Front Hub (2011–2016)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     170.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Evo Fatsno Front Hub (2011–2016)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Evo Front Hub (2011–2015)",
+    "flanschabstaende": [
+     20.0,
+     33.0
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Evo Front Hub (2011–2015)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Front Hub (2006–2011)",
+    "flanschabstaende": [
+     20.0,
+     33.0
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Front Hub (2006–2011)"
+   },
+   {
+    "schluessel": "Hope|Pro 3 Mono Front Hub",
+    "flanschabstaende": [
+     34.5,
+     34.5
+    ],
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 3 Mono Front Hub"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Boost 110mm Front Hub (2016–2023)",
+    "flanschabstaende": [
+     25.0,
+     33.0
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Boost 110mm Front Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Fatsno Front Hub",
+    "flanschabstaende": [
+     18.75,
+     18.75
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     170.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Fatsno Front Hub"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Front Hub (2016–2023)",
+    "flanschabstaende": [
+     20.0,
+     33.0
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Front Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Straight Pull 6 Bolt Front Hub (2016–2023)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     24,
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     100.0,
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Straight Pull 6 Bolt Front Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 5 Front Hub (6-Bolt / Centre Lock)",
+    "flanschabstaende": [
+     11.0,
+     11.0
+    ],
+    "flanschdurchmesser_paar": [
+     43.0,
+     43.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0,
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 5 Front Hub (6-Bolt / Centre Lock)"
+   },
+   {
+    "schluessel": "Hope|Pro 5 Hook Flange Front Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     100.0,
+     110.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 5 Hook Flange Front Hub"
+   },
+   {
+    "schluessel": "Hope|RS4 Centre Lock Front Hub",
+    "flanschabstaende": [
+     21.7,
+     32.7
+    ],
+    "flanschdurchmesser_paar": [
+     42.0,
+     42.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     100.0,
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope RS4 Centre Lock Front Hub"
+   },
+   {
+    "schluessel": "Hope|RS4 Road Front Hub",
+    "flanschabstaende": [
+     34.5,
+     34.5
+    ],
+    "flanschdurchmesser_paar": [
+     42.0,
+     42.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope RS4 Road Front Hub"
+   },
+   {
+    "schluessel": "Hope|RS4 Straight Pull 6 Bolt Front Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     100.0,
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope RS4 Straight Pull 6 Bolt Front Hub"
+   },
+   {
+    "schluessel": "Hope|RS4 Straight Pull Centre Lock Front Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     100.0,
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope RS4 Straight Pull Centre Lock Front Hub"
+   },
+   {
+    "schluessel": "Hope|XC Front Hub (2001–2007)",
+    "flanschabstaende": [
+     21.0,
+     32.5
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     45.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     100.0
+    ],
+    "aufnahme": "",
+    "merkmale": [
+     "Vorderrad"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope XC Front Hub (2001–2007)"
+   },
+   {
+    "schluessel": "Hope|BMX Rear Hub (2014–2017)",
+    "flanschabstaende": [
+     28.0,
+     26.5
+    ],
+    "flanschdurchmesser_paar": [
+     54.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     110.0,
+     135.0
+    ],
+    "aufnahme": "Singlespeed",
+    "merkmale": [
+     "Hinterrad",
+     "Singlespeed"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope BMX Rear Hub (2014–2017)"
+   },
+   {
+    "schluessel": "Hope|Bulb Rear Hub (1998–2005)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Bulb Rear Hub (1998–2005)"
+   },
+   {
+    "schluessel": "Hope|Mono RS Rear Hub (2014–2016)",
+    "flanschabstaende": [
+     32.0,
+     19.0
+    ],
+    "flanschdurchmesser_paar": [
+     47.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Mono RS Rear Hub (2014–2016)"
+   },
+   {
+    "schluessel": "Hope|Mono Rear Hub (2001–2007)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Mono Rear Hub (2001–2007)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Evo 150mm Rear Hub (2011–2015)",
+    "flanschabstaende": [
+     26.5,
+     26.5
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     150.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Evo 150mm Rear Hub (2011–2015)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Evo Boost 148mm Rear Hub (2011–2015)",
+    "flanschabstaende": [
+     35.0,
+     22.0
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Evo Boost 148mm Rear Hub (2011–2015)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Evo Fatsno Rear Hub (2011–2016)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     170.0,
+     190.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Evo Fatsno Rear Hub (2011–2016)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Evo Rear Hub (2011–2015)",
+    "flanschabstaende": [
+     33.0,
+     20.0
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Evo Rear Hub (2011–2015)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Evo Trials/SS Rear Hub (2011–2015)",
+    "flanschabstaende": [
+     32.5,
+     32.5
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Singlespeed",
+    "merkmale": [
+     "Hinterrad",
+     "Singlespeed"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Evo Trials/SS Rear Hub (2011–2015)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Rear Hub (2006–2011)",
+    "flanschabstaende": [
+     33.0,
+     20.0
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Rear Hub (2006–2011)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Rear Hub 150mm (2006–2011)",
+    "flanschabstaende": [
+     26.5,
+     26.5
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     150.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Rear Hub 150mm (2006–2011)"
+   },
+   {
+    "schluessel": "Hope|Pro 2 Trials/SS Rear Hub (2006–2011)",
+    "flanschabstaende": [
+     32.5,
+     32.5
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Singlespeed",
+    "merkmale": [
+     "Hinterrad",
+     "Singlespeed"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 2 Trials/SS Rear Hub (2006–2011)"
+   },
+   {
+    "schluessel": "Hope|Pro 3 Mono Rear Hub",
+    "flanschabstaende": [
+     33.0,
+     20.0
+    ],
+    "flanschdurchmesser_paar": [
+     47.0,
+     54.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 3 Mono Rear Hub"
+   },
+   {
+    "schluessel": "Hope|Pro 4 150mm Rear Hub (2016–2023)",
+    "flanschabstaende": [
+     26.5,
+     26.5
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     150.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 150mm Rear Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Boost 148mm Rear Hub (2016–2023)",
+    "flanschabstaende": [
+     35.0,
+     22.0
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Boost 148mm Rear Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 4 DH Rear Hub (2016–2023)",
+    "flanschabstaende": [
+     34.25,
+     34.75
+    ],
+    "flanschdurchmesser_paar": [
+     60.0,
+     64.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     150.0,
+     157.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 DH Rear Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Fatsno Rear Hub",
+    "flanschabstaende": [
+     22.5,
+     22.5
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     170.0,
+     190.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Fatsno Rear Hub"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Rear Hub (2016–2023)",
+    "flanschabstaende": [
+     33.0,
+     19.0
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     142.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Rear Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 4 SP24 SCS Rear Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "",
+    "merkmale": [
+     "Hinterrad"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 SP24 SCS Rear Hub"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Straight Pull 6 Bolt Rear Hub (2016–2023)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     24,
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     135.0,
+     142.0,
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Straight Pull 6 Bolt Rear Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Super Boost Rear Hub (2016–2023)",
+    "flanschabstaende": [
+     38.5,
+     26.5
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     157.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Super Boost Rear Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 4 Trials/Single Speed Rear Hub (2016–2023)",
+    "flanschabstaende": [
+     32.5,
+     32.5
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Singlespeed",
+    "merkmale": [
+     "Hinterrad",
+     "Singlespeed"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 4 Trials/Single Speed Rear Hub (2016–2023)"
+   },
+   {
+    "schluessel": "Hope|Pro 5 Centre Lock Rear Hub (135/148mm)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 5 Centre Lock Rear Hub (135/148mm)"
+   },
+   {
+    "schluessel": "Hope|Pro 5 DH Rear Hub (148/150/157mm)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     148.0,
+     150.0,
+     157.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 5 DH Rear Hub (148/150/157mm)"
+   },
+   {
+    "schluessel": "Hope|Pro 5 E-Bike Rear Hub (148mm)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 5 E-Bike Rear Hub (148mm)"
+   },
+   {
+    "schluessel": "Hope|Pro 5 Hook Flange Rear Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     28,
+     32
+    ],
+    "einbaubreiten": [
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 5 Hook Flange Rear Hub"
+   },
+   {
+    "schluessel": "Hope|Pro 5 Rear Hub (6-Bolt, 135/148/150/157mm)",
+    "flanschabstaende": [
+     17.5,
+     17.5
+    ],
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     24,
+     28,
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0,
+     142.0,
+     148.0,
+     150.0,
+     157.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 5 Rear Hub (6-Bolt, 135/148/150/157mm)"
+   },
+   {
+    "schluessel": "Hope|Pro 5 SS/Trials Rear Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Singlespeed",
+    "merkmale": [
+     "Hinterrad",
+     "Singlespeed"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Pro 5 SS/Trials Rear Hub"
+   },
+   {
+    "schluessel": "Hope|RS4 Centre Lock Rear Hub",
+    "flanschabstaende": [
+     32.0,
+     19.0
+    ],
+    "flanschdurchmesser_paar": [
+     47.0,
+     57.0
+    ],
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     130.0,
+     142.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope RS4 Centre Lock Rear Hub"
+   },
+   {
+    "schluessel": "Hope|RS4 Road Rear Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     130.0,
+     142.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope RS4 Road Rear Hub"
+   },
+   {
+    "schluessel": "Hope|RS4 Straight Pull 6 Bolt Rear Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     130.0,
+     142.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope RS4 Straight Pull 6 Bolt Rear Hub"
+   },
+   {
+    "schluessel": "Hope|RS4 Straight Pull Centre Lock Rear Hub",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": 2.0,
+    "lochzahlen": [
+     20,
+     24,
+     28
+    ],
+    "einbaubreiten": [
+     130.0,
+     142.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope RS4 Straight Pull Centre Lock Rear Hub"
+   },
+   {
+    "schluessel": "Hope|Screw-on Rear Hub (1991–2000)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Screw-on Rear Hub (1991–2000)"
+   },
+   {
+    "schluessel": "Hope|Ti Glide Rear Hub (1992–2000)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Hope Ti Glide Rear Hub (1992–2000)"
+   },
+   {
+    "schluessel": "Hope|XC Rear Hub (2001–2007)",
+    "flanschabstaende": [
+     32.5,
+     19.5
+    ],
+    "flanschdurchmesser_paar": [
+     56.0,
+     45.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Hope XC Rear Hub (2001–2007)"
+   },
+   {
+    "schluessel": "Shimano|FH-M7110-B (SLX, Center Lock, 12-fach)",
+    "flanschabstaende": [
+     31.08,
+     31.08
+    ],
+    "flanschdurchmesser_paar": [
+     68.8,
+     68.8
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano FH-M7110-B (SLX, Center Lock, 12-fach)"
+   },
+   {
+    "schluessel": "Shimano|FH-M756 (Deore XT, 6-Loch, älter)",
+    "flanschabstaende": [
+     28.55,
+     28.55
+    ],
+    "flanschdurchmesser_paar": [
+     70.6,
+     61.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano FH-M756 (Deore XT, 6-Loch, älter)"
+   },
+   {
+    "schluessel": "Shimano|FH-M8000 (Deore XT, Center Lock)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": [
+     52.8,
+     53.8
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano FH-M8000 (Deore XT, Center Lock)"
+   },
+   {
+    "schluessel": "Shimano|FH-RS400 (Tiagra, Hohlachse)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [
+     142.0,
+     135.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano FH-RS400 (Tiagra, Hohlachse)"
+   },
+   {
+    "schluessel": "Shimano|FH-TC500 (CUES, Center Lock)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [],
+    "einbaubreiten": [
+     148.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano FH-TC500 (CUES, Center Lock)"
+   },
+   {
+    "schluessel": "Shimano|RX100 FH-A550 (Kassette, 126 mm)",
+    "flanschabstaende": [
+     37.3,
+     20.7
+    ],
+    "flanschdurchmesser_paar": [
+     45.0,
+     45.0
+    ],
+    "speichenloch_mm": 2.6,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     126.0
+    ],
+    "aufnahme": "Kassette",
+    "merkmale": [
+     "Hinterrad",
+     "Kassette"
+    ],
+    "hat_flanschmasse": true,
+    "einspeichbar": true,
+    "bezeichnung": "Shimano RX100 FH-A550 (Kassette, 126 mm)"
+   },
+   {
+    "schluessel": "Phil Wood|G-Touring (Schraubkranz, 126 mm)",
+    "flanschabstaende": [
+     32.0,
+     18.0
+    ],
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     126.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Phil Wood G-Touring (Schraubkranz, 126 mm)"
+   },
+   {
+    "schluessel": "Phil Wood|Track High Flange (Fixed/Freewheel, 120 mm)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": [
+     66.0,
+     66.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     120.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Phil Wood Track High Flange (Fixed/Freewheel, 120 mm)"
+   },
+   {
+    "schluessel": "Phil Wood|Track Low Flange (Fixed/Freewheel, 120 mm)",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": [
+     57.0,
+     57.0
+    ],
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     120.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Phil Wood Track Low Flange (Fixed/Freewheel, 120 mm)"
+   },
+   {
+    "schluessel": "Joytech|JY-734",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Joytech JY-734"
+   },
+   {
+    "schluessel": "Joytech|JY-752",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Joytech JY-752"
+   },
+   {
+    "schluessel": "Quando|KT-A12R",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Quando KT-A12R"
+   },
+   {
+    "schluessel": "Quando|KT-M55R",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Quando KT-M55R"
+   },
+   {
+    "schluessel": "Formula|FM-21",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Formula FM-21"
+   },
+   {
+    "schluessel": "Formula|FM-31",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "Formula FM-31"
+   },
+   {
+    "schluessel": "KT (Kung Teng)|A12R",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "KT (Kung Teng) A12R"
+   },
+   {
+    "schluessel": "KT (Kung Teng)|A15R",
+    "flanschabstaende": null,
+    "flanschdurchmesser_paar": null,
+    "speichenloch_mm": null,
+    "lochzahlen": [
+     32,
+     36
+    ],
+    "einbaubreiten": [
+     135.0
+    ],
+    "aufnahme": "Schraubkranz",
+    "merkmale": [
+     "Hinterrad",
+     "Schraubkranz"
+    ],
+    "hat_flanschmasse": false,
+    "einspeichbar": true,
+    "bezeichnung": "KT (Kung Teng) A15R"
+   }
+  ],
+  "felgen": [
+   {
+    "name": "Flachbettfelge",
+    "materialien": [
+     "Stahl",
+     "Aluminium"
+    ],
+    "oesen_stufe": 0,
+    "spannungsbereich": [
+     500.0,
+     800.0
+    ],
+    "nur_ab_20_zoll": false
+   },
+   {
+    "name": "Hohlkammerfelge (Box-Section)",
+    "materialien": [
+     "Aluminium"
+    ],
+    "oesen_stufe": 1,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": false
+   },
+   {
+    "name": "V-Profil-Felge",
+    "materialien": [
+     "Aluminium"
+    ],
+    "oesen_stufe": 1,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": false
+   },
+   {
+    "name": "Aero-Felge",
+    "materialien": [
+     "Aluminium",
+     "Carbon"
+    ],
+    "oesen_stufe": 1,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": true
+   },
+   {
+    "name": "Hakenfelge (Hooked/Crochet)",
+    "materialien": [
+     "Aluminium",
+     "Carbon"
+    ],
+    "oesen_stufe": 1,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": false
+   },
+   {
+    "name": "Hakenlose Felge (Hookless/TSS)",
+    "materialien": [
+     "Aluminium",
+     "Carbon"
+    ],
+    "oesen_stufe": 0,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": true
+   },
+   {
+    "name": "Tubeless-Ready-Felge (TR)",
+    "materialien": [
+     "Aluminium",
+     "Carbon"
+    ],
+    "oesen_stufe": 0,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": true
+   },
+   {
+    "name": "Schlauchreifenfelge (Tubular)",
+    "materialien": [
+     "Aluminium",
+     "Carbon"
+    ],
+    "oesen_stufe": 0,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": true
+   },
+   {
+    "name": "Stahlfelge",
+    "materialien": [
+     "Stahl"
+    ],
+    "oesen_stufe": 0,
+    "spannungsbereich": [
+     500.0,
+     800.0
+    ],
+    "nur_ab_20_zoll": false
+   },
+   {
+    "name": "Aluminiumfelge",
+    "materialien": [
+     "Aluminium"
+    ],
+    "oesen_stufe": 1,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": false
+   },
+   {
+    "name": "Carbonfelge",
+    "materialien": [
+     "Carbon"
+    ],
+    "oesen_stufe": 0,
+    "spannungsbereich": [
+     900.0,
+     1200.0
+    ],
+    "nur_ab_20_zoll": true
+   },
+   {
+    "name": "Titanfelge",
+    "materialien": [
+     "Titan"
+    ],
+    "oesen_stufe": 0,
+    "spannungsbereich": null,
+    "nur_ab_20_zoll": true
+   },
+   {
+    "name": "Rennrad-Felge",
+    "materialien": [
+     "Aluminium",
+     "Carbon"
+    ],
+    "oesen_stufe": 1,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": true
+   },
+   {
+    "name": "MTB-Felge",
+    "materialien": [
+     "Aluminium",
+     "Carbon"
+    ],
+    "oesen_stufe": 2,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": true
+   },
+   {
+    "name": "Trekking-/City-Felge",
+    "materialien": [
+     "Stahl",
+     "Aluminium"
+    ],
+    "oesen_stufe": 1,
+    "spannungsbereich": [
+     500.0,
+     800.0
+    ],
+    "nur_ab_20_zoll": false
+   },
+   {
+    "name": "BMX-Felge",
+    "materialien": [
+     "Stahl",
+     "Aluminium"
+    ],
+    "oesen_stufe": 2,
+    "spannungsbereich": [
+     500.0,
+     800.0
+    ],
+    "nur_ab_20_zoll": false
+   },
+   {
+    "name": "Fatbike-Felge",
+    "materialien": [
+     "Aluminium"
+    ],
+    "oesen_stufe": 2,
+    "spannungsbereich": [
+     800.0,
+     1100.0
+    ],
+    "nur_ab_20_zoll": true
+   }
+  ],
+  "arten": [
+   [
+    "Vorderrad",
+    90
+   ],
+   [
+    "Nabenschaltung",
+    73
+   ],
+   [
+    "Dynamo",
+    69
+   ],
+   [
+    "Hinterrad",
+    52
+   ],
+   [
+    "Kassette",
+    35
+   ],
+   [
+    "Schraubritzel",
+    26
+   ],
+   [
+    "Schraubkranz",
+    17
+   ],
+   [
+    "Steckritzel",
+    17
+   ],
+   [
+    "Steckzahnkranz",
+    9
+   ],
+   [
+    "Singlespeed",
+    5
+   ]
+  ],
+  "hersteller": [
+   [
+    "Classified",
+    2
+   ],
+   [
+    "Enviolo (ehem. NuVinci)",
+    9
+   ],
+   [
+    "Fichtel & Sachs",
+    4
+   ],
+   [
+    "Formula",
+    2
+   ],
+   [
+    "Hope",
+    56
+   ],
+   [
+    "Joytech",
+    2
+   ],
+   [
+    "KT (Kung Teng)",
+    2
+   ],
+   [
+    "Kindernay",
+    2
+   ],
+   [
+    "Phil Wood",
+    3
+   ],
+   [
+    "Quando",
+    2
+   ],
+   [
+    "Rohloff",
+    26
+   ],
+   [
+    "SON (Schmidt Maschinenbau)",
+    30
+   ],
+   [
+    "SRAM",
+    16
+   ],
+   [
+    "Shimano",
+    38
+   ],
+   [
+    "Shutter Precision (SP Dynamo)",
+    7
+   ],
+   [
+    "Sturmey-Archer",
+    12
+   ],
+   [
+    "Supernova",
+    2
+   ]
+  ]
+ }
 }

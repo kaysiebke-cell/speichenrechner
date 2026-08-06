@@ -39,5 +39,10 @@ jobs:
           python3 werkzeuge/pruefwerte_erzeugen.py
           git diff --exit-code -- data/pruefwerte.json
 
-      - name: JavaScript-Rechnung gegen die Python-Prüfwerte
+      - name: Webdaten neu erzeugen und Abweichung ausschließen
+        run: |
+          python3 werkzeuge/webdaten_erzeugen.py
+          git diff --exit-code -- app/public/js/daten.js
+
+      - name: JavaScript-Rechnung und -Katalog gegen die Python-Prüfwerte
         run: node werkzeuge/pruefwerte_js.mjs

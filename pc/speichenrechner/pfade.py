@@ -16,8 +16,13 @@ def konfig_verzeichnis() -> Path:
 
 
 def projekt_verzeichnis() -> Path:
-    """Wurzel der Installation – für Icon und mitgelieferte Dateien."""
-    return Path(__file__).resolve().parent.parent
+    """Wurzel des Projekts – für Icon, Katalogdaten und mitgelieferte Dateien.
+
+    Die Anwendung liegt in ``pc/speichenrechner/``, die gemeinsamen Daten aber
+    in ``data/`` neben ``pc/`` und ``app/``: sie versorgen beide Fassungen.
+    Deshalb zwei Ebenen nach oben statt einer.
+    """
+    return Path(__file__).resolve().parents[2]
 
 
 def icon_pfad() -> Path:

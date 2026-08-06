@@ -48,10 +48,10 @@ gerechnet wird auf dem Gerät.
 
 ## Wie sie gebaut wird
 
-Es gibt keine zweite Fassung der Web-Dateien. `android/app/build.gradle` kopiert
-`public/` vor dem Bauen in die App-Assets, und `MainActivity.kt` lädt sie über
+Es gibt keine zweite Fassung der Web-Dateien. `app/android/app/build.gradle` kopiert
+`app/public/` vor dem Bauen in die App-Assets, und `MainActivity.kt` lädt sie über
 den `WebViewAssetLoader` unter einer https-Adresse – nicht über `file://`, sonst
 verweigert der WebView die ES-Module.
 
-Was in `public/` liegt, ist damit gleichzeitig die Browser-Fassung und der
+Was in `app/public/` liegt, ist damit gleichzeitig die Browser-Fassung und der
 Inhalt der App.
