@@ -1,0 +1,161 @@
+{
+ "quelle": "daten_quelle_felgen.xlsx",
+ "felgen": [
+  {
+   "name": "Flachbettfelge",
+   "kategorie": "Bauform",
+   "material": "Aluminium/Stahl",
+   "beschreibung": "Flacher Boden, einfachste Bauform",
+   "einsatz": "Günstige/ältere Räder",
+   "oesung": "keine",
+   "kindergroessen": "12 / 16 / 18 Zoll"
+  },
+  {
+   "name": "Hohlkammerfelge (Box-Section)",
+   "kategorie": "Bauform",
+   "material": "Aluminium",
+   "beschreibung": "Doppelwandig, Hohlkammerprofil, stabil & leicht",
+   "einsatz": "MTB, Trekking, Rennrad",
+   "oesung": "einfach genietet",
+   "kindergroessen": "16 / 18 Zoll"
+  },
+  {
+   "name": "V-Profil-Felge",
+   "kategorie": "Bauform",
+   "material": "Aluminium",
+   "beschreibung": "Schräge Seitenwände, für V-Brakes",
+   "einsatz": "City/Trekking mit Felgenbremse",
+   "oesung": "einfach genietet",
+   "kindergroessen": "16 / 18 Zoll"
+  },
+  {
+   "name": "Aero-Felge",
+   "kategorie": "Bauform",
+   "material": "Aluminium/Carbon",
+   "beschreibung": "Hohes, aerodynamisches Profil",
+   "einsatz": "Rennrad, Triathlon",
+   "oesung": "einfach genietet",
+   "kindergroessen": "nicht üblich"
+  },
+  {
+   "name": "Hakenfelge (Hooked/Crochet)",
+   "kategorie": "Bauform",
+   "material": "Aluminium/Carbon",
+   "beschreibung": "Mit Wulsthaken für Drahtreifen",
+   "einsatz": "Standard, universell",
+   "oesung": "einfach genietet",
+   "kindergroessen": "12 / 16 / 18 Zoll"
+  },
+  {
+   "name": "Hakenlose Felge (Hookless/TSS)",
+   "kategorie": "Bauform",
+   "material": "Carbon/Aluminium",
+   "beschreibung": "Ohne Wulsthaken, für Tubeless-Reifen",
+   "einsatz": "MTB, Gravel, High-End Rennrad",
+   "oesung": "keine",
+   "kindergroessen": "nicht üblich"
+  },
+  {
+   "name": "Tubeless-Ready-Felge (TR)",
+   "kategorie": "Bauform",
+   "material": "Aluminium/Carbon",
+   "beschreibung": "Luftdichte Kammer, meist ohne Felgenband nutzbar",
+   "einsatz": "MTB, Gravel, Rennrad",
+   "oesung": "keine",
+   "kindergroessen": "nicht üblich"
+  },
+  {
+   "name": "Schlauchreifenfelge (Tubular)",
+   "kategorie": "Bauform",
+   "material": "Carbon/Aluminium",
+   "beschreibung": "Flache Felge ohne Wulst, Reifen wird aufgeklebt",
+   "einsatz": "Rennsport (Rennrad, Cyclocross)",
+   "oesung": "keine",
+   "kindergroessen": "nicht üblich"
+  },
+  {
+   "name": "Stahlfelge",
+   "kategorie": "Material",
+   "material": "Stahl",
+   "beschreibung": "Günstig, schwer, rostanfällig",
+   "einsatz": "Billigräder, Retro/Klassiker",
+   "oesung": "keine",
+   "kindergroessen": "12 / 16 / 18 Zoll"
+  },
+  {
+   "name": "Aluminiumfelge",
+   "kategorie": "Material",
+   "material": "Aluminium",
+   "beschreibung": "Gutes Gewicht/Preis-Verhältnis, Standard",
+   "einsatz": "Die meisten modernen Räder",
+   "oesung": "einfach genietet",
+   "kindergroessen": "12 / 16 / 18 Zoll"
+  },
+  {
+   "name": "Carbonfelge",
+   "kategorie": "Material",
+   "material": "Carbon (CFK)",
+   "beschreibung": "Leicht, steif, teuer",
+   "einsatz": "Rennrad/MTB High-End",
+   "oesung": "keine",
+   "kindergroessen": "nicht üblich"
+  },
+  {
+   "name": "Titanfelge",
+   "kategorie": "Material",
+   "material": "Titan",
+   "beschreibung": "Selten, meist Spezialanfertigung",
+   "einsatz": "Sonderanfertigungen",
+   "oesung": "keine",
+   "kindergroessen": "nicht üblich"
+  },
+  {
+   "name": "Rennrad-Felge",
+   "kategorie": "Einsatzbereich",
+   "material": "Aluminium/Carbon",
+   "beschreibung": "Schmal, aerodynamisch, leicht",
+   "einsatz": "Rennrad",
+   "oesung": "einfach genietet",
+   "kindergroessen": "nicht üblich"
+  },
+  {
+   "name": "MTB-Felge",
+   "kategorie": "Einsatzbereich",
+   "material": "Aluminium/Carbon",
+   "beschreibung": "Breiter, stabil für Gelände",
+   "einsatz": "Mountainbike",
+   "oesung": "doppelt genietet",
+   "kindergroessen": "nicht üblich (ab 20 Zoll)"
+  },
+  {
+   "name": "Trekking-/City-Felge",
+   "kategorie": "Einsatzbereich",
+   "material": "Aluminium/Stahl",
+   "beschreibung": "Robust, alltagstauglich",
+   "einsatz": "Trekking, Stadtrad",
+   "oesung": "einfach genietet",
+   "kindergroessen": "16 / 18 Zoll"
+  },
+  {
+   "name": "BMX-Felge",
+   "kategorie": "Einsatzbereich",
+   "material": "Aluminium/Stahl",
+   "beschreibung": "Sehr robust, kleiner Durchmesser",
+   "einsatz": "BMX",
+   "oesung": "doppelt genietet",
+   "kindergroessen": "16 / 18 Zoll"
+  },
+  {
+   "name": "Fatbike-Felge",
+   "kategorie": "Einsatzbereich",
+   "material": "Aluminium",
+   "beschreibung": "Sehr breit für große Reifen",
+   "einsatz": "Fatbike",
+   "oesung": "doppelt genietet",
+   "kindergroessen": "nicht üblich"
+  }
+ ],
+ "fussnoten": [
+  "Hinweis: Ösung ist kein eigener Felgentyp, sondern ein Konstruktionsmerkmal. Kindergrößen (12/16/18 Zoll) sind typische Vorgaben je Felgentyp, keine feste Norm – abhängig von Hersteller und Modell."
+ ]
+}

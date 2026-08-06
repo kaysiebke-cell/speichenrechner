@@ -1,0 +1,44 @@
+name: Handy-Version veröffentlichen
+
+# Stellt den Inhalt von public/ als GitHub Pages bereit. Danach ist der
+# Rechner unter der Pages-Adresse erreichbar und lässt sich auf dem Handy
+# über „Zum Startbildschirm hinzufügen" installieren.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "public/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  veroeffentlichen:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Pages einrichten
+        uses: actions/configure-pages@v5
+
+      - name: public/ als Artefakt hochladen
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Veröffentlichen
+        id: pages
+        uses: actions/deploy-pages@v4

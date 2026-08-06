@@ -1,0 +1,43 @@
+name: Tests
+
+# Prüft beide Fassungen und ihre Daten:
+#   - die Python-Tests der PC-Anwendung (ohne GTK, GTK-Tests überspringen sich)
+#   - den Nabenkatalog Zelle für Zelle gegen die Herstellertabelle
+#   - dass die JavaScript-Rechnung der Handy-Fassung dieselben Zahlen liefert
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+  workflow_dispatch: {}
+
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python-Tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Nabenkatalog gegen die Tabelle prüfen
+        run: python3 werkzeuge/katalog_pruefen.py daten_quelle_naben.xlsx
+
+      - name: Node einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Prüfwerte neu erzeugen und Abweichung ausschließen
+        run: |
+          python3 werkzeuge/pruefwerte_erzeugen.py
+          git diff --exit-code -- data/pruefwerte.json
+
+      - name: JavaScript-Rechnung gegen die Python-Prüfwerte
+        run: node werkzeuge/pruefwerte_js.mjs

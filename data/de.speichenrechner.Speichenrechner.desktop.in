@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Speichenrechner
+GenericName=Speichenlängen-Rechner
+Comment=Speichenlängen für Fahrradlaufräder berechnen
+Comment[en]=Calculate bicycle spoke lengths
+Exec=@EXEC@
+Icon=@ICON@
+Terminal=false
+Categories=Utility;Calculator;
+Keywords=Fahrrad;Speiche;Speichen;Laufrad;Nabe;Felge;ERD;Einspeichen;bicycle;spoke;wheel;
+StartupNotify=true
+StartupWMClass=de.speichenrechner.Speichenrechner

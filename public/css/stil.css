@@ -1,0 +1,180 @@
+/* Speichenrechner – Handy-Fassung.
+ *
+ * Wie am PC bringt die Anwendung kein eigenes Farbschema mit: sie folgt der
+ * Einstellung des Geräts (hell/dunkel) über prefers-color-scheme. Keine
+ * Schriften, keine Bibliotheken von außen – die Seite muss ohne Netz laufen.
+ */
+
+:root {
+  --grund: #f6f6f6;
+  --karte: #ffffff;
+  --text: #1c1e20;
+  --schwach: #6a6f75;
+  --linie: #d6d9dc;
+  --akzent: #0a5fd6;
+  --warnung-grund: #fff3e0;
+  --warnung-text: #8a4b00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --grund: #1f2225;
+    --karte: #282c30;
+    --text: #e4e6e8;
+    --schwach: #a0a6ac;
+    --linie: #3a3f45;
+    --akzent: #5aa2ff;
+    --warnung-grund: #4a3a1c;
+    --warnung-text: #ffd79a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 0 2rem;
+  background: var(--grund);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+
+header {
+  padding: 1rem 1rem 0.5rem;
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+
+h1 { margin: 0; font-size: 1.35rem; }
+.unterzeile { margin: 0.1rem 0 0; color: var(--schwach); font-size: 0.85rem; }
+
+main { max-width: 34rem; margin: 0 auto; padding: 0 1rem; }
+
+/* ------------------------------------------------------------- Ergebnis */
+
+.ergebnis {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.seiten { display: flex; gap: 1rem; }
+.seite { flex: 1 1 0; min-width: 0; }
+
+.beschriftung {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--schwach);
+}
+
+.seite strong {
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.einheit { color: var(--schwach); font-size: 0.85rem; margin-left: 0.2rem; }
+
+.bestellen {
+  margin: 0.7rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--linie);
+  font-weight: 600;
+}
+
+.hinweis {
+  margin: 0.7rem 0 0;
+  padding: 0.5rem 0.7rem;
+  background: var(--warnung-grund);
+  color: var(--warnung-text);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.klein { font-size: 0.8rem; color: var(--schwach); margin: 0.4rem 0 0; }
+
+/* -------------------------------------------------------------- Formular */
+
+fieldset {
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 12px;
+  padding: 0.6rem 1rem 1rem;
+  margin: 0 0 1rem;
+}
+
+legend { padding: 0 0.35rem; font-weight: 600; }
+
+.zeile {
+  display: grid;
+  grid-template-columns: 1fr 5.5rem 5.5rem;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.3rem 0;
+}
+
+.zeile.kopf {
+  padding: 0 0 0.1rem;
+  font-size: 0.75rem;
+  color: var(--schwach);
+}
+.zeile.kopf span { text-align: center; }
+.zeile.kopf span:first-child { text-align: left; }
+
+input[type="number"], select {
+  width: 100%;
+  padding: 0.55rem 0.5rem;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text);
+  background: var(--grund);
+  border: 1px solid var(--linie);
+  border-radius: 8px;
+}
+
+select { text-align: left; grid-column: 2 / 4; }
+
+input:focus, select:focus, button:focus {
+  outline: 2px solid var(--akzent);
+  outline-offset: 1px;
+}
+
+.einheit-feld { color: var(--schwach); font-size: 0.85rem; }
+
+.haken {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0 0.2rem;
+}
+.haken input { width: 1.15rem; height: 1.15rem; }
+
+button.flach {
+  display: block;
+  width: 100%;
+  padding: 0.7rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+}
+
+footer { margin-top: 1.5rem; }
+
+/* Auf breiten Bildschirmen zwei Spalten – am Telefon bleibt es eine. */
+@media (min-width: 44rem) {
+  main { max-width: 52rem; }
+  #formular { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+  #formular > button { grid-column: 1 / 3; }
+}
