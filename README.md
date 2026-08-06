@@ -453,10 +453,14 @@ Zum Ansehen genügt ein Ordner-Server:
 python3 -m http.server 8765 --directory public
 ```
 
-Auf dem Handy läuft sie über GitHub Pages (`.github/workflows/pages.yml`
-veröffentlicht `public/` bei jedem Push auf `main`). Dort dann
+Auf dem Handy läuft sie über GitHub Pages:
+
+**https://kaysiebke-cell.github.io/speichenrechner/**
+
+`.github/workflows/pages.yml` legt `public/` bei jedem Push auf `main` auf den
+Branch `gh-pages`, von dem Pages ausliefert. Auf dem Handy dann
 „Zum Startbildschirm hinzufügen“ – danach startet sie wie eine App, im
-Vollbild und ohne Adresszeile.
+Vollbild und ohne Adresszeile, und rechnet auch ohne Empfang weiter.
 
 Die Farben folgen der Geräteeinstellung über `prefers-color-scheme`, hell wie
 dunkel – wie am PC das Mint-Theme.

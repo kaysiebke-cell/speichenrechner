@@ -1,8 +1,9 @@
 name: Handy-Version veröffentlichen
 
-# Stellt den Inhalt von public/ als GitHub Pages bereit. Danach ist der
-# Rechner unter der Pages-Adresse erreichbar und lässt sich auf dem Handy
-# über „Zum Startbildschirm hinzufügen" installieren.
+# Legt den Inhalt von public/ auf den Branch gh-pages; GitHub Pages liefert
+# ihn von dort aus. Bewusst ohne die Umgebung „github-pages": deren
+# Freigabeschritt blieb beim ersten Deployment eines neuen Repos hängen.
+# Hier tut es einfaches git – kein fremder Code, wie im ganzen Projekt.
 
 on:
   push:
@@ -13,32 +14,25 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  contents: write
 
 jobs:
   veroeffentlichen:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.pages.outputs.page_url }}
     steps:
       - name: Code auschecken
         uses: actions/checkout@v4
 
-      - name: Pages einrichten
-        uses: actions/configure-pages@v5
-
-      - name: public/ als Artefakt hochladen
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
-
-      - name: Veröffentlichen
-        id: pages
-        uses: actions/deploy-pages@v4
+      - name: public/ auf den Branch gh-pages legen
+        run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Ein einzelner Commit ohne Historie: der Branch trägt nur die Seite.
+          cd public
+          git init -q -b gh-pages
+          git add -A
+          git commit -q -m "Handy-Version aus ${GITHUB_SHA:0:7}"
+          git push -q --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+            gh-pages
