@@ -1,11 +1,22 @@
 // Service Worker: macht die Seite ohne Netz benutzbar.
 //
 // In der Werkstatt ist kein Empfang. Deshalb liegt die ganze Anwendung im
-// Cache: beim ersten Aufruf abgelegt, danach von dort geliefert. Die
-// Versionsnummer im Cache-Namen erneuert den Bestand bei einer neuen Fassung –
-// alte Caches werden bei der Aktivierung gelöscht.
+// Cache: beim ersten Aufruf abgelegt, danach von dort geliefert.
+//
+// Zwei Dinge sind dabei über die Füße gestolpert und deshalb ausdrücklich
+// geregelt:
+//
+// 1. **Der Cache-Name trägt eine Fassung.** Bleibt er gleich, während sich die
+//    Dateien ändern, bekommt das Handy weiter die alte Seite – und wundert
+//    sich, wo der Nabenkatalog geblieben ist. Bei jeder Änderung an public/
+//    muss FASSUNG hochgezählt werden; ein Test hält das fest.
+//
+// 2. **Für die Seite selbst gilt Netz zuerst.** Sonst müsste man den Browser
+//    überreden, eine neue Fassung zu holen. Ist kein Netz da, kommt sie aus
+//    dem Cache – der Werkstattfall bleibt also gedeckt.
 
-const CACHE = "speichenrechner-v1";
+const FASSUNG = 3;
+const CACHE = `speichenrechner-v${FASSUNG}`;
 
 const DATEIEN = [
   ".",
@@ -13,6 +24,9 @@ const DATEIEN = [
   "css/stil.css",
   "js/app.js",
   "js/rechnen.js",
+  "js/katalog.js",
+  "js/daten.js",
+  "js/zeichnung.js",
   "manifest.json",
   "icons/icon-192.png",
   "icons/icon-512.png",
@@ -32,17 +46,40 @@ self.addEventListener("activate", (ereignis) => {
   );
 });
 
+/** Ist das der Aufruf einer Seite (nicht einer Datei darin)? */
+function istSeitenaufruf(anfrage) {
+  return anfrage.mode === "navigate"
+    || (anfrage.headers.get("accept") || "").includes("text/html");
+}
+
 self.addEventListener("fetch", (ereignis) => {
-  if (ereignis.request.method !== "GET") return;
+  const anfrage = ereignis.request;
+  if (anfrage.method !== "GET") return;
+
+  if (istSeitenaufruf(anfrage)) {
+    // Netz zuerst: eine neue Fassung soll ohne Umwege ankommen.
+    ereignis.respondWith(
+      fetch(anfrage)
+        .then((antwort) => {
+          const kopie = antwort.clone();
+          caches.open(CACHE).then((cache) => cache.put(anfrage, kopie)).catch(() => {});
+          return antwort;
+        })
+        .catch(() => caches.match(anfrage).then((gefunden) => gefunden
+          || caches.match("index.html"))),
+    );
+    return;
+  }
+
+  // Alles andere aus dem Cache, sonst aus dem Netz und dann hinein.
   ereignis.respondWith(
-    caches.match(ereignis.request).then((gefunden) => {
+    caches.match(anfrage).then((gefunden) => {
       if (gefunden) return gefunden;
-      return fetch(ereignis.request).then((antwort) => {
-        // Nachladen still in den Cache legen, damit es beim nächsten Mal da ist.
+      return fetch(anfrage).then((antwort) => {
         const kopie = antwort.clone();
-        caches.open(CACHE).then((cache) => cache.put(ereignis.request, kopie)).catch(() => {});
+        caches.open(CACHE).then((cache) => cache.put(anfrage, kopie)).catch(() => {});
         return antwort;
-      }).catch(() => caches.match("index.html"));
+      });
     }),
   );
 });

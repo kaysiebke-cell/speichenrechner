@@ -1,9 +1,22 @@
 # Speichenrechner aufs Handy
 
-Zwei Wege. Der erste braucht keine Installation, der zweite gibt eine richtige
-App im Menü.
+Drei Wege. Der erste funktioniert immer, der dritte gibt eine richtige App im
+Menü.
 
-## 1. Über den Browser (kein Download nötig)
+## 0. Eine einzige Datei (funktioniert sofort)
+
+**[`app/speichenrechner-handy.html`](app/speichenrechner-handy.html)** – 123 KB,
+alles drin. Herunterladen, aufs Handy kopieren (Kabel, Speicherkarte, an sich
+selbst schicken) und im Browser öffnen. Kein Server, kein Netz, keine
+Installation. Auch als Anhang an den
+[Releases](https://github.com/kaysiebke-cell/speichenrechner/releases) – über
+GitHub direkt am Handy ist das der zuverlässigere Weg, weil eine `.html` im
+Repo als Quelltext angezeigt statt geladen wird.
+
+Ihr fehlt nur der Service Worker und der Startbildschirm-Eintrag; die Rechnung
+und der Katalog sind dieselben.
+
+## 1. Über das Netz (kein Download nötig)
 
 **https://kaysiebke-cell.github.io/speichenrechner/**
 

@@ -1,0 +1,5055 @@
+<!DOCTYPE html>
+<!-- Erzeugt von werkzeuge/einzeldatei_erzeugen.py – alles in einer Datei.
+     Quelle ist app/public/. Änderungen hier gehen beim nächsten Lauf
+     verloren. -->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Speichenrechner</title>
+<meta name="description" content="Speichenlängen für Fahrradlaufräder – rechnet ohne Netz.">
+<meta name="theme-color" content="#1f2225">
+<style>
+/* Speichenrechner – Handy-Fassung.
+ *
+ * Wie am PC bringt die Anwendung kein eigenes Farbschema mit: sie folgt der
+ * Einstellung des Geräts (hell/dunkel) über prefers-color-scheme. Keine
+ * Schriften, keine Bibliotheken von außen – die Seite muss ohne Netz laufen.
+ */
+
+:root {
+  --grund: #f6f6f6;
+  --karte: #ffffff;
+  --text: #1c1e20;
+  --schwach: #6a6f75;
+  --linie: #d6d9dc;
+  --akzent: #0a5fd6;
+  --warnung-grund: #fff3e0;
+  --warnung-text: #8a4b00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --grund: #1f2225;
+    --karte: #282c30;
+    --text: #e4e6e8;
+    --schwach: #a0a6ac;
+    --linie: #3a3f45;
+    --akzent: #5aa2ff;
+    --warnung-grund: #4a3a1c;
+    --warnung-text: #ffd79a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 0 2rem;
+  background: var(--grund);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+
+header {
+  padding: 1rem 1rem 0.5rem;
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+
+h1 { margin: 0; font-size: 1.35rem; }
+.unterzeile { margin: 0.1rem 0 0; color: var(--schwach); font-size: 0.85rem; }
+
+main { max-width: 34rem; margin: 0 auto; padding: 0 1rem; }
+
+/* ------------------------------------------------------------- Ergebnis */
+
+.ergebnis {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.seiten { display: flex; gap: 1rem; }
+.seite { flex: 1 1 0; min-width: 0; }
+
+.beschriftung {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--schwach);
+}
+
+.seite strong {
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.einheit { color: var(--schwach); font-size: 0.85rem; margin-left: 0.2rem; }
+
+.bestellen {
+  margin: 0.7rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--linie);
+  font-weight: 600;
+}
+
+.hinweis {
+  margin: 0.7rem 0 0;
+  padding: 0.5rem 0.7rem;
+  background: var(--warnung-grund);
+  color: var(--warnung-text);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.klein { font-size: 0.8rem; color: var(--schwach); margin: 0.4rem 0 0; }
+
+/* -------------------------------------------------------------- Formular */
+
+fieldset {
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 12px;
+  padding: 0.6rem 1rem 1rem;
+  margin: 0 0 1rem;
+}
+
+legend { padding: 0 0.35rem; font-weight: 600; }
+
+.zeile {
+  display: grid;
+  grid-template-columns: 1fr 5.5rem 5.5rem;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.3rem 0;
+}
+
+.zeile.kopf {
+  padding: 0 0 0.1rem;
+  font-size: 0.75rem;
+  color: var(--schwach);
+}
+.zeile.kopf span { text-align: center; }
+.zeile.kopf span:first-child { text-align: left; }
+
+input[type="number"], select {
+  width: 100%;
+  padding: 0.55rem 0.5rem;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text);
+  background: var(--grund);
+  border: 1px solid var(--linie);
+  border-radius: 8px;
+}
+
+select { text-align: left; grid-column: 2 / 4; }
+
+/* Volle Breite für Katalog-Listen und die Suche. */
+.voll, select.voll, input.voll {
+  width: 100%;
+  grid-column: 1 / 4;
+  margin: 0.3rem 0 0;
+  text-align: left;
+}
+
+/* Zwei Listen nebeneinander – Filter über der Auswahl. */
+.zeile.zwei { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.zeile.zwei select { grid-column: auto; }
+
+input[type="search"] {
+  padding: 0.55rem 0.6rem;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--grund);
+  border: 1px solid var(--linie);
+  border-radius: 8px;
+}
+
+input:focus, select:focus, button:focus {
+  outline: 2px solid var(--akzent);
+  outline-offset: 1px;
+}
+
+.einheit-feld { color: var(--schwach); font-size: 0.85rem; }
+
+.haken {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0 0.2rem;
+}
+.haken input { width: 1.15rem; height: 1.15rem; }
+
+button.flach {
+  display: block;
+  width: 100%;
+  padding: 0.7rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+}
+
+footer { margin-top: 1.5rem; }
+
+/* Auf breiten Bildschirmen zwei Spalten – am Telefon bleibt es eine. */
+@media (min-width: 44rem) {
+  main { max-width: 52rem; }
+  #formular { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+  #formular > button { grid-column: 1 / 3; }
+}
+
+/* ------------------------------------------------------------- Skizzen */
+
+.skizzen {
+  background: var(--karte);
+  border: 1px solid var(--linie);
+  border-radius: 12px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  margin: 0 0 1rem;
+}
+
+.umschalter { display: flex; gap: 0.4rem; margin-bottom: 0.4rem; }
+
+.umschalter button {
+  flex: 1 1 0;
+  padding: 0.45rem;
+  font-size: 0.85rem;
+  color: var(--schwach);
+  background: var(--grund);
+  border: 1px solid var(--linie);
+  border-radius: 8px;
+}
+
+.umschalter button.aktiv {
+  color: var(--text);
+  border-color: var(--akzent);
+  font-weight: 600;
+}
+
+.skizze { display: block; width: 100%; height: auto; }
+
+/* Farben wie am PC: das Bauteil trägt den Akzent, Achse und Details bleiben
+   neutral. Feste Farbwerte gibt es nicht – alles kommt aus den Variablen. */
+.skizze .bauteil {
+  /* Deckend gemischt, nicht durchsichtig: sonst scheint die Achse durch den
+     Nabenkörper – derselbe Stolperstein wie in der PC-Fassung. */
+  fill: color-mix(in srgb, var(--akzent) 30%, var(--karte));
+  stroke: var(--text);
+  stroke-width: 1.2;
+  stroke-opacity: 0.75;
+}
+.skizze .achse { fill: var(--text); fill-opacity: 0.55; }
+.skizze .detail { stroke: var(--text); stroke-opacity: 0.45; stroke-width: 1; }
+.skizze .bohrung { fill: var(--grund); stroke: var(--akzent); stroke-width: 1.2; }
+.skizze .oese { fill: none; stroke: var(--text); stroke-opacity: 0.6; stroke-width: 1.2; }
+.skizze .blech {
+  fill: none;
+  stroke: color-mix(in srgb, var(--akzent) 75%, var(--text));
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.skizze .mittellinie {
+  stroke: var(--schwach); stroke-width: 1; stroke-dasharray: 6 3 2 3;
+}
+.skizze .mass line { stroke: var(--schwach); stroke-width: 1; }
+.skizze .mass text, .skizze .titel {
+  fill: var(--schwach);
+  font-size: 9px;
+  font-family: inherit;
+  text-anchor: middle;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Speichenrechner</h1>
+  <p class="unterzeile">Speichenlängen für Fahrradlaufräder</p>
+</header>
+
+<main>
+  <!-- Ergebnis steht oben: am Handy will man es sehen, ohne zu rollen. -->
+  <section class="ergebnis" aria-live="polite">
+    <div class="seiten">
+      <div class="seite">
+        <span class="beschriftung">Links</span>
+        <strong id="laenge-links">–</strong><span class="einheit">mm</span>
+        <span class="klein" id="genau-links"></span>
+      </div>
+      <div class="seite">
+        <span class="beschriftung">Rechts</span>
+        <strong id="laenge-rechts">–</strong><span class="einheit">mm</span>
+        <span class="klein" id="genau-rechts"></span>
+      </div>
+    </div>
+    <p class="bestellen" id="bestellen"></p>
+    <p class="klein" id="kennwerte"></p>
+    <p class="hinweis" id="hinweis" hidden></p>
+  </section>
+
+  <!-- Skizzen: was die Maße bedeuten. Wie am PC folgen sie den Eingaben. -->
+  <section class="skizzen">
+    <div class="umschalter" role="tablist">
+      <button type="button" data-bild="nabe" class="aktiv" role="tab">Nabe</button>
+      <button type="button" data-bild="felge" role="tab">Felge · ERD</button>
+    </div>
+    <div id="skizze-nabe"></div>
+    <div id="skizze-felge" hidden></div>
+    <p class="klein">Die Maßlinien tragen die eingegebenen Werte. Die Nabenform
+      folgt der gewählten Bauart, das Felgenprofil dem Felgentyp.</p>
+  </section>
+
+  <form id="formular" autocomplete="off">
+
+    <fieldset>
+      <legend>Nabe</legend>
+      <!-- Katalog zuerst: meist wählt man eine Nabe, statt Maße zu tippen. -->
+      <div class="zeile zwei">
+        <select id="nabenart" aria-label="Bauart oder Ritzelaufnahme"></select>
+        <select id="nabenhersteller" aria-label="Hersteller"></select>
+      </div>
+      <input type="search" id="nabensuche" class="voll" placeholder="Nabe suchen …"
+             aria-label="Nabe suchen">
+      <select id="nabenliste" class="voll" aria-label="Nabe aus dem Katalog"></select>
+      <p class="klein" id="nabeninfo"></p>
+      <div class="zeile kopf"><span></span><span>links</span><span>rechts</span></div>
+      <label class="zeile">
+        <span>Flansch-Ø</span>
+        <input type="number" id="flansch-d-links" inputmode="decimal" step="0.5" min="10" max="200" value="45">
+        <input type="number" id="flansch-d-rechts" inputmode="decimal" step="0.5" min="10" max="200" value="45">
+      </label>
+      <label class="zeile">
+        <span>Flanschabstand</span>
+        <input type="number" id="flansch-a-links" inputmode="decimal" step="0.5" min="0" max="120" value="35">
+        <input type="number" id="flansch-a-rechts" inputmode="decimal" step="0.5" min="0" max="120" value="20">
+      </label>
+      <label class="zeile">
+        <span>Speichenloch-Ø</span>
+        <input type="number" id="speichenloch" inputmode="decimal" step="0.1" min="1" max="5" value="2.6">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <p class="klein">Flanschabstand ab Nabenmitte, nicht ab der Endkappe.
+        Flansch-Ø durch die Mitten der Speichenlöcher.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Felge</legend>
+      <select id="felgenvorlage" class="voll" aria-label="Felgengröße als Vorlage"></select>
+      <label class="zeile">
+        <span>ERD</span>
+        <input type="number" id="erd" inputmode="decimal" step="0.5" min="100" max="800" value="600">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="zeile">
+        <span>Versatz</span>
+        <input type="number" id="versatz" inputmode="decimal" step="0.5" min="-15" max="15" value="0">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <div class="zeile zwei">
+        <select id="felgenkategorie" aria-label="Kategorie des Felgentyps"></select>
+        <select id="felgentyp" aria-label="Felgentyp"></select>
+      </div>
+      <p class="klein" id="felgeninfo"></p>
+      <p class="klein">ERD von Nippelsitz zu Nippelsitz, nicht bis zum Reifensitz.
+        Versatz: minus = Speichenbett nach links.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Einspeichung</legend>
+      <label class="zeile">
+        <span>Speichenzahl</span>
+        <input type="number" id="speichenzahl" inputmode="numeric" step="2" min="8" max="64" value="32">
+        <span class="einheit-feld">Stück</span>
+      </label>
+      <label class="zeile">
+        <span>Verteilung</span>
+        <select id="verteilung">
+          <option value="1:1">gleich verteilt (1:1)</option>
+          <option value="2:1">2:1 – rechts doppelt so viele</option>
+        </select>
+      </label>
+      <label class="zeile">
+        <span>Kreuzungen</span>
+        <input type="number" id="kreuzungen-links" inputmode="numeric" step="1" min="0" max="6" value="3">
+        <input type="number" id="kreuzungen-rechts" inputmode="numeric" step="1" min="0" max="6" value="3">
+      </label>
+      <label class="haken">
+        <input type="checkbox" id="gekoppelt" checked>
+        <span>Beide Seiten gleich kreuzen</span>
+      </label>
+      <label class="zeile">
+        <span>Rundung</span>
+        <select id="rundung">
+          <option value="1">auf 1 mm (üblich)</option>
+          <option value="0.5">auf 0,5 mm</option>
+          <option value="2">auf 2 mm</option>
+        </select>
+      </label>
+    </fieldset>
+
+    <button type="button" id="zuruecksetzen" class="flach">Eingaben zurücksetzen</button>
+  </form>
+
+  <footer>
+    <p class="klein">
+      Dieselbe Rechnung wie am PC, derselbe Katalog (230 Naben, 17 Felgentypen)
+      und dieselben Skizzen. Beide Fassungen werden gegen 2841 Werte aus der
+      Python-Fassung geprüft.
+    </p>
+    <p class="klein">
+      Angaben ohne Gewähr – ERD und Nabenmaße vor dem Bestellen nachmessen.
+    </p>
+  </footer>
+</main>
+
+<script>
+// ===== js/daten.js =======================================================
+
+// Erzeugt von werkzeuge/webdaten_erzeugen.py – nicht von Hand ändern.
+//
+// Quelle sind die JSON-Dateien in data/. Wer hier etwas ändert, verliert
+// es beim nächsten Lauf des Werkzeugs; die Tabelle und naben_zusatz.json
+// sind die Quelle der Wahrheit.
+
+const NABEN = [
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28",
+"art": "Dynamo",
+"lochzahl": "20/24/28/32/36/40/48",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "62 (31/31)",
+"flanschdurchmesser": "54/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 12 110 disc 6-bolt",
+"art": "Dynamo",
+"lochzahl": "28/32",
+"einbaubreite": "110 (Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "56*",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 12 110 disc center lock",
+"art": "Dynamo",
+"lochzahl": "28/32",
+"einbaubreite": "110 (Boost)",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "56*",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 12 disc 6-bolt",
+"art": "Dynamo",
+"lochzahl": "24/32",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "47,5 (22,5/25)",
+"flanschdurchmesser": "59/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 12 disc center lock",
+"art": "Dynamo",
+"lochzahl": "24/32",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "48 (23/25)",
+"flanschdurchmesser": "54/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 135",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 135 VR",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 15 110 disc 6-bolt",
+"art": "Dynamo",
+"lochzahl": "28/32",
+"einbaubreite": "110 (Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 15 110 disc center lock",
+"art": "Dynamo",
+"lochzahl": "28/32",
+"einbaubreite": "110 (Boost)",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 15 150",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "150",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 15 disc 6-bolt",
+"art": "Dynamo",
+"lochzahl": "28/32",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "47,5 (22,5/25)",
+"flanschdurchmesser": "59/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 disc 6-bolt",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "47,5 (22,5/25)",
+"flanschdurchmesser": "59/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 28 disc center lock",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "48 (23/25)",
+"flanschdurchmesser": "54/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 29 S TR disc 6-bolt",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 29 S TR disc center lock",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON 29 S disc center lock",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS für Brompton",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "74 (Klemmbreite)",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS klassik für Brompton",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "74 (Klemmbreite)",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS-M für Aidoo Trailer",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "fahrzeugspezifisch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS-M für Anthrotech",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "fahrzeugspezifisch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS-M für Catrike",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "fahrzeugspezifisch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS-M für Christiania Cargo Bike",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "fahrzeugspezifisch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS-M für HP Velotechnik",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "fahrzeugspezifisch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS-M für ICE Trike",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "fahrzeugspezifisch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS-M für KMX",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "fahrzeugspezifisch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SON XS-M für Steintrike",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "fahrzeugspezifisch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SONdelux",
+"art": "Dynamo",
+"lochzahl": "20/24/28/32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "50 (25/25)",
+"flanschdurchmesser": "54/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SONdelux 12 disc center lock",
+"art": "Dynamo",
+"lochzahl": "24/32",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "48 (23/25)*",
+"flanschdurchmesser": "54/54*",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SONdelux disc center lock",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "48 (23/25)",
+"flanschdurchmesser": "54/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SON (Schmidt Maschinenbau)",
+"modell": "SONdelux wide body",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "i-Light D1 Series",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "i-Light D3 Series",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "i-Light D330",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "i-Light D7 Series",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "i-Light D724",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "i-Light D730",
+"art": "Dynamo",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Alfine DH-S501",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "52,1 (29,85/22,25)",
+"flanschdurchmesser": "70/70",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Alfine DH-S701",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Alivio DH-T4000-1N",
+"art": "Dynamo",
+"lochzahl": "36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3D30",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3D32",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3D35",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3D37",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3D72",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "52,1 (29,85/22,25)",
+"flanschdurchmesser": "70/70",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3D80",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3N20",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3N30",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3N72",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "52,1 (29,85/22,25)*",
+"flanschdurchmesser": "70/70*",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-3N80",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-C3000-1N",
+"art": "Dynamo",
+"lochzahl": "36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-C3000-3N",
+"art": "Dynamo",
+"lochzahl": "36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-T4050-1D",
+"art": "Dynamo",
+"lochzahl": "36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "DH-UR700-3D",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Deore LX DH-T670",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "52,1 (29,85/22,25)*",
+"flanschdurchmesser": "70/70*",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Deore LX DH-T675",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Deore XT DH-T780",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Deore XT DH-T785",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shutter Precision (SP Dynamo)",
+"modell": "P8X",
+"art": "Dynamo",
+"lochzahl": "20/24/28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc/Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shutter Precision (SP Dynamo)",
+"modell": "PD-7",
+"art": "Dynamo",
+"lochzahl": "24/28/32",
+"einbaubreite": "100 (12x100 Steckachse)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shutter Precision (SP Dynamo)",
+"modell": "PD-8",
+"art": "Dynamo",
+"lochzahl": "20/24/28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "50 (25/25)",
+"flanschdurchmesser": "58/52",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shutter Precision (SP Dynamo)",
+"modell": "PL-7",
+"art": "Dynamo",
+"lochzahl": "24/28/32",
+"einbaubreite": "100 (12x100 Steckachse)",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shutter Precision (SP Dynamo)",
+"modell": "PL-8",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "50 (25/25)*",
+"flanschdurchmesser": "58/52*",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shutter Precision (SP Dynamo)",
+"modell": "PV-8",
+"art": "Dynamo",
+"lochzahl": "20/24/28/32/36",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "50 (25/25)",
+"flanschdurchmesser": "52/52",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Shutter Precision (SP Dynamo)",
+"modell": "S8",
+"art": "Dynamo",
+"lochzahl": "28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc/Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "Dyno-Hub (historisch, klassisch)",
+"art": "Dynamo",
+"lochzahl": "28/32/36",
+"einbaubreite": "100 (British Standard)",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "X-FDD",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "XL-FDD",
+"art": "Dynamo",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Supernova",
+"modell": "Infinity 8",
+"art": "Dynamo",
+"lochzahl": "28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc/Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Supernova",
+"modell": "Infinity S",
+"art": "Dynamo",
+"lochzahl": "28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc/Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "50 (25/25)*",
+"flanschdurchmesser": "58/52* (baugleich mit Shutter Precision PD-8)",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Classified",
+"modell": "Powershift Hub (MTB, 2-Gang)",
+"art": "Nabenschaltung",
+"lochzahl": "28/32",
+"einbaubreite": "148 (Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Kein Standard-Freilaufkörper – proprietäre einteilige Classified-Kassette (12-fach für MTB), Befestigung per Standard-Verschlussring",
+"quelle": ""
+},
+{
+"hersteller": "Classified",
+"modell": "Powershift Hub (Road/Gravel, 2-Gang)",
+"art": "Nabenschaltung",
+"lochzahl": "24/28",
+"einbaubreite": "142 (Boost)",
+"bremse": "Disc / Felgenbremse (Modellabhängig)",
+"speichenloch": "",
+"flanschabstand": "31,75/17,5",
+"flanschdurchmesser": "50,0/91,2",
+"freilauf": "Kein Standard-Freilaufkörper – proprietäre einteilige Classified-Kassette (11-/12-/13-fach, 11–40Z), Befestigung per Standard-Verschlussring",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "AUTOMATiQ (Automatik-Interface)",
+"art": "Nabenschaltung",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "CO (Cargo/Commercial)",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "135/170",
+"bremse": "keine/Disc optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "CVP Heavy Duty",
+"art": "Nabenschaltung",
+"lochzahl": "32",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "City (310%)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "Extreme (bis 500 kg Nutzlast)",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "170/198 (Lastenrad)",
+"bremse": "Disc",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "Heavy Duty",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/170 (Lastenrad)",
+"bremse": "keine/Disc optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "Trekking / TR (380%)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/142 (Boost)",
+"bremse": "keine/Disc optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "Urban (256%)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Enviolo (ehem. NuVinci)",
+"modell": "Utility",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckzahnkranz (Push-on-Ritzel), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Fichtel & Sachs",
+"modell": "3x3 Triflex (historisch)",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "126",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "Fichtel & Sachs",
+"modell": "Elan 3-Gang (historisch)",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "126",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "Fichtel & Sachs",
+"modell": "Pentasport 5-Gang (historisch)",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "126",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "Fichtel & Sachs",
+"modell": "Torpedo 3-Gang (historisch)",
+"art": "Nabenschaltung",
+"lochzahl": "36/40",
+"einbaubreite": "114/119 (British/ISO)",
+"bremse": "keine/Rücktritt",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "Kindernay",
+"modell": "Kindernay VII (7-Gang)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/142 (Boost)",
+"bremse": "Disc (Center Lock)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "9-Spline-Freilaufkörper (herstellereigenes Design), Stahlritzel oder Gates-Riemenscheibe aufsteckbar",
+"quelle": ""
+},
+{
+"hersteller": "Kindernay",
+"modell": "Kindernay XIV (14-Gang)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/142 (Boost)",
+"bremse": "Disc (Center Lock)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "9-Spline-Freilaufkörper (herstellereigenes Design), Stahlritzel oder Gates-Riemenscheibe aufsteckbar",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "E-14",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "142/148 (Boost)",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "E-14 Solo",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "142/148 (Boost)",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 A12 DB OEM2",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "142",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "",
+"flanschdurchmesser": "Ø100*",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 A12 DB PM",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "142",
+"bremse": "Disc Post Mount",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "",
+"flanschdurchmesser": "Ø100*",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/145 (OLD)",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC DB",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC DB OEM",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC DB OEM2",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC EX",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC EX OEM",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC EX OEM2",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC OEM",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/145",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC OEM2",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/145",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 CC PM",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc Post Mount",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/145",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS DB",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS DB OEM",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS DB OEM2",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Rohloff-Rotor)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS EX",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS EX OEM",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS EX OEM2",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS OEM",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/145",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 TS OEM2",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/145",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "58 (symmetrisch)",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 Tandem (T)",
+"art": "Nabenschaltung",
+"lochzahl": "40/48",
+"einbaubreite": "135/145",
+"bremse": "je nach Ausführung",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 XL (170/177mm)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "170/177",
+"bremse": "je nach Ausführung",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "93*",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "Rohloff",
+"modell": "SPEEDHUB 500/14 XXL (190/197mm)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "190/197",
+"bremse": "je nach Ausführung",
+"speichenloch": "2,0/2,6",
+"flanschabstand": "93*",
+"flanschdurchmesser": "Ø100",
+"freilauf": "Schraubritzel (Rohloff-eigenes Gewinde), Standard 16Z, optional 13/15/17Z",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "Automatix",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "DualDrive (inkl. Pulse System)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "3-Gang-Nabe kombiniert mit externer Kettenschaltung – normaler Shimano-HG-Freilaufkörper (7-/8-/9-fach Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "E-Matic",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "135",
+"bremse": "Disc",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "G8",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "135",
+"bremse": "keine/Disc optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "G9",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "135",
+"bremse": "Disc optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "I-Motion 3",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "I-Motion 9",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "P5 (Spectro P5)",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "S7",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "SRAM",
+"modell": "T3",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "126/135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Alfine 11 (SG-S700 / SG-S7001-11)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Center Lock)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Alfine 8 (SG-S501 / SG-S7001-8)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Center Lock)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Alfine Di2 11 (SG-S705)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Center Lock)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Alfine Di2 8 (SG-S505)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc (Center Lock)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Nexus Inter-3 (SG-3C41)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "126/135",
+"bremse": "keine/Rücktritt optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Nexus Inter-4",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "126/135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Nexus Inter-5 (SG-C3000-5)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine/Rücktritt optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Nexus Inter-5E (SG-C7000-5V, E-Bike)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/142",
+"bremse": "Disc",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Nexus Inter-7 (SG-7C)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "Nexus Inter-8 (SG-8C31 / SG-C6000-8 / SG-C6010-8R)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine/Disc optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "STEPS SG-C7000-5 (E-Bike)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135/142",
+"bremse": "Disc",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme mit Sprengring, 16–23 Zähne), kein Kassetten-Freilaufkörper",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "AW (klassische 3-Gang-Nabe)",
+"art": "Nabenschaltung",
+"lochzahl": "36/40",
+"einbaubreite": "114 (British Standard)",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "je nach Baujahr Schraubkranz oder Steckritzel – nicht einheitlich, keine verlässliche Quelle für alle Baujahre",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "CS-RF3 (9-fach Kassette)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme, Shimano-kompatibel), meist 1/2×1/8\"",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "CS-RK3 (Disc, 9-fach Kassette)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme, Shimano-kompatibel), meist 1/2×1/8\"",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "S-RC3 (Rücktritt)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Rücktritt",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme, Shimano-kompatibel), meist 1/2×1/8\"",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "S-RF3",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme, Shimano-kompatibel), meist 1/2×1/8\"",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "S3X (historisch)",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "114/120",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "S5 (5-Gang, historisch)",
+"art": "Nabenschaltung",
+"lochzahl": "36",
+"einbaubreite": "114/120",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "X-RD3",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme, Shimano-kompatibel), meist 1/2×1/8\"",
+"quelle": ""
+},
+{
+"hersteller": "Sturmey-Archer",
+"modell": "X-RF8 (8-Gang)",
+"art": "Nabenschaltung",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "keine/Disc optional",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Steckritzel (3-Punkt-Aufnahme, Shimano-kompatibel), meist 1/2×1/8\"",
+"quelle": ""
+},
+{
+"hersteller": "Effigear",
+"modell": "Effigear Mimic (9-Gang)",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Effigear",
+"modell": "Effigear Original",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "C1.12",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "C1.12i (Smart.Shift)",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "C1.6",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "C1.6i (Smart.Shift)",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "C1.9",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "C1.9i (Smart.Shift)",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "MGU E1.12",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "MGU E1.9",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "P1.12",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "P1.18",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "P1.9",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "P1.9CR",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Pinion",
+"modell": "P1.9XR",
+"art": "Tretlagergetriebe",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (kein Laufradnaben-Bauteil)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "BMX Front Hub (2014–2017)",
+"art": "Vorderrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "100",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "34,5/34,5",
+"flanschdurchmesser": "42/42",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Bulb Front Hub 20mm (1998–2005)",
+"art": "Vorderrad",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Bulb Front Hub QR (1998–2005)",
+"art": "Vorderrad",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Fatsno Front Hub (1996–2000)",
+"art": "Vorderrad",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Mono RS Front Hub (2014–2016)",
+"art": "Vorderrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "34,5/34,5",
+"flanschdurchmesser": "42/42 (18-24L) bzw. 38/38 (32/36L)",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Evo Boost 110mm Front Hub (2011–2015)",
+"art": "Vorderrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "110 (Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "25/33",
+"flanschdurchmesser": "56/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Evo Fatsno Front Hub (2011–2016)",
+"art": "Vorderrad",
+"lochzahl": "32/36",
+"einbaubreite": "135/170",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "33/38,5 bzw. 37,5/38,5*",
+"flanschdurchmesser": "57/57",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Evo Front Hub (2011–2015)",
+"art": "Vorderrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "20/33",
+"flanschdurchmesser": "56/54",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Front Hub (2006–2011)",
+"art": "Vorderrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "20/33*",
+"flanschdurchmesser": "56/54*",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 3 Mono Front Hub",
+"art": "Vorderrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "34,5/34,5",
+"flanschdurchmesser": "42/42 (18-24L) bzw. 38/38 (32/36L)",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Boost 110mm Front Hub (2016–2023)",
+"art": "Vorderrad",
+"lochzahl": "24/28/32/36",
+"einbaubreite": "110 (Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "25/33",
+"flanschdurchmesser": "57/57",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Fatsno Front Hub",
+"art": "Vorderrad",
+"lochzahl": "32/36",
+"einbaubreite": "135/170",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "37,5/38,5 (135mm)*",
+"flanschdurchmesser": "57/57",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Front Hub (2016–2023)",
+"art": "Vorderrad",
+"lochzahl": "24/28/32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "20/33",
+"flanschdurchmesser": "57/57",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Straight Pull 6 Bolt Front Hub (2016–2023)",
+"art": "Vorderrad",
+"lochzahl": "24/28/32",
+"einbaubreite": "100/110",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 5 Front Hub (6-Bolt / Centre Lock)",
+"art": "Vorderrad",
+"lochzahl": "24/28/32/36",
+"einbaubreite": "100/110 (Boost)",
+"bremse": "Disc 6-Loch / Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "22/33 (100mm)*",
+"flanschdurchmesser": "43/43 (100mm)*",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 5 Hook Flange Front Hub",
+"art": "Vorderrad",
+"lochzahl": "28/32",
+"einbaubreite": "100/110",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "RS4 Centre Lock Front Hub",
+"art": "Vorderrad",
+"lochzahl": "20/24/28",
+"einbaubreite": "100/12x100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "21,7/32,7",
+"flanschdurchmesser": "42/42",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "RS4 Road Front Hub",
+"art": "Vorderrad",
+"lochzahl": "20/24/28",
+"einbaubreite": "100",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "34,5/34,5*",
+"flanschdurchmesser": "42/42*",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "RS4 Straight Pull 6 Bolt Front Hub",
+"art": "Vorderrad",
+"lochzahl": "20/24/28",
+"einbaubreite": "100/12x100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "RS4 Straight Pull Centre Lock Front Hub",
+"art": "Vorderrad",
+"lochzahl": "20/24/28",
+"einbaubreite": "100/12x100",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "XC Front Hub (2001–2007)",
+"art": "Vorderrad",
+"lochzahl": "32/36",
+"einbaubreite": "100",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "21/32,5",
+"flanschdurchmesser": "56/45",
+"freilauf": "entfällt (Vorderradnabe, kein Freilauf)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "BMX Rear Hub (2014–2017)",
+"art": "Hinterrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "110/135",
+"bremse": "keine",
+"speichenloch": "",
+"flanschabstand": "28/26,5",
+"flanschdurchmesser": "54/54",
+"freilauf": "entfällt (Singlespeed, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Bulb Rear Hub (1998–2005)",
+"art": "Hinterrad",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Schraubkranz bzw. HG-Freilauf (Shimano/SRAM, 5–9-fach; je nach Baujahr)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Mono RS Rear Hub (2014–2016)",
+"art": "Hinterrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "32/19",
+"flanschdurchmesser": "47/54",
+"freilauf": "Shimano HG (9/10/11-fach, Alu oder Stahl)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Mono Rear Hub (2001–2007)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Schraubkranz bzw. HG-Freilauf (Shimano/SRAM, 5–9-fach; je nach Baujahr)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Evo 150mm Rear Hub (2011–2015)",
+"art": "Hinterrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "150",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "26,5/26,5",
+"flanschdurchmesser": "56/54",
+"freilauf": "Shimano HG (9–11-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Evo Boost 148mm Rear Hub (2011–2015)",
+"art": "Hinterrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "148 (Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "35/22",
+"flanschdurchmesser": "56/54",
+"freilauf": "Shimano HG (9–11-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Evo Fatsno Rear Hub (2011–2016)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "170/190",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "45/37 (170mm) bzw. 55/47 (190mm)",
+"flanschdurchmesser": "57/57",
+"freilauf": "Shimano HG (9–11-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Evo Rear Hub (2011–2015)",
+"art": "Hinterrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "33/20",
+"flanschdurchmesser": "56/54",
+"freilauf": "Shimano HG (9–11-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Evo Trials/SS Rear Hub (2011–2015)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "32,5/32,5",
+"flanschdurchmesser": "56/54",
+"freilauf": "entfällt (Singlespeed, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Rear Hub (2006–2011)",
+"art": "Hinterrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "33/20*",
+"flanschdurchmesser": "56/54*",
+"freilauf": "Shimano HG (8/9-fach); später Umbausatz auf SRAM XD erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Rear Hub 150mm (2006–2011)",
+"art": "Hinterrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "150",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "26,5/26,5*",
+"flanschdurchmesser": "56/54*",
+"freilauf": "Shimano HG (8/9-fach); später Umbausatz auf SRAM XD erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 2 Trials/SS Rear Hub (2006–2011)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "32,5/32,5*",
+"flanschdurchmesser": "56/54*",
+"freilauf": "entfällt (Singlespeed, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 3 Mono Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "28/32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "33/20",
+"flanschdurchmesser": "47/54",
+"freilauf": "Shimano HG (9/10/11-fach, Alu oder Stahl)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 150mm Rear Hub (2016–2023)",
+"art": "Hinterrad",
+"lochzahl": "24/28/32/36",
+"einbaubreite": "150",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "26,5/26,5",
+"flanschdurchmesser": "57/57",
+"freilauf": "Shimano HG (9–11-fach), Shimano Micro Spline (12-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Boost 148mm Rear Hub (2016–2023)",
+"art": "Hinterrad",
+"lochzahl": "24/28/32/36",
+"einbaubreite": "148 (Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "35/22",
+"flanschdurchmesser": "57/57",
+"freilauf": "Shimano HG (9–11-fach), Shimano Micro Spline (12-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 DH Rear Hub (2016–2023)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "150/157",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "34,25/34,75",
+"flanschdurchmesser": "60/64",
+"freilauf": "Shimano HG (9–11-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Fatsno Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "170/190",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "45/37 (170mm)*",
+"flanschdurchmesser": "57/57",
+"freilauf": "Shimano HG (9–11-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Rear Hub (2016–2023)",
+"art": "Hinterrad",
+"lochzahl": "24/28/32/36",
+"einbaubreite": "135/142",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "33/19",
+"flanschdurchmesser": "57/57",
+"freilauf": "Shimano HG (9–11-fach), Shimano Micro Spline (12-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 SP24 SCS Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Straight Pull 6 Bolt Rear Hub (2016–2023)",
+"art": "Hinterrad",
+"lochzahl": "24/28/32",
+"einbaubreite": "135/142/148",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano HG (9–11-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Super Boost Rear Hub (2016–2023)",
+"art": "Hinterrad",
+"lochzahl": "28/32",
+"einbaubreite": "157 (Super Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "38,5/26,5",
+"flanschdurchmesser": "57/57",
+"freilauf": "Shimano HG (9–11-fach), Shimano Micro Spline (12-fach) und SRAM XD (11/12-fach) als Wechselfreilaufkörper erhältlich",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 4 Trials/Single Speed Rear Hub (2016–2023)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "32,5/32,5",
+"flanschdurchmesser": "57/57",
+"freilauf": "entfällt (Singlespeed, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 5 Centre Lock Rear Hub (135/148mm)",
+"art": "Hinterrad",
+"lochzahl": "24/28/32/36",
+"einbaubreite": "135/148",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano HG, Shimano Micro Spline (12-fach), SRAM XD/XDR (11/12-fach) und E-Bike-spezifische Freiläufe als Wechselfreilaufkörper erhältlich (Pro 5)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 5 DH Rear Hub (148/150/157mm)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "148/150/157",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano HG, Shimano Micro Spline (12-fach), SRAM XD/XDR (11/12-fach) und E-Bike-spezifische Freiläufe als Wechselfreilaufkörper erhältlich (Pro 5)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 5 E-Bike Rear Hub (148mm)",
+"art": "Hinterrad",
+"lochzahl": "28/32",
+"einbaubreite": "148 (Boost)",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano oder SRAM E-Bike-Freilaufkörper (54 POE, hohe Drehmomentfestigkeit)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 5 Hook Flange Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "28/32",
+"einbaubreite": "148",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano HG, Shimano Micro Spline (12-fach), SRAM XD/XDR (11/12-fach) und E-Bike-spezifische Freiläufe als Wechselfreilaufkörper erhältlich (Pro 5)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 5 Rear Hub (6-Bolt, 135/148/150/157mm)",
+"art": "Hinterrad",
+"lochzahl": "24/28/32/36",
+"einbaubreite": "135/142/148/150/157",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "35/22,6 (148mm)*",
+"flanschdurchmesser": "57/59 (148mm)*",
+"freilauf": "Shimano HG, Shimano Micro Spline (12-fach), SRAM XD/XDR (11/12-fach) und E-Bike-spezifische Freiläufe als Wechselfreilaufkörper erhältlich (Pro 5)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Pro 5 SS/Trials Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "entfällt (Singlespeed, kein Freilauf/Kassette)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "RS4 Centre Lock Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "20/24/28",
+"einbaubreite": "130/142",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "32/19",
+"flanschdurchmesser": "47/57",
+"freilauf": "Shimano HG-11 / SRAM XDR (Rennrad/Gravel-Freilaufkörper)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "RS4 Road Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "20/24/28",
+"einbaubreite": "130/142",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano HG-11 / SRAM XDR (Rennrad/Gravel-Freilaufkörper)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "RS4 Straight Pull 6 Bolt Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "20/24/28",
+"einbaubreite": "130/142",
+"bremse": "Disc 6-Loch",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano HG-11 / SRAM XDR (Rennrad/Gravel-Freilaufkörper)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "RS4 Straight Pull Centre Lock Rear Hub",
+"art": "Hinterrad",
+"lochzahl": "20/24/28",
+"einbaubreite": "130/142",
+"bremse": "Center Lock",
+"speichenloch": "2,0",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano HG-11 / SRAM XDR (Rennrad/Gravel-Freilaufkörper)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Screw-on Rear Hub (1991–2000)",
+"art": "Hinterrad",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Schraubkranz (klassisches Gewinde, kein Freilaufkörper)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "Ti Glide Rear Hub (1992–2000)",
+"art": "Hinterrad",
+"lochzahl": "",
+"einbaubreite": "",
+"bremse": "",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Schraubkranz bzw. HG-Freilauf (Shimano/SRAM, 5–9-fach; je nach Baujahr)",
+"quelle": ""
+},
+{
+"hersteller": "Hope",
+"modell": "XC Rear Hub (2001–2007)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "32,5/19,5",
+"flanschdurchmesser": "56/45",
+"freilauf": "Schraubkranz bzw. HG-Freilauf (Shimano/SRAM, 5–9-fach; je nach Baujahr)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "FH-M7110-B (SLX, Center Lock, 12-fach)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "148 (Boost)",
+"bremse": "Center Lock",
+"speichenloch": "",
+"flanschabstand": "62,16",
+"flanschdurchmesser": "68,8/69,8 (L/R), Lochkreis 60/61",
+"freilauf": "Shimano Micro Spline (12-fach)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "FH-M756 (Deore XT, 6-Loch, älter)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Disc 6-Loch",
+"speichenloch": "",
+"flanschabstand": "57,1",
+"flanschdurchmesser": "70,6 / Lochkreis 61",
+"freilauf": "Shimano HG (8-/9-/10-fach)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "FH-M8000 (Deore XT, Center Lock)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "Center Lock",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "52,8/53,8",
+"freilauf": "Shimano HG (8-/9-/10-/11-fach)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "FH-RS400 (Tiagra, Hohlachse)",
+"art": "Hinterrad",
+"lochzahl": "",
+"einbaubreite": "142/135",
+"bremse": "keine (Felgenbremse) / Disc je nach Variante",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano HG-11 (10-/11-fach Road)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "FH-TC500 (CUES, Center Lock)",
+"art": "Hinterrad",
+"lochzahl": "",
+"einbaubreite": "148 (Boost)",
+"bremse": "Center Lock",
+"speichenloch": "",
+"flanschabstand": "",
+"flanschdurchmesser": "",
+"freilauf": "Shimano Micro Spline (12-fach)",
+"quelle": ""
+},
+{
+"hersteller": "Shimano",
+"modell": "RX100 FH-A550 (Kassette, 126 mm)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "126",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "2,6",
+"flanschabstand": "58 (37,3/20,7)",
+"flanschdurchmesser": "45/45",
+"freilauf": "Kassette (Freilaufkörper, Uniglide/HG)",
+"quelle": "spokelengthcalculator.com, umgerechnet von 25,7/42,3 ab Kontermutter"
+},
+{
+"hersteller": "Phil Wood",
+"modell": "G-Touring (Schraubkranz, 126 mm)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "126",
+"bremse": "keine (Felgenbremse)",
+"speichenloch": "k. A.",
+"flanschabstand": "50 (32/18)",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,370 x 24 tpi)",
+"quelle": "rideyourbike.com – Flansch-Ø fehlt, bitte nachmessen"
+},
+{
+"hersteller": "Phil Wood",
+"modell": "Track High Flange (Fixed/Freewheel, 120 mm)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "120",
+"bremse": "keine",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "66/66",
+"freilauf": "Schraubkranz (Gewinde 1,370 x 24 tpi, eine Seite fest)",
+"quelle": "philwood.com – Flanschabstand fehlt, bitte nachmessen"
+},
+{
+"hersteller": "Phil Wood",
+"modell": "Track Low Flange (Fixed/Freewheel, 120 mm)",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "120",
+"bremse": "keine",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "57/57",
+"freilauf": "Schraubkranz (Gewinde 1,370 x 24 tpi, eine Seite fest)",
+"quelle": "philwood.com – Flanschabstand fehlt, bitte nachmessen"
+},
+{
+"hersteller": "Joytech",
+"modell": "JY-734",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "k. A.",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,375 x 24 TPI)",
+"quelle": "ungeprüft"
+},
+{
+"hersteller": "Joytech",
+"modell": "JY-752",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "k. A.",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,375 x 24 TPI)",
+"quelle": "ungeprüft"
+},
+{
+"hersteller": "Quando",
+"modell": "KT-A12R",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "k. A.",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,375 x 24 TPI)",
+"quelle": "ungeprüft"
+},
+{
+"hersteller": "Quando",
+"modell": "KT-M55R",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "k. A.",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,375 x 24 TPI)",
+"quelle": "ungeprüft"
+},
+{
+"hersteller": "Formula",
+"modell": "FM-21",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "k. A.",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,375 x 24 TPI)",
+"quelle": "ungeprüft"
+},
+{
+"hersteller": "Formula",
+"modell": "FM-31",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "k. A.",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,375 x 24 TPI)",
+"quelle": "ungeprüft"
+},
+{
+"hersteller": "KT (Kung Teng)",
+"modell": "A12R",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "k. A.",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,375 x 24 TPI)",
+"quelle": "ungeprüft"
+},
+{
+"hersteller": "KT (Kung Teng)",
+"modell": "A15R",
+"art": "Hinterrad",
+"lochzahl": "32/36",
+"einbaubreite": "135",
+"bremse": "k. A.",
+"speichenloch": "k. A.",
+"flanschabstand": "k. A.",
+"flanschdurchmesser": "k. A.",
+"freilauf": "Schraubkranz (Gewinde 1,375 x 24 TPI)",
+"quelle": "ungeprüft"
+}
+];
+
+const FELGENTYPEN = [
+{
+"name": "Flachbettfelge",
+"kategorie": "Bauform",
+"material": "Aluminium/Stahl",
+"beschreibung": "Flacher Boden, einfachste Bauform",
+"einsatz": "Günstige/ältere Räder",
+"oesung": "keine",
+"kindergroessen": "12 / 16 / 18 Zoll"
+},
+{
+"name": "Hohlkammerfelge (Box-Section)",
+"kategorie": "Bauform",
+"material": "Aluminium",
+"beschreibung": "Doppelwandig, Hohlkammerprofil, stabil & leicht",
+"einsatz": "MTB, Trekking, Rennrad",
+"oesung": "einfach genietet",
+"kindergroessen": "16 / 18 Zoll"
+},
+{
+"name": "V-Profil-Felge",
+"kategorie": "Bauform",
+"material": "Aluminium",
+"beschreibung": "Schräge Seitenwände, für V-Brakes",
+"einsatz": "City/Trekking mit Felgenbremse",
+"oesung": "einfach genietet",
+"kindergroessen": "16 / 18 Zoll"
+},
+{
+"name": "Aero-Felge",
+"kategorie": "Bauform",
+"material": "Aluminium/Carbon",
+"beschreibung": "Hohes, aerodynamisches Profil",
+"einsatz": "Rennrad, Triathlon",
+"oesung": "einfach genietet",
+"kindergroessen": "nicht üblich"
+},
+{
+"name": "Hakenfelge (Hooked/Crochet)",
+"kategorie": "Bauform",
+"material": "Aluminium/Carbon",
+"beschreibung": "Mit Wulsthaken für Drahtreifen",
+"einsatz": "Standard, universell",
+"oesung": "einfach genietet",
+"kindergroessen": "12 / 16 / 18 Zoll"
+},
+{
+"name": "Hakenlose Felge (Hookless/TSS)",
+"kategorie": "Bauform",
+"material": "Carbon/Aluminium",
+"beschreibung": "Ohne Wulsthaken, für Tubeless-Reifen",
+"einsatz": "MTB, Gravel, High-End Rennrad",
+"oesung": "keine",
+"kindergroessen": "nicht üblich"
+},
+{
+"name": "Tubeless-Ready-Felge (TR)",
+"kategorie": "Bauform",
+"material": "Aluminium/Carbon",
+"beschreibung": "Luftdichte Kammer, meist ohne Felgenband nutzbar",
+"einsatz": "MTB, Gravel, Rennrad",
+"oesung": "keine",
+"kindergroessen": "nicht üblich"
+},
+{
+"name": "Schlauchreifenfelge (Tubular)",
+"kategorie": "Bauform",
+"material": "Carbon/Aluminium",
+"beschreibung": "Flache Felge ohne Wulst, Reifen wird aufgeklebt",
+"einsatz": "Rennsport (Rennrad, Cyclocross)",
+"oesung": "keine",
+"kindergroessen": "nicht üblich"
+},
+{
+"name": "Stahlfelge",
+"kategorie": "Material",
+"material": "Stahl",
+"beschreibung": "Günstig, schwer, rostanfällig",
+"einsatz": "Billigräder, Retro/Klassiker",
+"oesung": "keine",
+"kindergroessen": "12 / 16 / 18 Zoll"
+},
+{
+"name": "Aluminiumfelge",
+"kategorie": "Material",
+"material": "Aluminium",
+"beschreibung": "Gutes Gewicht/Preis-Verhältnis, Standard",
+"einsatz": "Die meisten modernen Räder",
+"oesung": "einfach genietet",
+"kindergroessen": "12 / 16 / 18 Zoll"
+},
+{
+"name": "Carbonfelge",
+"kategorie": "Material",
+"material": "Carbon (CFK)",
+"beschreibung": "Leicht, steif, teuer",
+"einsatz": "Rennrad/MTB High-End",
+"oesung": "keine",
+"kindergroessen": "nicht üblich"
+},
+{
+"name": "Titanfelge",
+"kategorie": "Material",
+"material": "Titan",
+"beschreibung": "Selten, meist Spezialanfertigung",
+"einsatz": "Sonderanfertigungen",
+"oesung": "keine",
+"kindergroessen": "nicht üblich"
+},
+{
+"name": "Rennrad-Felge",
+"kategorie": "Einsatzbereich",
+"material": "Aluminium/Carbon",
+"beschreibung": "Schmal, aerodynamisch, leicht",
+"einsatz": "Rennrad",
+"oesung": "einfach genietet",
+"kindergroessen": "nicht üblich"
+},
+{
+"name": "MTB-Felge",
+"kategorie": "Einsatzbereich",
+"material": "Aluminium/Carbon",
+"beschreibung": "Breiter, stabil für Gelände",
+"einsatz": "Mountainbike",
+"oesung": "doppelt genietet",
+"kindergroessen": "nicht üblich (ab 20 Zoll)"
+},
+{
+"name": "Trekking-/City-Felge",
+"kategorie": "Einsatzbereich",
+"material": "Aluminium/Stahl",
+"beschreibung": "Robust, alltagstauglich",
+"einsatz": "Trekking, Stadtrad",
+"oesung": "einfach genietet",
+"kindergroessen": "16 / 18 Zoll"
+},
+{
+"name": "BMX-Felge",
+"kategorie": "Einsatzbereich",
+"material": "Aluminium/Stahl",
+"beschreibung": "Sehr robust, kleiner Durchmesser",
+"einsatz": "BMX",
+"oesung": "doppelt genietet",
+"kindergroessen": "16 / 18 Zoll"
+},
+{
+"name": "Fatbike-Felge",
+"kategorie": "Einsatzbereich",
+"material": "Aluminium",
+"beschreibung": "Sehr breit für große Reifen",
+"einsatz": "Fatbike",
+"oesung": "doppelt genietet",
+"kindergroessen": "nicht üblich"
+}
+];
+
+const FELGEN_FUSSNOTEN = [
+"Hinweis: Ösung ist kein eigener Felgentyp, sondern ein Konstruktionsmerkmal. Kindergrößen (12/16/18 Zoll) sind typische Vorgaben je Felgentyp, keine feste Norm – abhängig von Hersteller und Modell."
+];
+
+const NABEN_VORLAGEN = [
+{
+"name": "Vorderrad 100 mm, Felgenbremse (typisch)",
+"flanschdurchmesser_links": 38.0,
+"flanschdurchmesser_rechts": 38.0,
+"flanschabstand_links": 35.0,
+"flanschabstand_rechts": 35.0,
+"speichenloch": 2.6,
+"art": "Vorderrad",
+"aufnahme": ""
+},
+{
+"name": "Vorderrad 100 mm, Scheibenbremse (typisch)",
+"flanschdurchmesser_links": 45.0,
+"flanschdurchmesser_rechts": 38.0,
+"flanschabstand_links": 32.0,
+"flanschabstand_rechts": 22.0,
+"speichenloch": 2.6,
+"art": "Vorderrad",
+"aufnahme": ""
+},
+{
+"name": "Vorderrad Boost 110 mm, Scheibe (typisch)",
+"flanschdurchmesser_links": 45.0,
+"flanschdurchmesser_rechts": 38.0,
+"flanschabstand_links": 37.0,
+"flanschabstand_rechts": 25.0,
+"speichenloch": 2.6,
+"art": "Vorderrad",
+"aufnahme": ""
+},
+{
+"name": "Hinterrad 130 mm, Felgenbremse (typisch)",
+"flanschdurchmesser_links": 45.0,
+"flanschdurchmesser_rechts": 45.0,
+"flanschabstand_links": 36.0,
+"flanschabstand_rechts": 19.0,
+"speichenloch": 2.6,
+"art": "Hinterrad",
+"aufnahme": "Kassette"
+},
+{
+"name": "Hinterrad 135 mm, Scheibenbremse (typisch)",
+"flanschdurchmesser_links": 45.0,
+"flanschdurchmesser_rechts": 45.0,
+"flanschabstand_links": 37.0,
+"flanschabstand_rechts": 19.0,
+"speichenloch": 2.6,
+"art": "Hinterrad",
+"aufnahme": "Kassette"
+},
+{
+"name": "Hinterrad 142x12 mm, Scheibe (typisch)",
+"flanschdurchmesser_links": 45.0,
+"flanschdurchmesser_rechts": 45.0,
+"flanschabstand_links": 36.0,
+"flanschabstand_rechts": 19.0,
+"speichenloch": 2.6,
+"art": "Hinterrad",
+"aufnahme": "Kassette"
+},
+{
+"name": "Hinterrad Boost 148 mm, Scheibe (typisch)",
+"flanschdurchmesser_links": 45.0,
+"flanschdurchmesser_rechts": 45.0,
+"flanschabstand_links": 39.0,
+"flanschabstand_rechts": 21.0,
+"speichenloch": 2.6,
+"art": "Hinterrad",
+"aufnahme": "Kassette"
+},
+{
+"name": "Hinterrad Schraubkranz 126 mm (typisch)",
+"flanschdurchmesser_links": 45.0,
+"flanschdurchmesser_rechts": 45.0,
+"flanschabstand_links": 33.0,
+"flanschabstand_rechts": 19.0,
+"speichenloch": 2.6,
+"art": "Hinterrad",
+"aufnahme": "Schraubkranz"
+},
+{
+"name": "White Industries ENO (Schraubkranz, 135 mm)",
+"flanschdurchmesser_links": 60.0,
+"flanschdurchmesser_rechts": 60.0,
+"flanschabstand_links": 32.0,
+"flanschabstand_rechts": 32.0,
+"speichenloch": 2.6,
+"art": "Hinterrad",
+"aufnahme": "Schraubkranz"
+},
+{
+"name": "White Industries ENO Flip Flop (Schraubkranz)",
+"flanschdurchmesser_links": 48.0,
+"flanschdurchmesser_rechts": 48.0,
+"flanschabstand_links": 32.5,
+"flanschabstand_rechts": 32.5,
+"speichenloch": 2.6,
+"art": "Hinterrad",
+"aufnahme": "Schraubkranz"
+},
+{
+"name": "Rohloff SPEEDHUB 500/14 (135/142 mm)",
+"flanschdurchmesser_links": 100.0,
+"flanschdurchmesser_rechts": 100.0,
+"flanschabstand_links": 29.0,
+"flanschabstand_rechts": 29.0,
+"speichenloch": 2.7,
+"art": "Nabenschaltung",
+"aufnahme": "Schraubritzel"
+},
+{
+"name": "Rohloff SPEEDHUB 500/14 A12 (148 mm, asym.)",
+"flanschdurchmesser_links": 100.0,
+"flanschdurchmesser_rechts": 100.0,
+"flanschabstand_links": 32.0,
+"flanschabstand_rechts": 26.0,
+"speichenloch": 2.7,
+"art": "Nabenschaltung",
+"aufnahme": "Schraubritzel"
+},
+{
+"name": "SON 28 Nabendynamo (Felgenbremse, 100 mm)",
+"flanschdurchmesser_links": 69.0,
+"flanschdurchmesser_rechts": 69.0,
+"flanschabstand_links": 31.0,
+"flanschabstand_rechts": 31.0,
+"speichenloch": 2.0,
+"art": "Dynamo",
+"aufnahme": ""
+},
+{
+"name": "SON 28 Disc 6-Loch Nabendynamo",
+"flanschdurchmesser_links": 59.0,
+"flanschdurchmesser_rechts": 54.0,
+"flanschabstand_links": 22.5,
+"flanschabstand_rechts": 25.0,
+"speichenloch": 2.0,
+"art": "Dynamo",
+"aufnahme": ""
+},
+{
+"name": "SONdelux Nabendynamo (Felgenbremse)",
+"flanschdurchmesser_links": 54.0,
+"flanschdurchmesser_rechts": 54.0,
+"flanschabstand_links": 25.0,
+"flanschabstand_rechts": 25.0,
+"speichenloch": 2.0,
+"art": "Dynamo",
+"aufnahme": ""
+}
+];
+
+const FELGEN_VORLAGEN = [
+{
+"name": "28\" / 700C (ETRTO 622), Rennfelge (typisch)",
+"erd": 602.0,
+"versatz": 0.0
+},
+{
+"name": "28\" / 700C (ETRTO 622), Trekking (typisch)",
+"erd": 596.0,
+"versatz": 0.0
+},
+{
+"name": "27,5\" (ETRTO 584), MTB (typisch)",
+"erd": 560.0,
+"versatz": 0.0
+},
+{
+"name": "26\" (ETRTO 559), MTB (typisch)",
+"erd": 536.0,
+"versatz": 0.0
+},
+{
+"name": "24\" (ETRTO 507), Jugendrad (typisch)",
+"erd": 484.0,
+"versatz": 0.0
+},
+{
+"name": "20\" (ETRTO 406), Falt-/Lastenrad (typisch)",
+"erd": 384.0,
+"versatz": 0.0
+},
+{
+"name": "18\" (ETRTO 355), Kinderrad (typisch)",
+"erd": 334.0,
+"versatz": 0.0
+},
+{
+"name": "16\" (ETRTO 349), Faltrad (typisch)",
+"erd": 328.0,
+"versatz": 0.0
+},
+{
+"name": "16\" (ETRTO 305), Kinderrad (typisch)",
+"erd": 283.0,
+"versatz": 0.0
+},
+{
+"name": "12\" (ETRTO 203), Kinderrad (typisch)",
+"erd": 180.0,
+"versatz": 0.0
+}
+];
+
+
+// ===== js/rechnen.js =====================================================
+
+// Mathematik des Speichenrechners – Handy-Fassung.
+//
+// Wortgetreue Übertragung von speichenrechner/berechnung.py. Die Namen sind
+// absichtlich dieselben, damit man beide Fassungen nebeneinander lesen kann.
+//
+// Modell: Nabenmitte im Ursprung, Radebene = xy-Ebene, Achse entlang z.
+//
+//   Flanschloch:  (r, 0, w)                 r = Flanschradius, w = Flanschabstand
+//   Felgenloch:   (R·cos a, R·sin a, 0)     R = ERD/2
+//   L = sqrt(R² + r² + w² − 2·R·r·cos a) − d/2
+//
+// Dass diese Fassung dasselbe rechnet wie die Python-Fassung, prüft
+// werkzeuge/pruefwerte_js.mjs gegen data/pruefwerte.json.
+
+const RUNDUNGSSCHRITTE = [1.0, 0.5, 2.0];
+
+/** Sehnenwinkel in Grad aus der Speichenzahl **einer** Flanschseite. */
+function sehnenwinkelSeite(speichenSeite, kreuzungen) {
+  if (speichenSeite <= 0) {
+    throw new Error("Auf jeder Seite muss mindestens eine Speiche sitzen.");
+  }
+  return (kreuzungen * 360.0) / speichenSeite;
+}
+
+/** Speichenzahl der linken Seite – bei 2:1 trägt rechts doppelt so viele. */
+function speichenLinks(speichenzahl, verteilung) {
+  return verteilung === "2:1"
+    ? Math.floor(speichenzahl / 3)
+    : Math.floor(speichenzahl / 2);
+}
+
+function speichenRechts(speichenzahl, verteilung) {
+  return speichenzahl - speichenLinks(speichenzahl, verteilung);
+}
+
+/** Exakte Speichenlänge in mm (ungerundet). */
+function speichenlaenge(erd, flanschdurchmesser, flanschabstand, speichenSeite,
+                               kreuzungen, speichenloch = 2.6) {
+  if (erd <= 0) throw new Error("Der ERD muss größer als 0 sein.");
+  if (flanschdurchmesser <= 0) throw new Error("Der Flanschdurchmesser muss größer als 0 sein.");
+  if (kreuzungen < 0) throw new Error("Die Kreuzungszahl darf nicht negativ sein.");
+
+  const R = erd / 2.0;
+  const r = flanschdurchmesser / 2.0;
+  const w = Math.abs(flanschabstand);
+  const a = (sehnenwinkelSeite(speichenSeite, kreuzungen) * Math.PI) / 180.0;
+
+  const quadrat = R * R + r * r + w * w - 2.0 * R * r * Math.cos(a);
+  return Math.sqrt(Math.max(quadrat, 0.0)) - speichenloch / 2.0;
+}
+
+/** Speichenwinkel gegen die Radebene, in Grad. Je größer, desto seitensteifer. */
+function speichenwinkel(erd, flanschdurchmesser, flanschabstand, speichenSeite,
+                               kreuzungen) {
+  const R = erd / 2.0;
+  const r = flanschdurchmesser / 2.0;
+  const w = Math.abs(flanschabstand);
+  const a = (sehnenwinkelSeite(speichenSeite, kreuzungen) * Math.PI) / 180.0;
+
+  const geometrisch = Math.sqrt(
+    Math.max(R * R + r * r + w * w - 2.0 * R * r * Math.cos(a), 0.0),
+  );
+  if (geometrisch <= 0.0) return 0.0;
+  return (Math.asin(Math.min(w / geometrisch, 1.0)) * 180.0) / Math.PI;
+}
+
+/** Winkel an der Felge zwischen Speiche und Felgenradius, in Grad. */
+function felgenwinkel(erd, flanschdurchmesser, kreuzungen, speichenSeite) {
+  const R = erd / 2.0;
+  const r = flanschdurchmesser / 2.0;
+  const a = (sehnenwinkelSeite(speichenSeite, kreuzungen) * Math.PI) / 180.0;
+  const projektion = Math.sqrt(Math.max(R * R + r * r - 2.0 * R * r * Math.cos(a), 0.0));
+  if (projektion <= 0) return 0.0;
+  return (Math.asin(Math.min((r * Math.sin(a)) / projektion, 1.0)) * 180.0) / Math.PI;
+}
+
+/** Bogenabstand benachbarter Speichenlöcher eines Flansches, in mm. */
+function lochabstand(flanschdurchmesser, speichenSeite) {
+  if (speichenSeite <= 0) return 0.0;
+  return (Math.PI * flanschdurchmesser) / speichenSeite;
+}
+
+/** Rundet auf den nächsten verfügbaren Speichenlängen-Schritt. */
+function runden(laenge, schritt = 1.0) {
+  if (schritt <= 0) return laenge;
+  // Python rundet zur geraden Zahl, JavaScript von der Null weg. Bei genau
+  // 0,5 Schritten fällt das auf, deshalb hier ausdrücklich wie Python.
+  const anteil = laenge / schritt;
+  const abgerundet = Math.floor(anteil);
+  const rest = anteil - abgerundet;
+  let ganz;
+  if (rest > 0.5) ganz = abgerundet + 1;
+  else if (rest < 0.5) ganz = abgerundet;
+  else ganz = abgerundet % 2 === 0 ? abgerundet : abgerundet + 1;
+  return ganz * schritt;
+}
+
+/**
+ * Spannungsanteile beider Seiten in Prozent.
+ *
+ * Axiales Kräftegleichgewicht: m_l · T_l · sin(a_l) = m_r · T_r · sin(a_r).
+ * Die stärker gespannte Seite wird auf 100 % gesetzt.
+ */
+function spannungsanteile(links, rechts) {
+  const hebelLinks = links.speichen * Math.sin((links.speichenwinkel * Math.PI) / 180.0);
+  const hebelRechts = rechts.speichen * Math.sin((rechts.speichenwinkel * Math.PI) / 180.0);
+  if (hebelLinks <= 0 || hebelRechts <= 0) return [100.0, 100.0];
+  if (hebelLinks <= hebelRechts) return [100.0, (100.0 * hebelLinks) / hebelRechts];
+  return [(100.0 * hebelRechts) / hebelLinks, 100.0];
+}
+
+/** Übliche Kreuzungszahl für eine Flanschseite mit ``m`` Speichen. */
+function ueblicheKreuzungen(speichenSeite) {
+  if (speichenSeite >= 12) return 3;
+  if (speichenSeite >= 9) return 2;
+  return 1;
+}
+
+/**
+ * Rechnet beide Seiten eines Laufrads.
+ *
+ * ``eingabe`` trägt dieselben Feldnamen wie data/pruefwerte.json.
+ */
+function berechne(eingabe) {
+  const {
+    flanschdurchmesser_links: dLinks,
+    flanschdurchmesser_rechts: dRechts,
+    flanschabstand_links: aLinks,
+    flanschabstand_rechts: aRechts,
+    speichenloch = 2.6,
+    erd,
+    versatz = 0.0,
+    speichenzahl,
+    kreuzungen_links: kLinks,
+    kreuzungen_rechts: kRechts,
+    verteilung = "1:1",
+    schritt = 1.0,
+  } = eingabe;
+
+  // Asymmetrische Felge: das Speichenbett wandert nach rechts, damit
+  // vergrößert sich der wirksame Abstand links und verkleinert sich rechts.
+  const wirksamLinks = aLinks + versatz;
+  const wirksamRechts = aRechts - versatz;
+
+  const anzahlLinks = speichenLinks(speichenzahl, verteilung);
+  const anzahlRechts = speichenRechts(speichenzahl, verteilung);
+
+  const seite = (durchmesser, abstand, kreuzungen, anzahl) => {
+    const laenge = speichenlaenge(erd, durchmesser, abstand, anzahl, kreuzungen, speichenloch);
+    return {
+      laenge,
+      laenge_gerundet: runden(laenge, schritt),
+      speichenwinkel: speichenwinkel(erd, durchmesser, abstand, anzahl, kreuzungen),
+      felgenwinkel: felgenwinkel(erd, durchmesser, kreuzungen, anzahl),
+      sehnenwinkel: sehnenwinkelSeite(anzahl, kreuzungen),
+      lochabstand: lochabstand(durchmesser, anzahl),
+      kreuzungen,
+      speichen: anzahl,
+    };
+  };
+
+  const links = seite(dLinks, wirksamLinks, kLinks, anzahlLinks);
+  const rechts = seite(dRechts, wirksamRechts, kRechts, anzahlRechts);
+  const [spannungLinks, spannungRechts] = spannungsanteile(links, rechts);
+
+  return {
+    links,
+    rechts,
+    spannung_links_prozent: spannungLinks,
+    spannung_rechts_prozent: spannungRechts,
+    gleicheBestelllaenge: links.laenge_gerundet === rechts.laenge_gerundet,
+  };
+}
+
+/** Was zu bestellen ist – gleiche Bestelllängen werden zusammengefasst. */
+function einkaufsliste(ergebnis) {
+  const { links, rechts } = ergebnis;
+  if (ergebnis.gleicheBestelllaenge) {
+    return [`${links.speichen + rechts.speichen} × ${zahl(links.laenge_gerundet)} mm`];
+  }
+  return [
+    `${links.speichen} × ${zahl(links.laenge_gerundet)} mm (links)`,
+    `${rechts.speichen} × ${zahl(rechts.laenge_gerundet)} mm (rechts)`,
+  ];
+}
+
+/** Deutsche Schreibweise: Komma statt Punkt. */
+function zahl(wert, stellen = 1) {
+  return wert.toFixed(stellen).replace(".", ",");
+}
+
+function mm(wert, stellen = 1) {
+  return `${zahl(wert, stellen)} mm`;
+}
+
+function grad(wert, stellen = 1) {
+  return `${zahl(wert, stellen)}°`;
+}
+
+
+// ===== js/katalog.js =====================================================
+
+// Nabenkatalog und Felgentypen – Handy-Fassung.
+//
+// Übertragung von speichenrechner/tabelle.py, katalog.py und felgenkunde.py.
+// Die Daten kommen aus daten.js, das aus data/*.json erzeugt wird.
+//
+// Die Schreibweisen der Herstellertabelle sind von Hand gepflegt und
+// entsprechend vielfältig – „47,5 (22,5/25)“, „58 (symmetrisch)“, „Ø100“,
+// „33/20“, „k. A.“. Diese Regeln sind über Jahre gewachsen und hier
+// wortgetreu übernommen; dass sie dasselbe ergeben wie in Python, prüft
+// werkzeuge/pruefwerte_js.mjs für **jede** Nabe und jeden Felgentyp.
+
+
+// ------------------------------------------------- Schreibweisen der Tabelle
+
+/** Werte, die „nichts bekannt“ bedeuten. */
+const LEER = new Set(["", "k. a.", "k.a.", "—", "-", "n/a", "entfällt", "entfaellt"]);
+
+/** Angaben, die von der Lochzahl abhängen und deshalb offen bleiben. */
+const MEHRDEUTIG = ["bzw", "je nach", "abhängig"];
+
+function istLeer(text) {
+  const schlicht = (text || "").trim().toLowerCase();
+  return LEER.has(schlicht) || schlicht.startsWith("k. a.") || schlicht.startsWith("k.a.");
+}
+
+/** Alle Zahlen aus einer Angabe, Komma wie Punkt als Dezimaltrennzeichen. */
+function zahlen(text) {
+  if (istLeer(text)) return [];
+  const treffer = (text || "").match(/\d+(?:[.,]\d+)?/g) || [];
+  return treffer.map((t) => Number.parseFloat(t.replace(",", ".")));
+}
+
+/** Lochzahlen aus „20/24/28/32/36“ – nur plausible Werte. */
+function ganzeZahlen(text, von = 8, bis = 64) {
+  return zahlen(text).filter((z) => z >= von && z <= bis && Number.isInteger(z));
+}
+
+/** Einbaubreiten aus „135/145 (OLD)“ – nur plausible Werte. */
+function masse(text, von = 50.0, bis = 250.0) {
+  return zahlen(text).filter((z) => z >= von && z <= bis);
+}
+
+function ersteZahl(text) {
+  const werte = zahlen(text);
+  return werte.length ? werte[0] : null;
+}
+
+function aufteilen(wert, istAbstand) {
+  return istAbstand ? [wert / 2, wert / 2] : [wert, wert];
+}
+
+/**
+ * Liest Angaben wie „47,5 (22,5/25)“, „33/20“, „58 (symmetrisch)“.
+ *
+ * Bei `istAbstand` gilt eine **einzelne** Zahl als Maß über beide Flansche und
+ * wird halbiert; beim Durchmesser gilt sie für beide Seiten. Angaben, die von
+ * der Lochzahl abhängen, bleiben absichtlich offen (null).
+ */
+function seitenwerte(text, istAbstand) {
+  if (istLeer(text)) return null;
+  const klein = (text || "").toLowerCase();
+  if (MEHRDEUTIG.some((wort) => klein.includes(wort))) return null;
+
+  const sauber = (text || "").replaceAll("*", "").replaceAll("Ø", " ").trim();
+
+  // Das Paar in Klammern ist die genauere Angabe: „50 (25/25)“
+  const klammer = sauber.match(/\(([^)]*)\)/);
+  if (klammer) {
+    const paar = zahlen(klammer[1]);
+    if (paar.length >= 2) return [paar[0], paar[1]];
+    const davor = zahlen(sauber.slice(0, klammer.index));
+    if (davor.length) return aufteilen(davor[0], istAbstand);
+    return null;
+  }
+
+  const werte = zahlen(sauber);
+  if (werte.length >= 2) return [werte[0], werte[1]];
+  if (werte.length === 1) return aufteilen(werte[0], istAbstand);
+  return null;
+}
+
+// ---------------------------------------------------------- Ritzelaufnahmen
+
+/** Bauart für Systeme, die keine Laufradnabe sind (Tretlager-Getriebe). */
+const KEIN_LAUFRAD = "Tretlagergetriebe";
+
+/** Herkunftsangabe für Modelle ohne belegte Maße. */
+const UNGEPRUEFT = "ungeprüft";
+
+/** Reihenfolge zählt: der erste Treffer gewinnt. */
+const AUFNAHMEN = [
+  ["schraubritzel", "Schraubritzel"],
+  ["schraubkranz", "Schraubkranz"],
+  ["gewindekranz", "Schraubkranz"],
+  ["steckzahnkranz", "Steckzahnkranz"],
+  ["push-on", "Steckzahnkranz"],
+  ["steckritzel", "Steckritzel"],
+  ["micro spline", "Kassette"],
+  ["freilaufkörper", "Kassette"],
+  ["kassette", "Kassette"],
+  ["hg", "Kassette"],
+  ["xd", "Kassette"],
+];
+
+/**
+ * Wie die Ritzel sitzen – unabhängig von der Bauart.
+ *
+ * Nur ein führendes „entfällt“ verneint. Auf „kein Freilauf“ zu prüfen wäre
+ * falsch: „Schraubkranz (klassisches Gewinde, kein Freilaufkörper)“ nennt sehr
+ * wohl eine Aufnahme.
+ */
+function aufnahme(nabe) {
+  const text = (nabe.freilauf || "").toLowerCase();
+  if (!text || text.startsWith("k. a.")) return "";
+  if (text.startsWith("entfällt")) {
+    return text.includes("singlespeed") ? "Singlespeed" : "";
+  }
+  for (const [stichwort, name] of AUFNAHMEN) {
+    if (text.includes(stichwort)) return name;
+  }
+  return "";
+}
+
+/** Alle Schubladen, in die diese Nabe gehört – Bauart und Aufnahme nebeneinander. */
+function merkmale(nabe) {
+  const gefunden = [];
+  if (nabe.art) gefunden.push(nabe.art);
+  if ((nabe.freilauf || "").toLowerCase().includes("vorderrad")
+      && !gefunden.includes("Vorderrad")) {
+    gefunden.push("Vorderrad");
+  }
+  const auf = aufnahme(nabe);
+  if (auf && !gefunden.includes(auf)) gefunden.push(auf);
+  return gefunden;
+}
+
+const flanschabstaende = (nabe) => seitenwerte(nabe.flanschabstand, true);
+const flanschdurchmesserPaar = (nabe) => seitenwerte(nabe.flanschdurchmesser, false);
+const speichenlochMm = (nabe) => ersteZahl(nabe.speichenloch);
+const lochzahlen = (nabe) => ganzeZahlen(nabe.lochzahl);
+const einbaubreiten = (nabe) => masse(nabe.einbaubreite);
+
+/** True, wenn sich mit dieser Nabe sofort rechnen lässt. */
+function hatFlanschmasse(nabe) {
+  return flanschabstaende(nabe) !== null && flanschdurchmesserPaar(nabe) !== null;
+}
+
+/** False bei Tretlager-Getrieben – die haben kein Speichenloch. */
+const einspeichbar = (nabe) => nabe.art !== KEIN_LAUFRAD;
+
+/** „Hersteller Modell“ – ohne Dopplung, wenn beides gleich anfängt. */
+function bezeichnung(nabe) {
+  const hersteller = nabe.hersteller || "";
+  const modell = nabe.modell || "";
+  if (modell.toLowerCase().startsWith(hersteller.toLowerCase())) return modell;
+  return `${hersteller} ${modell}`.trim();
+}
+
+/** Zeile für die Auswahlliste – Name plus die wichtigsten Kennwerte. */
+function listentext(nabe) {
+  const teile = [bezeichnung(nabe)];
+  if (hatFlanschmasse(nabe)) teile.push("✓ mit Flanschmaßen");
+  if (!istLeer(nabe.einbaubreite)) teile.push(`${nabe.einbaubreite} mm`);
+  if (!istLeer(nabe.lochzahl)) teile.push(`${nabe.lochzahl} Loch`);
+  if (nabe.quelle) teile.push(nabe.quelle === UNGEPRUEFT ? "ungeprüft" : "nachgetragen");
+  return teile.join("  ·  ");
+}
+
+// ------------------------------------------------------------------- Suchen
+
+/**
+ * Vergleich wie Pythons `sorted()`: nach Zeichencode, nicht nach deutschen
+ * Regeln. Dadurch steht „KT" vor „Kindernay" und „SON" vor „Shimano" – etwas
+ * ungewohnt, aber beide Fassungen zeigen dieselbe Reihenfolge, und das prüft
+ * werkzeuge/pruefwerte_js.mjs. `localeCompare` würde hier abweichen.
+ */
+const wieInPython = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+
+/** Alle einspeichbaren Naben. */
+const alleNaben = () => NABEN.filter(einspeichbar);
+
+/** Die vorkommenden Merkmale mit ihrer Anzahl, häufigste zuerst. */
+function artenMitAnzahl() {
+  const zaehler = new Map();
+  for (const nabe of alleNaben()) {
+    for (const merkmal of merkmale(nabe)) {
+      zaehler.set(merkmal, (zaehler.get(merkmal) || 0) + 1);
+    }
+  }
+  return [...zaehler.entries()].sort((a, b) => b[1] - a[1] || wieInPython(a[0], b[0]));
+}
+
+/** Hersteller mit der Zahl ihrer Naben, wahlweise nur zu einem Merkmal. */
+function herstellerMitAnzahl(art = "") {
+  const zaehler = new Map();
+  for (const nabe of alleNaben()) {
+    if (!nabe.hersteller) continue;
+    if (art && !merkmale(nabe).includes(art)) continue;
+    zaehler.set(nabe.hersteller, (zaehler.get(nabe.hersteller) || 0) + 1);
+  }
+  return [...zaehler.entries()].sort((a, b) => wieInPython(a[0], b[0]));
+}
+
+/**
+ * Naben zu Merkmal, Hersteller und Suchtext.
+ *
+ * Naben mit vollständigen Flanschmaßen stehen zuerst – mit ihnen lässt sich
+ * ohne Nachmessen rechnen.
+ */
+function suche({ art = "", hersteller = "", text = "" } = {}) {
+  const begriffe = text.toLowerCase().split(/\s+/).filter(Boolean);
+  const treffer = alleNaben().filter((nabe) => {
+    if (hersteller && nabe.hersteller !== hersteller) return false;
+    if (art && !merkmale(nabe).includes(art)) return false;
+    if (begriffe.length) {
+      const suchtext = [
+        nabe.hersteller, nabe.modell, nabe.art, nabe.bremse,
+        nabe.lochzahl, nabe.einbaubreite, nabe.freilauf, nabe.quelle,
+      ].join(" ").toLowerCase();
+      if (!begriffe.every((b) => suchtext.includes(b))) return false;
+    }
+    return true;
+  });
+  return treffer.sort((a, b) => {
+    const fertig = Number(hatFlanschmasse(b)) - Number(hatFlanschmasse(a));
+    if (fertig) return fertig;
+    return wieInPython(bezeichnung(a).toLowerCase(), bezeichnung(b).toLowerCase());
+  });
+}
+
+// -------------------------------------------------------------- Felgentypen
+
+/** Anhaltswerte für die Speichenspannung an der Felge, in Newton. */
+const SPANNUNG_JE_MATERIAL = {
+  Stahl: [500.0, 800.0],
+  Aluminium: [800.0, 1100.0],
+  Carbon: [900.0, 1200.0],
+};
+
+const MATERIAL_REIHENFOLGE = ["Stahl", "Aluminium", "Carbon", "Titan"];
+
+const MATERIALWOERTER = [
+  ["stahl", "Stahl"],
+  ["alumini", "Aluminium"],
+  ["carbon", "Carbon"],
+  ["cfk", "Carbon"],
+  ["titan", "Titan"],
+];
+
+/** Unter diesem ERD ist ein Laufrad kleiner als 20 Zoll. */
+const ERD_KINDERRAD = 360.0;
+
+const felgentypen = () => FELGENTYPEN;
+const felgenFussnoten = () => FELGEN_FUSSNOTEN;
+
+function felgentyp(name) {
+  if (!name) return null;
+  return FELGENTYPEN.find((typ) => typ.name === name) || null;
+}
+
+function felgenkategorien() {
+  const gefunden = [];
+  for (const typ of FELGENTYPEN) {
+    if (typ.kategorie && !gefunden.includes(typ.kategorie)) gefunden.push(typ.kategorie);
+  }
+  return gefunden;
+}
+
+/** Die genannten Werkstoffe, schwächster zuerst. */
+function materialien(typ) {
+  const text = (typ.material || "").toLowerCase();
+  const gefunden = new Set();
+  for (const [wort, name] of MATERIALWOERTER) {
+    if (text.includes(wort)) gefunden.add(name);
+  }
+  return MATERIAL_REIHENFOLGE.filter((m) => gefunden.has(m));
+}
+
+/** 0 = ohne Ösen, 1 = einfach genietet, 2 = doppelt genietet. */
+function oesenStufe(typ) {
+  const text = (typ.oesung || "").toLowerCase();
+  if (text.includes("doppelt")) return 2;
+  if (text.includes("einfach") || text.includes("genietet") || text.includes("geöst")) return 1;
+  return 0;
+}
+
+/** Bei mehreren Materialien begrenzt das schwächere – es gibt nach. */
+function spannungsbereich(typ) {
+  for (const werkstoff of materialien(typ)) {
+    const bereich = SPANNUNG_JE_MATERIAL[werkstoff];
+    if (bereich) return bereich;
+  }
+  return null;
+}
+
+/** True, wenn die Tabelle diesen Typ für Kinderräder ausschließt. */
+function nurAb20Zoll(typ) {
+  return (typ.kindergroessen || "").toLowerCase().includes("nicht üblich");
+}
+
+/** Was am gerechneten Laufrad nicht zu dieser Bauform passt. */
+function felgenwarnungen(typ, erd = 0, spannung = 0) {
+  const meldungen = [];
+  if (!typ) return meldungen;
+
+  const bereich = spannungsbereich(typ);
+  const werkstoffe = materialien(typ);
+  const materialtext = werkstoffe.length ? werkstoffe[0] : (typ.material || "diese Felge");
+
+  if (bereich && spannung > 0) {
+    const [unten, oben] = bereich;
+    if (spannung > oben) {
+      meldungen.push(`${Math.round(spannung)} N liegen über dem, was für ${materialtext} `
+        + `üblich ist (${unten}–${oben} N). Ohne Herstellerfreigabe ist das zu viel.`);
+    } else if (spannung < unten) {
+      meldungen.push(`${Math.round(spannung)} N sind für ${materialtext} wenig `
+        + `(${unten}–${oben} N sind üblich) – zu locker gespannte Speichen brechen am Bogen.`);
+    }
+  }
+
+  if (erd > 0 && erd < ERD_KINDERRAD && nurAb20Zoll(typ)) {
+    meldungen.push(`Der ERD von ${Math.round(erd)} mm gehört zu einem Laufrad unter 20 Zoll. `
+      + `Für diese Größen führt die Tabelle „${typ.name}“ als nicht üblich.`);
+  }
+  return meldungen;
+}
+
+/** Eine Zeile mit dem Wichtigsten – für die Anzeige unter der Auswahl. */
+function felgenbeschreibung(typ) {
+  if (!typ) return "";
+  const zeilen = [typ.kategorie ? `${typ.name} · ${typ.kategorie}` : typ.name];
+
+  const zweite = [typ.beschreibung, typ.material];
+  zweite.push(oesenStufe(typ) ? `Ösen: ${typ.oesung}` : "ohne Ösen");
+  zeilen.push(zweite.filter(Boolean).join("  ·  "));
+
+  const dritte = [];
+  if (typ.einsatz) dritte.push(typ.einsatz);
+  if (typ.kindergroessen) dritte.push(`Kinder: ${typ.kindergroessen}`);
+  const bereich = spannungsbereich(typ);
+  if (bereich) dritte.push(`${bereich[0]}–${bereich[1]} N üblich`);
+  if (dritte.length) zeilen.push(dritte.join("  ·  "));
+
+  return zeilen.join("\n");
+}
+
+
+// ===== js/zeichnung.js ===================================================
+
+// Skizzen der Handy-Fassung: Nabe von der Seite, Felgenprofil im Schnitt.
+//
+// Übertragung von pc/speichenrechner/ui/bauteile.py. Dort wird mit Cairo
+// gezeichnet, hier mit SVG – die Formen selbst sind in beiden Fassungen
+// dieselben Zahlen:
+//
+//   * Die Nabe ist eine **Drehteil-Kontur**: eine Liste von (x, Radius) ab der
+//     Nabenmitte, oben hin und unten zurück. Deshalb wirken die Flansche
+//     angeformt und nicht angeklebt.
+//   * Die Felge ist Blech: die Kontur wird als Strich in Wandstärke gezeichnet,
+//     nicht als gefüllte Fläche.
+//
+// Farben kommen aus dem Stylesheet (currentColor und die CSS-Variablen), damit
+// die Skizze der Hell/Dunkel-Einstellung des Geräts folgt.
+
+// --------------------------------------------------------------- Nabenform
+
+/** Radien der Nabe in mm, für die es keine Eingabe gibt. */
+const GESTALT = {
+  achse: 5.0, kappe: 8.5, sitz: 12.0, bund: 13.5, rohr: 11.0, taille: 9.5,
+  freilauf: 17.0, flanschdicke: 1.4, flanschrand: 2.5,
+  stummel: 30.0, kappeAb: 22.0, sitzAb: 15.0, bundAb: 7.0, uebergang: 5.0,
+  freilaufAb: 3.0, freilaufBis: 30.0, kappeRechts: 36.0, stummelRechts: 44.0,
+};
+
+const GEWINDE_LAENGE = 16.0;
+const GEWINDE_RADIUS = 13.0;
+const TAILLE_SCHRITTE = 14;
+
+/** `[Bund, Rohr, Taille]` in mm – bei „gross“ füllt die Schale fast den Flansch. */
+function schale(art, radiusLinks, radiusRechts) {
+  const kleinster = Math.max(Math.min(radiusLinks, radiusRechts), 1.0);
+  if (art === "gross") return [kleinster * 0.86, kleinster * 0.82, kleinster * 0.76];
+  const deckel = kleinster * 0.80;
+  return [
+    Math.min(GESTALT.bund, deckel),
+    Math.min(GESTALT.rohr, deckel * 0.88),
+    Math.min(GESTALT.taille, deckel * 0.76),
+  ];
+}
+
+/** Was rechts an der Nabe sitzt: „kassette“, „gewinde“ oder „keiner“. */
+function antrieb(art, aufnahme) {
+  if (art === "Vorderrad" || art === "Dynamo") return "keiner";
+  if (art === "Nabenschaltung") return "gewinde";
+  if (["Schraubkranz", "Schraubritzel", "Singlespeed"].includes(aufnahme)) return "gewinde";
+  return "kassette";
+}
+
+/** „gross“ bei Dynamo und Nabenschaltung, sonst „normal“. */
+const schalenart = (art) => (["Dynamo", "Nabenschaltung"].includes(art)
+  ? "gross" : "normal");
+
+/** Die Nabe als `[x, Radius]` in mm, ab der Nabenmitte. */
+function stationen(aLinks, aRechts, rLinks, rRechts,
+                          antriebsart = "kassette", schalenArt = "normal") {
+  const g = GESTALT;
+  const rFl = rLinks + g.flanschrand;
+  const rFr = rRechts + g.flanschrand;
+  const dicke = g.flanschdicke;
+  const [bund, rohr, taille] = schale(schalenArt, rLinks, rRechts);
+  const sitz = Math.min(g.sitz, bund * 0.92);
+  const kappe = Math.min(g.kappe, sitz * 0.75);
+  const achse = Math.min(g.achse, kappe * 0.62);
+
+  const liste = [
+    [-aLinks - g.stummel, achse], [-aLinks - g.kappeAb, achse],
+    [-aLinks - g.kappeAb, kappe], [-aLinks - g.sitzAb, kappe],
+    [-aLinks - g.sitzAb, sitz], [-aLinks - g.bundAb, sitz],
+    [-aLinks - g.bundAb, bund], [-aLinks - dicke, bund],
+    [-aLinks - dicke, rFl], [-aLinks + dicke, rFl],
+    [-aLinks + dicke, bund], [-aLinks + g.uebergang, rohr],
+  ];
+
+  // Taille als Kosinus abgetastet – ein weicher Bogen statt einer Kante.
+  const von = -aLinks + g.uebergang;
+  const bis = aRechts - g.uebergang;
+  if (bis > von) {
+    for (let n = 0; n <= TAILLE_SCHRITTE; n += 1) {
+      const anteil = n / TAILLE_SCHRITTE;
+      const hub = (Math.cos(anteil * 2 * Math.PI - Math.PI) + 1) / 2;
+      liste.push([von + anteil * (bis - von), taille + (rohr - taille) * hub]);
+    }
+  }
+
+  liste.push(
+    [aRechts - g.uebergang, rohr], [aRechts - dicke, bund],
+    [aRechts - dicke, rFr], [aRechts + dicke, rFr],
+    [aRechts + dicke, bund], [aRechts + g.freilaufAb, bund],
+  );
+
+  if (antriebsart === "kassette") {
+    liste.push(
+      [aRechts + g.freilaufAb, g.freilauf], [aRechts + g.freilaufBis, g.freilauf],
+      [aRechts + g.freilaufBis, kappe], [aRechts + g.kappeRechts, kappe],
+      [aRechts + g.kappeRechts, achse], [aRechts + g.stummelRechts, achse],
+    );
+  } else if (antriebsart === "gewinde") {
+    const ende = aRechts + g.freilaufAb + GEWINDE_LAENGE;
+    liste.push(
+      [aRechts + g.freilaufAb, GEWINDE_RADIUS], [ende, GEWINDE_RADIUS],
+      [ende, kappe], [ende + 7, kappe],
+      [ende + 7, achse], [ende + 15, achse],
+    );
+  } else {
+    liste.push(
+      [aRechts + g.bundAb, sitz], [aRechts + g.sitzAb, sitz],
+      [aRechts + g.sitzAb, kappe], [aRechts + g.kappeAb, kappe],
+      [aRechts + g.kappeAb, achse], [aRechts + g.stummel, achse],
+    );
+  }
+  return liste;
+}
+
+// ------------------------------------------------------------ Felgenprofile
+
+/** Umrisse der Profile in mm ab dem Nippelsitz: `[Tiefe, quer]`. */
+const PROFILE = {
+  hohlkammer: {
+    aussen: [[0, -7], [3, -10], [14, -11.5], [14, -13.5], [22, -13.5], [22, -9.5], [19, -8],
+             [19, 8], [22, 9.5], [22, 13.5], [14, 13.5], [14, 11.5], [3, 10], [0, 7]],
+    kammer: [[3.5, -8.5], [12, -9.5], [12, 9.5], [3.5, 8.5]],
+  },
+  haken: {
+    aussen: [[0, -7], [3, -10], [14, -11.5], [14, -13.5], [22, -13.5], [22, -9], [18.5, -7.5],
+             [18.5, 7.5], [22, 9], [22, 13.5], [14, 13.5], [14, 11.5], [3, 10], [0, 7]],
+    kammer: [[3.5, -8.5], [12, -9.5], [12, 9.5], [3.5, 8.5]],
+  },
+  tubeless: {
+    aussen: [[0, -7], [3, -10], [14, -11.5], [14, -13.5], [22, -13.5], [22, -9.5], [19, -8],
+             [20, -5.5], [17.5, -2.5], [17.5, 2.5], [20, 5.5], [19, 8], [22, 9.5], [22, 13.5],
+             [14, 13.5], [14, 11.5], [3, 10], [0, 7]],
+    kammer: [[3.5, -8.5], [12, -9.5], [12, 9.5], [3.5, 8.5]],
+  },
+  hakenlos: {
+    aussen: [[0, -7], [3, -10], [14, -11.5], [19, -12], [22, -11.5], [22, -8], [19, -8],
+             [19, 8], [22, 8], [22, 11.5], [19, 12], [14, 11.5], [3, 10], [0, 7]],
+    kammer: [[3.5, -8.5], [12, -9.5], [12, 9.5], [3.5, 8.5]],
+  },
+  "v-profil": {
+    aussen: [[0, -6.5], [18, -12], [18, -13.5], [24, -13.5], [24, -9.5], [21, -8],
+             [21, 8], [24, 9.5], [24, 13.5], [18, 13.5], [18, 12], [0, 6.5]],
+    kammer: [[3, -7.5], [16.5, -10.5], [16.5, 10.5], [3, 7.5]],
+  },
+  aero: {
+    aussen: [[0, -5], [30, -11.5], [30, -13.5], [38, -13.5], [38, -9.5], [35, -8],
+             [35, 8], [38, 9.5], [38, 13.5], [30, 13.5], [30, 11.5], [0, 5]],
+    kammer: [[3, -6], [28, -10.5], [28, 10.5], [3, 6]],
+  },
+  flachbett: {
+    aussen: [[14, -13], [12, -12], [2, -10], [0, -6], [0, 6], [2, 10], [12, 12], [14, 13]],
+    offen: true,
+  },
+  schlauch: {
+    aussen: [[0, -9], [2, -11], [10, -12], [13, -11.5], [10, -7], [9, 0], [10, 7],
+             [13, 11.5], [10, 12], [2, 11], [0, 9]],
+  },
+};
+
+const PROFIL_STANDARD = "hohlkammer";
+
+/** Bauform → Profil. Der erste Treffer im Namen gewinnt. */
+const PROFILWOERTER = [
+  ["flachbett", "flachbett"], ["hohlkammer", "hohlkammer"], ["box-section", "hohlkammer"],
+  ["v-profil", "v-profil"], ["aero", "aero"], ["hakenlos", "hakenlos"], ["hookless", "hakenlos"],
+  ["haken", "haken"], ["tubeless", "tubeless"], ["schlauchreifen", "schlauch"],
+  ["tubular", "schlauch"],
+];
+
+function profilName(felgentypName) {
+  const text = (felgentypName || "").toLowerCase();
+  for (const [wort, profil] of PROFILWOERTER) {
+    if (text.includes(wort)) return profil;
+  }
+  return PROFIL_STANDARD;
+}
+
+// -------------------------------------------------------------------- SVG
+
+const rund = (wert) => Math.round(wert * 100) / 100;
+const pfad = (punkte, zu = true) =>
+  `M ${punkte.map(([x, y]) => `${rund(x)} ${rund(y)}`).join(" L ")}${zu ? " Z" : ""}`;
+
+/**
+ * Nabe von der Seite als SVG.
+ *
+ * `nabe` trägt die Felder des Formulars; `art` und `aufnahme` bestimmen, ob
+ * rechts ein Freilaufkörper, ein Gewindestummel oder nichts sitzt.
+ */
+function nabeSvg(nabe, breite = 340, hoehe = 190) {
+  const rLinks = nabe.flanschdurchmesser_links / 2;
+  const rRechts = nabe.flanschdurchmesser_rechts / 2;
+  const antriebsart = antrieb(nabe.art, nabe.aufnahme);
+  const schalenArt = schalenart(nabe.art);
+  const liste = stationen(nabe.flanschabstand_links, nabe.flanschabstand_rechts,
+                          rLinks, rRechts, antriebsart, schalenArt);
+
+  const spanneX = liste[liste.length - 1][0] - liste[0][0];
+  const spanneR = Math.max(...liste.map(([, r]) => r));
+  const skala = Math.min(breite / (spanneX * 1.08), (hoehe / 2) / (spanneR * 1.25));
+
+  const mitteY = hoehe / 2;
+  const mitteX = breite / 2 - ((liste[0][0] + liste[liste.length - 1][0]) / 2) * skala;
+  const X = (x) => mitteX + x * skala;
+  const Y = (r) => mitteY - r * skala;
+
+  const oben = liste.map(([x, r]) => [X(x), Y(r)]);
+  const unten = [...liste].reverse().map(([x, r]) => [X(x), mitteY + r * skala]);
+
+  const xFl = X(-nabe.flanschabstand_links);
+  const xFr = X(nabe.flanschabstand_rechts);
+  const achse = Math.min(GESTALT.achse, spanneR * 0.2) * skala;
+
+  // Antriebsseite: Nuten des Freilaufkörpers oder Gewindestriche
+  let antriebsdetail = "";
+  if (antriebsart === "kassette") {
+    const x1 = xFr + GESTALT.freilaufAb * skala;
+    const x2 = xFr + GESTALT.freilaufBis * skala;
+    const halb = GESTALT.freilauf * skala * 0.96;
+    for (let n = 1; n < 7; n += 1) {
+      const x = x1 + ((x2 - x1) * n) / 7;
+      antriebsdetail += `<line x1="${rund(x)}" y1="${rund(mitteY - halb)}" `
+        + `x2="${rund(x)}" y2="${rund(mitteY + halb)}"/>`;
+    }
+  } else if (antriebsart === "gewinde") {
+    const x1 = xFr + GESTALT.freilaufAb * skala;
+    const x2 = x1 + GEWINDE_LAENGE * skala;
+    const halb = GEWINDE_RADIUS * skala;
+    const teilung = Math.max(3, 1.4 * skala);
+    for (let x = x1 + teilung * 0.4; x < x2 - teilung * 0.7; x += teilung) {
+      for (const richtung of [-1, 1]) {
+        const y = mitteY + richtung * halb;
+        antriebsdetail += `<line x1="${rund(x)}" y1="${rund(y)}" `
+          + `x2="${rund(x + teilung * 0.7)}" y2="${rund(y - richtung * halb * 0.3)}"/>`;
+      }
+    }
+  }
+
+  // Rändelung am Lagersitz links
+  const [bund] = schale(schalenArt, rLinks, rRechts);
+  const sitzHalb = Math.min(GESTALT.sitz, bund * 0.92) * skala * 0.94;
+  let riffel = "";
+  const rx1 = xFl - GESTALT.sitzAb * skala;
+  const rx2 = xFl - GESTALT.bundAb * skala;
+  for (let x = rx1 + 1.5; x < rx2; x += Math.max(2, 0.9 * skala)) {
+    riffel += `<line x1="${rund(x)}" y1="${rund(mitteY - sitzHalb)}" `
+      + `x2="${rund(x)}" y2="${rund(mitteY + sitzHalb)}"/>`;
+  }
+
+  const loch = Math.max(1.9, 0.95 * skala);
+  const loecher = [[xFl, rLinks], [xFr, rRechts]].flatMap(([x, r]) => [-1, 1].map(
+    (richtung) => `<circle cx="${rund(x)}" cy="${rund(mitteY + richtung * r * skala)}" `
+      + `r="${rund(loch)}" class="bohrung"/>`));
+
+  return `<svg viewBox="0 0 ${breite} ${hoehe}" class="skizze" role="img"
+   aria-label="Nabe von der Seite mit Flanschabstand und Flansch-Durchmesser">
+  <rect x="${rund(X(liste[0][0]))}" y="${rund(mitteY - achse)}"
+        width="${rund(X(liste[liste.length - 1][0]) - X(liste[0][0]))}"
+        height="${rund(2 * achse)}" class="achse"/>
+  <path d="${pfad([...oben, ...unten])}" class="bauteil"/>
+  <g class="detail">${antriebsdetail}${riffel}</g>
+  ${loecher.join("")}
+  <line x1="${rund(mitteX)}" y1="6" x2="${rund(mitteX)}" y2="${hoehe - 6}" class="mittellinie"/>
+  <g class="mass">
+    <line x1="${rund(xFl)}" y1="12" x2="${rund(mitteX)}" y2="12"/>
+    <line x1="${rund(mitteX)}" y1="24" x2="${rund(xFr)}" y2="24"/>
+    <text x="${rund((xFl + mitteX) / 2)}" y="9">a ${rund(nabe.flanschabstand_links)}</text>
+    <text x="${rund((mitteX + xFr) / 2)}" y="36">a ${rund(nabe.flanschabstand_rechts)}</text>
+    <text x="${rund(xFl)}" y="${rund(Y(rLinks) - 5)}">d ${rund(nabe.flanschdurchmesser_links)}</text>
+  </g>
+</svg>`;
+}
+
+/** Zwei Felgenprofile im Schnitt mit dem ERD dazwischen. */
+function felgeSvg(felgentypName, oesen, erd, breite = 340, hoehe = 170) {
+  const name = profilName(felgentypName);
+  const profil = PROFILE[name] || PROFILE[PROFIL_STANDARD];
+  const bezug = PROFILE[PROFIL_STANDARD];
+
+  const tiefe = Math.max(...profil.aussen.map(([t]) => t));
+  const halb = Math.max(...profil.aussen.map(([, q]) => Math.abs(q)));
+  const bezugTiefe = Math.max(...bezug.aussen.map(([t]) => t));
+  const bezugHalb = Math.max(...bezug.aussen.map(([, q]) => Math.abs(q)));
+  // Maßstab am Hohlkammerprofil: die Bauformen bleiben untereinander
+  // vergleichbar, nur ein größeres wird kleiner gezeichnet.
+  const skala = Math.min(breite * 0.23 / Math.max(tiefe, bezugTiefe),
+                         hoehe * 0.30 / Math.max(halb, bezugHalb));
+
+  const mitteY = hoehe * 0.44;
+  const abstand = breite * 0.19;
+  const wand = Math.max(1.7 * skala, 2.6);
+
+  const haelfte = (xNippel, nachAussen) => {
+    const P = ([t, q]) => [xNippel + nachAussen * t * skala, mitteY + q * skala];
+    let teile = `<path d="${pfad(profil.aussen.map(P), !profil.offen)}" `
+      + `class="blech" stroke-width="${rund(wand)}"/>`;
+    if (profil.kammer) {
+      teile += `<path d="${pfad(profil.kammer.map(P))}" class="blech" `
+        + `stroke-width="${rund(wand * 0.72)}"/>`;
+    }
+    if (oesen) {
+      const [x1, y1] = P([-0.5, -3.4]);
+      const [x2, y2] = P([1.4, 3.4]);
+      teile += `<rect x="${rund(Math.min(x1, x2))}" y="${rund(Math.min(y1, y2))}" `
+        + `width="${rund(Math.abs(x2 - x1))}" height="${rund(Math.abs(y2 - y1))}" class="oese"/>`;
+    }
+    teile += `<circle cx="${rund(xNippel)}" cy="${rund(mitteY)}" `
+      + `r="${rund(Math.max(2.4, 0.9 * skala))}" class="bohrung"/>`;
+    return teile;
+  };
+
+  const xLinks = breite / 2 - abstand;
+  const xRechts = breite / 2 + abstand;
+  const yMass = mitteY + (halb + 1) * skala + 18;
+
+  return `<svg viewBox="0 0 ${breite} ${hoehe}" class="skizze" role="img"
+   aria-label="Felgenprofil im Schnitt mit dem ERD">
+  ${haelfte(xLinks, -1)}
+  ${haelfte(xRechts, +1)}
+  <g class="mass">
+    <line x1="${rund(xLinks)}" y1="${rund(yMass)}" x2="${rund(xRechts)}" y2="${rund(yMass)}"/>
+    <text x="${rund(breite / 2)}" y="${rund(yMass + 14)}">ERD ${rund(erd)}</text>
+  </g>
+  <text x="${rund(breite / 2)}" y="12" class="titel">${felgentypName || "Hohlkammerfelge"}</text>
+</svg>`;
+}
+
+
+// ===== js/app.js =========================================================
+
+// Verdrahtung der Handy-Fassung: Formular lesen, rechnen, anzeigen.
+//
+// Die Rechnung selbst steht in rechnen.js und wird gegen die Prüfwerte der
+// Python-Fassung geprüft. Hier passiert nur Oberfläche.
+
+
+
+
+
+
+const SPEICHER = "speichenrechner.eingaben";
+
+/** Bauart und Ritzelaufnahme der zuletzt gewählten Nabe – für die Skizze. */
+let bauform = { art: "", aufnahme: "" };
+
+const felder = {
+  flanschdurchmesser_links: "flansch-d-links",
+  flanschdurchmesser_rechts: "flansch-d-rechts",
+  flanschabstand_links: "flansch-a-links",
+  flanschabstand_rechts: "flansch-a-rechts",
+  speichenloch: "speichenloch",
+  erd: "erd",
+  versatz: "versatz",
+  speichenzahl: "speichenzahl",
+  kreuzungen_links: "kreuzungen-links",
+  kreuzungen_rechts: "kreuzungen-rechts",
+  verteilung: "verteilung",
+  schritt: "rundung",
+};
+
+const $ = (id) => document.getElementById(id);
+const anzeige = {
+  laengeLinks: $("laenge-links"),
+  laengeRechts: $("laenge-rechts"),
+  genauLinks: $("genau-links"),
+  genauRechts: $("genau-rechts"),
+  bestellen: $("bestellen"),
+  kennwerte: $("kennwerte"),
+  hinweis: $("hinweis"),
+};
+
+/** Liest das Formular in die Feldnamen, die rechnen.js erwartet. */
+function eingabeLesen() {
+  const werte = {};
+  for (const [name, id] of Object.entries(felder)) {
+    const feld = $(id);
+    werte[name] = feld.tagName === "SELECT" && name === "verteilung"
+      ? feld.value
+      : Number(feld.value.replace(",", "."));
+  }
+  werte.verteilung = $("verteilung").value;
+  werte.speichenzahl = Math.round(werte.speichenzahl);
+  werte.kreuzungen_links = Math.round(werte.kreuzungen_links);
+  werte.kreuzungen_rechts = Math.round(werte.kreuzungen_rechts);
+  return werte;
+}
+
+/**
+ * Plausibilitätsprüfung – die gleichen Fälle wie am PC, nur die dringendsten.
+ * Der Rest (Bewertung, Felgentypen) kommt mit den späteren Stufen.
+ */
+function hinweise(eingabe, ergebnis) {
+  const meldungen = [];
+  const { speichenzahl, verteilung } = eingabe;
+
+  if (verteilung === "2:1") {
+    if (speichenzahl % 3 !== 0) {
+      meldungen.push(`Für eine 2:1-Einspeichung muss die Speichenzahl durch 3 teilbar sein – `
+        + `${speichenzahl} ist es nicht.`);
+    }
+  } else if (speichenzahl % 4 !== 0) {
+    meldungen.push("Die Speichenzahl ist nicht durch 4 teilbar – die Seiten lassen sich "
+      + "nicht gleichmäßig aufteilen.");
+  }
+
+  for (const [name, seite] of [["Links", ergebnis.links], ["Rechts", ergebnis.rechts]]) {
+    if (seite.sehnenwinkel >= 180.0) {
+      meldungen.push(`${name}: ${seite.kreuzungen}-fach gekreuzt ist bei ${seite.speichen} `
+        + "Speichen auf dieser Seite geometrisch nicht möglich.");
+    } else if (seite.kreuzungen > seite.speichen / 4) {
+      meldungen.push(`${name}: ${seite.kreuzungen}-fach ist bei ${seite.speichen} Speichen `
+        + "auf dieser Seite sehr hoch – die Speichen laufen flach am Flansch aus.");
+    }
+    if (seite.kreuzungen === 0) {
+      meldungen.push(`${name}: radial eingespeicht – nur bei dafür freigegebenen Naben.`);
+    }
+  }
+
+  if (eingabe.erd < 150 || eingabe.erd > 700) {
+    meldungen.push(`Der ERD von ${zahl(eingabe.erd, 0)} mm liegt außerhalb des üblichen `
+      + "Bereichs (etwa 170–640 mm). Bitte nachmessen.");
+  }
+
+  const unterschied = Math.abs(ergebnis.links.laenge - ergebnis.rechts.laenge);
+  if (unterschied >= 0.05 && !ergebnis.gleicheBestelllaenge) {
+    meldungen.push(`Links und rechts unterscheiden sich um ${zahl(unterschied)} mm – `
+      + "die Speichen nicht vertauschen.");
+  }
+
+  // Was am gerechneten Laufrad nicht zur gewählten Felgenbauform passt.
+  const typ = felgentyp($("felgentyp").value);
+  if (typ) meldungen.push(...felgenwarnungen(typ, eingabe.erd, 0));
+
+  return meldungen;
+}
+
+/** Zeichnet Nabe und Felgenprofil neu. */
+function skizzenZeichnen(eingabe) {
+  const nabe = {
+    flanschdurchmesser_links: eingabe.flanschdurchmesser_links,
+    flanschdurchmesser_rechts: eingabe.flanschdurchmesser_rechts,
+    flanschabstand_links: eingabe.flanschabstand_links,
+    flanschabstand_rechts: eingabe.flanschabstand_rechts,
+    art: bauform.art,
+    aufnahme: bauform.aufnahme,
+  };
+  const typName = $("felgentyp").value;
+  const typ = felgentyp(typName);
+  $("skizze-nabe").innerHTML = nabeSvg(nabe);
+  $("skizze-felge").innerHTML = felgeSvg(typName, typ ? oesenStufe(typ) : 1, eingabe.erd);
+}
+
+function anzeigen() {
+  const eingabe = eingabeLesen();
+  let ergebnis;
+  try {
+    ergebnis = berechne(eingabe);
+  } catch (fehler) {
+    anzeige.laengeLinks.textContent = "–";
+    anzeige.laengeRechts.textContent = "–";
+    anzeige.bestellen.textContent = "";
+    anzeige.kennwerte.textContent = "";
+    anzeige.hinweis.textContent = fehler.message;
+    anzeige.hinweis.hidden = false;
+    return;
+  }
+
+  const { links, rechts } = ergebnis;
+  anzeige.laengeLinks.textContent = zahl(links.laenge_gerundet);
+  anzeige.laengeRechts.textContent = zahl(rechts.laenge_gerundet);
+  anzeige.genauLinks.textContent = `exakt ${mm(links.laenge, 2)}`;
+  anzeige.genauRechts.textContent = `exakt ${mm(rechts.laenge, 2)}`;
+  anzeige.bestellen.textContent = `Zu bestellen: ${einkaufsliste(ergebnis).join("   ·   ")}`;
+
+  anzeige.kennwerte.textContent = [
+    `Speichenwinkel ${grad(links.speichenwinkel)} / ${grad(rechts.speichenwinkel)}`,
+    `Winkel an der Felge ${grad(links.felgenwinkel)} / ${grad(rechts.felgenwinkel)}`,
+    `Spannung ${Math.round(ergebnis.spannung_links_prozent)} / `
+      + `${Math.round(ergebnis.spannung_rechts_prozent)} %`,
+    `${links.speichen} + ${rechts.speichen} Speichen, `
+      + `${links.kreuzungen}- und ${rechts.kreuzungen}-fach`
+      + ` (üblich: ${ueblicheKreuzungen(links.speichen)}-fach)`,
+  ].join("  ·  ");
+
+  skizzenZeichnen(eingabe);
+
+  const meldungen = hinweise(eingabe, ergebnis);
+  anzeige.hinweis.textContent = meldungen.join("  ");
+  anzeige.hinweis.hidden = meldungen.length === 0;
+
+  sichern(eingabe);
+}
+
+/** Zuletzt eingegebene Werte behalten – wie am PC. */
+function sichern(eingabe) {
+  try {
+    localStorage.setItem(SPEICHER, JSON.stringify(eingabe));
+  } catch (_fehler) {
+    // Privater Modus o. Ä. – dann eben ohne Gedächtnis.
+  }
+}
+
+function laden() {
+  let gespeichert;
+  try {
+    gespeichert = JSON.parse(localStorage.getItem(SPEICHER) || "null");
+  } catch (_fehler) {
+    return;
+  }
+  if (!gespeichert) return;
+  for (const [name, id] of Object.entries(felder)) {
+    if (gespeichert[name] === undefined) continue;
+    $(id).value = gespeichert[name];
+  }
+  $("gekoppelt").checked =
+    gespeichert.kreuzungen_links === gespeichert.kreuzungen_rechts;
+  $("kreuzungen-rechts").disabled = $("gekoppelt").checked;
+}
+
+// ----------------------------------------------------------------- Katalog
+
+/** Füllt eine Liste mit `[wert, beschriftung]`-Paaren. */
+function listeFuellen(liste, paare, vorher = "") {
+  liste.innerHTML = "";
+  for (const [wert, text] of paare) {
+    const eintrag = document.createElement("option");
+    eintrag.value = wert;
+    eintrag.textContent = text;
+    liste.append(eintrag);
+  }
+  liste.value = paare.some(([w]) => w === vorher) ? vorher : (paare[0]?.[0] ?? "");
+}
+
+/** Die Nabenliste zu Filter und Suchtext neu aufbauen. */
+function nabenlisteFuellen() {
+  const art = $("nabenart").value;
+  const hersteller = $("nabenhersteller").value;
+  const text = $("nabensuche").value.trim();
+  const treffer = suche({ art, hersteller, text });
+
+  const vorlagen = art || hersteller || text
+    ? NABEN_VORLAGEN.filter((v) => !hersteller
+        && (!art || v.art === art || v.aufnahme === art)
+        && (!text || v.name.toLowerCase().includes(text.toLowerCase())))
+    : NABEN_VORLAGEN;
+
+  const paare = [["", `— eigene Werte —  (${treffer.length + vorlagen.length} zur Wahl)`]];
+  for (const [nummer, v] of vorlagen.entries()) paare.push([`v${nummer}`, v.name]);
+  for (const nabe of treffer) paare.push([`k${nabe.hersteller}|${nabe.modell}`, listentext(nabe)]);
+  listeFuellen($("nabenliste"), paare);
+  $("nabeninfo").textContent = "";
+}
+
+/** Eine gewählte Nabe in die Felder übernehmen. */
+function nabeUebernehmen() {
+  const wahl = $("nabenliste").value;
+  if (!wahl) return;
+
+  if (wahl.startsWith("v")) {
+    const v = NABEN_VORLAGEN[Number(wahl.slice(1))];
+    $("flansch-d-links").value = v.flanschdurchmesser_links;
+    $("flansch-d-rechts").value = v.flanschdurchmesser_rechts;
+    $("flansch-a-links").value = v.flanschabstand_links;
+    $("flansch-a-rechts").value = v.flanschabstand_rechts;
+    $("speichenloch").value = v.speichenloch;
+    bauform = { art: v.art || "", aufnahme: v.aufnahme || "" };
+    $("nabeninfo").textContent = `${v.name} übernommen.`;
+    anzeigen();
+    return;
+  }
+
+  const schluessel = wahl.slice(1);
+  const nabe = suche().find((n) => `${n.hersteller}|${n.modell}` === schluessel);
+  if (!nabe) return;
+
+  bauform = { art: nabe.art || "", aufnahme: aufnahmeVon(nabe) };
+  const abstand = flanschabstaende(nabe);
+  const durchmesser = flanschdurchmesserPaar(nabe);
+  const loch = speichenlochMm(nabe);
+  const zahlenDerLoecher = lochzahlen(nabe);
+
+  if (abstand && durchmesser) {
+    $("flansch-a-links").value = abstand[0];
+    $("flansch-a-rechts").value = abstand[1];
+    $("flansch-d-links").value = durchmesser[0];
+    $("flansch-d-rechts").value = durchmesser[1];
+  }
+  if (loch) $("speichenloch").value = loch;
+  if (zahlenDerLoecher.length) {
+    const jetzt = Number($("speichenzahl").value);
+    if (!zahlenDerLoecher.includes(jetzt)) {
+      $("speichenzahl").value = Math.max(...zahlenDerLoecher);
+    }
+  }
+
+  $("nabeninfo").textContent = abstand && durchmesser
+    ? `${bezeichnung(nabe)} übernommen – einschließlich der Flanschmaße. `
+      + "Vor dem Bestellen trotzdem gegenprüfen."
+    : `${bezeichnung(nabe)} übernommen. Flanschabstand und Flansch-Ø stehen in der `
+      + "Tabelle nicht – die bitte nachmessen.";
+  anzeigen();
+}
+
+/** Die Felgentypen zur gewählten Kategorie neu aufbauen. */
+function felgentypenFuellen() {
+  const kategorie = $("felgenkategorie").value;
+  const vorher = $("felgentyp").value;
+  const paare = [["", "kein bestimmter Typ"]];
+  for (const typ of felgentypen()) {
+    if (!kategorie || typ.kategorie === kategorie) paare.push([typ.name, typ.name]);
+  }
+  listeFuellen($("felgentyp"), paare, vorher);
+}
+
+function felgeninfoSetzen() {
+  const typ = felgentyp($("felgentyp").value);
+  const fussnoten = felgenFussnoten();
+  $("felgeninfo").textContent = typ
+    ? felgenbeschreibung(typ)
+    : (fussnoten[0] || "");
+}
+
+function katalogAufbauen() {
+  const gesamt = suche().length;
+  listeFuellen($("nabenart"),
+    [["", `alle Arten (${gesamt})`], ...artenMitAnzahl().map(([a, n]) => [a, `${a} (${n})`])]);
+  herstellerFuellen();
+  nabenlisteFuellen();
+
+  listeFuellen($("felgenvorlage"),
+    [["", "— eigene Werte —"],
+     ...FELGEN_VORLAGEN.map((f, i) => [String(i), f.name])]);
+
+  listeFuellen($("felgenkategorie"),
+    [["", "alle Kategorien"], ...felgenkategorien().map((k) => [k, k])]);
+  felgentypenFuellen();
+  felgeninfoSetzen();
+}
+
+function herstellerFuellen() {
+  const art = $("nabenart").value;
+  const mitAnzahl = herstellerMitAnzahl(art);
+  const gesamt = mitAnzahl.reduce((summe, [, n]) => summe + n, 0);
+  const vorher = $("nabenhersteller").value;
+  listeFuellen($("nabenhersteller"),
+    [["", `alle Hersteller (${gesamt})`],
+     ...mitAnzahl.map(([name, n]) => [name, `${name.split(" (")[0]} (${n})`])],
+    vorher);
+}
+
+$("nabenart").addEventListener("change", () => { herstellerFuellen(); nabenlisteFuellen(); });
+$("nabenhersteller").addEventListener("change", nabenlisteFuellen);
+$("nabensuche").addEventListener("input", nabenlisteFuellen);
+$("nabenliste").addEventListener("change", nabeUebernehmen);
+
+$("felgenvorlage").addEventListener("change", () => {
+  const wahl = $("felgenvorlage").value;
+  if (wahl === "") return;
+  const felge = FELGEN_VORLAGEN[Number(wahl)];
+  $("erd").value = felge.erd;
+  $("versatz").value = felge.versatz;
+  anzeigen();
+});
+$("felgenkategorie").addEventListener("change", () => {
+  felgentypenFuellen();
+  felgeninfoSetzen();
+  anzeigen();
+});
+$("felgentyp").addEventListener("change", () => { felgeninfoSetzen(); anzeigen(); });
+
+for (const knopf of document.querySelectorAll(".umschalter button")) {
+  knopf.addEventListener("click", () => {
+    for (const anderer of document.querySelectorAll(".umschalter button")) {
+      anderer.classList.toggle("aktiv", anderer === knopf);
+    }
+    $("skizze-nabe").hidden = knopf.dataset.bild !== "nabe";
+    $("skizze-felge").hidden = knopf.dataset.bild !== "felge";
+  });
+}
+
+// ------------------------------------------------------------- Verdrahtung
+
+for (const id of Object.values(felder)) {
+  $(id).addEventListener("input", anzeigen);
+  $(id).addEventListener("change", anzeigen);
+}
+
+$("kreuzungen-links").addEventListener("input", () => {
+  if ($("gekoppelt").checked) $("kreuzungen-rechts").value = $("kreuzungen-links").value;
+});
+
+$("gekoppelt").addEventListener("change", () => {
+  const gekoppelt = $("gekoppelt").checked;
+  $("kreuzungen-rechts").disabled = gekoppelt;
+  if (gekoppelt) $("kreuzungen-rechts").value = $("kreuzungen-links").value;
+  anzeigen();
+});
+
+$("zuruecksetzen").addEventListener("click", () => {
+  try {
+    localStorage.removeItem(SPEICHER);
+  } catch (_fehler) { /* nichts zu tun */ }
+  location.reload();
+});
+
+katalogAufbauen();
+laden();
+$("kreuzungen-rechts").disabled = $("gekoppelt").checked;
+anzeigen();
+
+
+</script>
+</body>
+</html>

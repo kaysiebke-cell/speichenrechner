@@ -38,6 +38,18 @@
     <p class="hinweis" id="hinweis" hidden></p>
   </section>
 
+  <!-- Skizzen: was die Maße bedeuten. Wie am PC folgen sie den Eingaben. -->
+  <section class="skizzen">
+    <div class="umschalter" role="tablist">
+      <button type="button" data-bild="nabe" class="aktiv" role="tab">Nabe</button>
+      <button type="button" data-bild="felge" role="tab">Felge · ERD</button>
+    </div>
+    <div id="skizze-nabe"></div>
+    <div id="skizze-felge" hidden></div>
+    <p class="klein">Die Maßlinien tragen die eingegebenen Werte. Die Nabenform
+      folgt der gewählten Bauart, das Felgenprofil dem Felgentyp.</p>
+  </section>
+
   <form id="formular" autocomplete="off">
 
     <fieldset>
@@ -131,9 +143,9 @@
 
   <footer>
     <p class="klein">
-      Dieselbe Rechnung wie am PC und derselbe Katalog: 230 Naben, 17
-      Felgentypen. Beide Fassungen werden gegen 2841 Werte aus der
-      Python-Fassung geprüft. Die Skizzen fehlen noch.
+      Dieselbe Rechnung wie am PC, derselbe Katalog (230 Naben, 17 Felgentypen)
+      und dieselben Skizzen. Beide Fassungen werden gegen 2841 Werte aus der
+      Python-Fassung geprüft.
     </p>
     <p class="klein">
       Angaben ohne Gewähr – ERD und Nabenmaße vor dem Bestellen nachmessen.

@@ -20,7 +20,27 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
   System-Einstellungen, sie passt sich also dem eingestellten Mint-Theme an.
 * **Handy** – eine Web-Fassung in `app/public/`, die ohne Netz läuft und sich auf
   dem Startbildschirm ablegen lässt, plus eine Android-App darum herum.
-  **[Aufs Handy holen → APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
+
+## Aufs Handy holen
+
+**Der kürzeste Weg: [`app/speichenrechner-handy.html`](app/speichenrechner-handy.html)
+herunterladen und auf dem Handy öffnen.** Eine Datei, 123 KB, alles drin –
+Rechnung, 230 Naben, 17 Felgentypen. Kein Server, kein Netz, keine
+Installation. Zu finden auch bei den
+[Releases](https://github.com/kaysiebke-cell/speichenrechner/releases) als
+Anhang, das lädt am Handy zuverlässiger als ein Blick in den Quelltext.
+
+| Weg | funktioniert | Vorteil |
+|---|---|---|
+| **Einzeldatei** `app/speichenrechner-handy.html` | sofort | eine Datei, keine Voraussetzungen |
+| **Eigenes WLAN** – `python3 -m http.server 8765 --directory app/public --bind 0.0.0.0`, dann `http://<PC-IP>:8765/` am Handy | sofort, solange der PC läuft | lässt sich über „Zum Startbildschirm hinzufügen“ als App ablegen, danach auch ohne PC |
+| **GitHub Pages** – <https://kaysiebke-cell.github.io/speichenrechner/> | sobald GitHub die Seite gebaut hat | immer die neueste Fassung, von überall |
+| **APK** – siehe [APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md) | sobald ein Actions-Runner frei ist | echte App im Menü, ohne Berechtigungen |
+
+Die Einzeldatei entsteht aus `app/public/` und wird mit
+`python3 werkzeuge/einzeldatei_erzeugen.py` erneuert; ein Test schlägt an, wenn
+sie veraltet ist. Ihr fehlt gegenüber der Web-Fassung nur der Service Worker
+und der Eintrag auf dem Startbildschirm – gerechnet wird genauso.
 
 ![Speichenrechner im dunklen Mint-Theme](data/screenshot.png)
 
@@ -520,10 +540,34 @@ anfasst.
 
 Drin: Eingaben, Längen und Kennwerte, die dringendsten Hinweise, der
 **Nabenkatalog mit 230 Naben** samt Filtern und Suche, die **Felgentypen** mit
-Beschreibung und Spannungswarnung, und die Vorlagen.
+Beschreibung und Spannungswarnung, die Vorlagen – und die **Skizzen**.
 
-Es fehlen: die Skizzen, der Tabellen-Editor, der Kreuzungsvergleich und die
-Speichenphysik (Dehnung, Ton, Gewicht).
+Die Skizzen sind dieselben Formen wie am PC, nur als SVG statt Cairo: die Nabe
+als Drehteil-Kontur, die Felge als Blech in Wandstärke. Bauart und
+Ritzelaufnahme bestimmen auch hier, was rechts sitzt – Freilaufkörper,
+Gewindestummel oder nichts – und Dynamo wie Nabenschaltung bekommen die dicke
+Schale. `app/public/js/zeichnung.js` trägt dieselben Zahlen wie
+`pc/speichenrechner/ui/bauteile.py`.
+
+Es fehlen: der Tabellen-Editor, der Kreuzungsvergleich und die Speichenphysik
+(Dehnung, Ton, Gewicht).
+
+### Der Cache-Stolperstein
+
+Der Service Worker legt die Anwendung ins Gerät, damit sie ohne Netz läuft –
+und hielt beim ersten Ausbau die **alte** Seite fest: der Cache-Name trug
+weiter `v1`, während `index.html` und die Skripte wuchsen. Auf dem Handy blieb
+dadurch der Nabenkatalog unsichtbar, obwohl er längst ausgeliefert wurde.
+
+Zwei Regeln stehen jetzt als Test in `tests/test_serviceworker.py`:
+
+* **Jede** Datei aus `app/public/` muss in der Liste des Service Workers stehen.
+* Die Seite selbst kommt **aus dem Netz zuerst**, der Cache ist nur die
+  Rückfallebene. Ohne Empfang ändert sich dadurch nichts, mit Empfang kommt eine
+  neue Fassung sofort an.
+
+Wer `app/public/` ändert, zählt `FASSUNG` in `sw.js` hoch – dann wird der alte
+Bestand beim nächsten Aufruf gelöscht.
 
 ## Rechenweg
 

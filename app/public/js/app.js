@@ -7,11 +7,16 @@ import { berechne, einkaufsliste, grad, mm, ueblicheKreuzungen, zahl } from "./r
 import {
   artenMitAnzahl, bezeichnung, felgenbeschreibung, felgenFussnoten, felgenkategorien,
   felgentyp, felgentypen, felgenwarnungen, flanschabstaende, flanschdurchmesserPaar,
-  herstellerMitAnzahl, listentext, lochzahlen, speichenlochMm, suche,
+  herstellerMitAnzahl, listentext, lochzahlen, oesenStufe, speichenlochMm, suche,
 } from "./katalog.js";
 import { FELGEN_VORLAGEN, NABEN_VORLAGEN } from "./daten.js";
+import { felgeSvg, nabeSvg } from "./zeichnung.js";
+import { aufnahme as aufnahmeVon } from "./katalog.js";
 
 const SPEICHER = "speichenrechner.eingaben";
+
+/** Bauart und Ritzelaufnahme der zuletzt gewählten Nabe – für die Skizze. */
+let bauform = { art: "", aufnahme: "" };
 
 const felder = {
   flanschdurchmesser_links: "flansch-d-links",
@@ -104,6 +109,22 @@ function hinweise(eingabe, ergebnis) {
   return meldungen;
 }
 
+/** Zeichnet Nabe und Felgenprofil neu. */
+function skizzenZeichnen(eingabe) {
+  const nabe = {
+    flanschdurchmesser_links: eingabe.flanschdurchmesser_links,
+    flanschdurchmesser_rechts: eingabe.flanschdurchmesser_rechts,
+    flanschabstand_links: eingabe.flanschabstand_links,
+    flanschabstand_rechts: eingabe.flanschabstand_rechts,
+    art: bauform.art,
+    aufnahme: bauform.aufnahme,
+  };
+  const typName = $("felgentyp").value;
+  const typ = felgentyp(typName);
+  $("skizze-nabe").innerHTML = nabeSvg(nabe);
+  $("skizze-felge").innerHTML = felgeSvg(typName, typ ? oesenStufe(typ) : 1, eingabe.erd);
+}
+
 function anzeigen() {
   const eingabe = eingabeLesen();
   let ergebnis;
@@ -135,6 +156,8 @@ function anzeigen() {
       + `${links.kreuzungen}- und ${rechts.kreuzungen}-fach`
       + ` (üblich: ${ueblicheKreuzungen(links.speichen)}-fach)`,
   ].join("  ·  ");
+
+  skizzenZeichnen(eingabe);
 
   const meldungen = hinweise(eingabe, ergebnis);
   anzeige.hinweis.textContent = meldungen.join("  ");
@@ -215,6 +238,7 @@ function nabeUebernehmen() {
     $("flansch-a-links").value = v.flanschabstand_links;
     $("flansch-a-rechts").value = v.flanschabstand_rechts;
     $("speichenloch").value = v.speichenloch;
+    bauform = { art: v.art || "", aufnahme: v.aufnahme || "" };
     $("nabeninfo").textContent = `${v.name} übernommen.`;
     anzeigen();
     return;
@@ -224,6 +248,7 @@ function nabeUebernehmen() {
   const nabe = suche().find((n) => `${n.hersteller}|${n.modell}` === schluessel);
   if (!nabe) return;
 
+  bauform = { art: nabe.art || "", aufnahme: aufnahmeVon(nabe) };
   const abstand = flanschabstaende(nabe);
   const durchmesser = flanschdurchmesserPaar(nabe);
   const loch = speichenlochMm(nabe);
@@ -317,6 +342,16 @@ $("felgenkategorie").addEventListener("change", () => {
   anzeigen();
 });
 $("felgentyp").addEventListener("change", () => { felgeninfoSetzen(); anzeigen(); });
+
+for (const knopf of document.querySelectorAll(".umschalter button")) {
+  knopf.addEventListener("click", () => {
+    for (const anderer of document.querySelectorAll(".umschalter button")) {
+      anderer.classList.toggle("aktiv", anderer === knopf);
+    }
+    $("skizze-nabe").hidden = knopf.dataset.bild !== "nabe";
+    $("skizze-felge").hidden = knopf.dataset.bild !== "felge";
+  });
+}
 
 // ------------------------------------------------------------- Verdrahtung
 
