@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'de.speichenrechner.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "de.speichenrechner.app"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.4.0"
+    }
+
+    buildTypes {
+        release {
+            // Persönliches Werkzeug: keine Verschleierung nötig, hält den Build einfach.
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+// --- public/ ist die einzige Quelle der Wahrheit ---
+// Der Build kopiert die Web-Fassung vor dem Zusammenbauen der Assets nach
+// src/main/assets/www. Dieser Ordner steht in .gitignore: die Dateien liegen
+// nur einmal im Repo, nämlich in public/.
+def webSrc = file("$rootDir/../public")
+def webDst = file("src/main/assets/www")
+
+tasks.register('copyWebApp', Copy) {
+    description = 'Kopiert die Web-Fassung (public/) in die App-Assets.'
+    from webSrc
+    exclude 'package.json'   // nur für den Node-Testlauf, nicht für die App
+    into webDst
+}
+
+tasks.configureEach { t ->
+    if (t.name.startsWith('merge') && t.name.endsWith('Assets')) {
+        t.dependsOn 'copyWebApp'
+    }
+}
+tasks.named('clean') { delete webDst }
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.webkit:webkit:1.11.0'
+}

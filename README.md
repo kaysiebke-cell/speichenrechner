@@ -7,7 +7,8 @@ Speichenlängen für Fahrradlaufräder berechnen. Zwei Fassungen, ein Repo:
   Farben, Icons und die Hell/Dunkel-Variante kommen aus den
   System-Einstellungen, sie passt sich also dem eingestellten Mint-Theme an.
 * **Handy** – eine Web-Fassung in `public/`, die ohne Netz läuft und sich auf
-  dem Startbildschirm ablegen lässt. Siehe [Handy-Version](#handy-version).
+  dem Startbildschirm ablegen lässt, plus eine Android-App darum herum.
+  **[Aufs Handy holen → APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
 
 ![Speichenrechner im dunklen Mint-Theme](data/screenshot.png)
 
@@ -453,7 +454,12 @@ Zum Ansehen genügt ein Ordner-Server:
 python3 -m http.server 8765 --directory public
 ```
 
-Auf dem Handy läuft sie über GitHub Pages:
+Zwei Wege aufs Handy, beide in **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
+beschrieben: über den Browser mit „Zum Startbildschirm hinzufügen", oder als
+APK, die GitHub bei jedem Push baut (`.github/workflows/android.yml`). Die APK
+verlangt keine einzige Berechtigung – kein Netz, keine Dateien.
+
+Im Browser läuft sie über GitHub Pages:
 
 **https://kaysiebke-cell.github.io/speichenrechner/**
 
@@ -617,6 +623,9 @@ speichenrechner/
     widgets.py               wiederverwendbare Bau-Helfer
 daten_quelle_naben.xlsx      Herstellertabelle – Quelle des Nabenkatalogs
 daten_quelle_felgen.xlsx     Felgentabelle – Quelle der Felgentypen
+android/                     dünne Android-Hülle um public/ (WebView, keine Rechte)
+  app/build.gradle           kopiert public/ in die App-Assets
+  …/MainActivity.kt          lädt die Seite über WebViewAssetLoader
 public/                      Handy-Version – ohne Bauschritt, ohne Fremdcode
   index.html                 eine Seite, Ergebnis oben
   css/stil.css               folgt hell/dunkel des Geräts

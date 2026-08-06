@@ -1,0 +1,78 @@
+name: Android-App bauen (APK)
+
+# Baut aus der Web-Fassung (public/) eine installierbare Android-APK.
+#  - Bei jedem Push, der die App betrifft, liegt die APK unter
+#    „Actions" → Lauf → Artifacts zum Herunterladen.
+#  - Bei einem Tag wie v1.4.0 entsteht zusätzlich ein Release mit APK daran.
+#
+# Die Web-Dateien liegen nur einmal im Repo: android/app/build.gradle kopiert
+# public/ vor dem Bauen in die App-Assets.
+
+on:
+  push:
+    branches: [ "**" ]
+    paths:
+      - "public/**"
+      - "android/**"
+      - ".github/workflows/android.yml"
+    tags:
+      - "v*"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: JDK 17 einrichten
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Android-SDK einrichten
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle-Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle', 'android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: APK bauen (Debug, ohne Signatur-Schlüssel installierbar)
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleDebug
+
+      - name: APK umbenennen
+        run: |
+          mkdir -p apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             "apk/Speichenrechner-${GITHUB_SHA:0:7}.apk"
+          ls -la apk
+
+      - name: APK als Download bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: Speichenrechner-APK
+          path: apk/*.apk
+          if-no-files-found: error
+
+      - name: Bei einem Tag zusätzlich ein Release anlegen
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: apk/*.apk
+          body: |
+            Speichenrechner als Android-App. Die APK ist mit dem Debug-Schlüssel
+            signiert – zum Installieren muss „Unbekannte Quellen" bzw.
+            „Aus dieser Quelle installieren" erlaubt werden.
