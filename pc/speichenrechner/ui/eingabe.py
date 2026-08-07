@@ -17,12 +17,19 @@ from .. import felgenkunde
 from .. import katalog as nabenkatalog
 from .. import vorlagen as vorlagen_speicher
 from ..berechnung import RUNDUNGSSCHRITTE
-from ..modelle import KOPFLAGEN, VERTEILUNGEN, Einspeichung, Felge, Nabe, Speichensatz
+from ..formatierung import zahl
+from ..modelle import (
+    KOPFLAGEN, NIPPEL_LAENGEN, NIPPEL_STANDARD, VERTEILUNGEN,
+    Einspeichung, Felge, Nabe, Speichensatz, nippel_abzug,
+)
 from ..speiche import BAUARTEN, EIGENE_BAUART, E_MODUL, SPANNUNG_STANDARD, WEITUNG_STANDARD
 from . import widgets
 from .bauart_dialog import BauartDialog
 from .nabe_hilfe import NabenmassDialog
 from .vorlagen_leiste import VorlagenLeiste
+
+#: Kennung des Listeneintrags, der das Abzugsfeld freigibt.
+EIGENER_ABZUG = "eigen"
 
 RUNDUNG_TEXTE = {
     1.0: "auf 1 mm (üblich)",
@@ -495,12 +502,32 @@ class EingabeBereich(Gtk.Box):
                   "Der wirksame ERD wächst um das Doppelte dieser Dicke.",
         )
 
-        self.nippel_korrektur = widgets.zahlenfeld(0.0, 4.0, 0.5, 1, 0.0)
+        # Gefragt wird nach der Nippellänge – die steht auf der Packung. Der
+        # Abzug daraus ist eine Rechnung, keine Angabe, die man kennen muss.
+        # „Nippel-Verkürzung" als Feldname war irreführend: dort stand nicht die
+        # Länge, sondern die Differenz.
+        self.nippellaenge = Gtk.ComboBoxText()
+        for laenge in NIPPEL_LAENGEN:
+            beschriftung = f"{zahl(laenge, 0)} mm"
+            if laenge == NIPPEL_STANDARD:
+                beschriftung += "  (üblich)"
+            self.nippellaenge.append(str(laenge), beschriftung)
+        self.nippellaenge.append(EIGENER_ABZUG, "eigener Abzug …")
+        self.nippellaenge.set_active_id(str(NIPPEL_STANDARD))
+        self.nippellaenge.connect("changed", self._nippellaenge_geaendert)
         reihe = widgets.zeile(
-            raster, reihe, "Nippel-Verkürzung", self.nippel_korrektur,
-            hilfe="Längere Nippel (14 oder 16 mm statt 12 mm) nehmen mehr Gewinde "
-                  "auf, die Speiche darf entsprechend kürzer sein. Herstellerangabe "
-                  "eintragen; 0 lässt die Korrektur weg.",
+            raster, reihe, "Nippellänge", self.nippellaenge, einheit=None,
+            hilfe="Die Länge, die auf der Nippelpackung steht. Ein längerer "
+                  "Nippel greift tiefer, die Speiche darf entsprechend kürzer "
+                  "sein – wie viel, steht in der Zeile darunter.",
+        )
+
+        self.nippel_korrektur = widgets.zahlenfeld(0.0, 4.0, 0.5, 1, 0.0)
+        self.nippel_korrektur.set_sensitive(False)
+        reihe = widgets.zeile(
+            raster, reihe, "→ Abzug", self.nippel_korrektur,
+            hilfe="Der Abzug, mit dem gerechnet wird: Nippellänge minus 12 mm. "
+                  "Zum Eintippen einer Herstellerangabe oben „eigener Abzug“ wählen.",
         )
 
         self.weitung = widgets.zahlenfeld(0.0, 1.0, 0.05, 2, WEITUNG_STANDARD)
@@ -525,6 +552,23 @@ class EingabeBereich(Gtk.Box):
             feld.connect("value-changed", self._einfach_geaendert)
 
         return rahmen
+
+    def _nippellaenge_wert(self) -> float:
+        """Die gewählte Länge; bei „eigener Abzug" bleibt die Vorgabe stehen."""
+        wahl = self.nippellaenge.get_active_id() or str(NIPPEL_STANDARD)
+        return NIPPEL_STANDARD if wahl == EIGENER_ABZUG else float(wahl)
+
+    def _nippellaenge_geaendert(self, combo: Gtk.ComboBoxText) -> None:
+        """Setzt den Abzug aus der Länge – oder gibt das Feld frei."""
+        wahl = combo.get_active_id() or str(NIPPEL_STANDARD)
+        eigen = wahl == EIGENER_ABZUG
+        self.nippel_korrektur.set_sensitive(eigen)
+        if not eigen:
+            stumm_vorher = self._stumm
+            self._stumm = True
+            self.nippel_korrektur.set_value(nippel_abzug(float(wahl)))
+            self._stumm = stumm_vorher
+        self._melde()
 
     def _bauart_geaendert(self, combo: Gtk.ComboBoxText) -> None:
         """Bei „eigene Maße“ gleich den Dialog anbieten, sonst nur rechnen."""
@@ -770,6 +814,7 @@ class EingabeBereich(Gtk.Box):
             spannung=self.spannung.get_value(),
             korrektur_anwenden=self.korrektur_anwenden.get_active(),
             weitung=self.weitung.get_value(),
+            nippellaenge=self._nippellaenge_wert(),
             nippel_verkuerzung=self.nippel_korrektur.get_value(),
             unterlegscheibe=self.unterlegscheibe.get_value(),
             straightpull=self.straightpull.get_active(),
@@ -825,6 +870,16 @@ class EingabeBereich(Gtk.Box):
             self.bauart.set_active_id(BAUARTEN[1].name)
         self.spannung.set_value(speichen.spannung)
         self.weitung.set_value(speichen.weitung)
+        # Passt der Abzug zur Länge, zeigt die Liste die Länge; sonst „eigener
+        # Abzug", damit ein von Hand eingetragener Wert nicht überschrieben wird.
+        laenge = speichen.nippellaenge
+        if laenge in NIPPEL_LAENGEN and abs(nippel_abzug(laenge)
+                                            - speichen.nippel_verkuerzung) < 0.01:
+            self.nippellaenge.set_active_id(str(laenge))
+            self.nippel_korrektur.set_sensitive(False)
+        else:
+            self.nippellaenge.set_active_id(EIGENER_ABZUG)
+            self.nippel_korrektur.set_sensitive(True)
         self.nippel_korrektur.set_value(speichen.nippel_verkuerzung)
         self.unterlegscheibe.set_value(speichen.unterlegscheibe)
         self.straightpull.set_active(speichen.straightpull)

@@ -130,6 +130,24 @@ class Felge:
         return cls(**gueltig)
 
 
+#: Länge eines gewöhnlichen Nippels in mm. Alles darüber nimmt mehr Gewinde
+#: auf, die Speiche darf entsprechend kürzer sein.
+NIPPEL_STANDARD = 12.0
+
+#: Nippellängen, die es im Handel gibt.
+NIPPEL_LAENGEN = (12.0, 14.0, 16.0)
+
+
+def nippel_abzug(laenge: float) -> float:
+    """Wie viel kürzer die Speiche bei dieser Nippellänge sein darf, in mm.
+
+    Ein 14-mm-Nippel greift 2 mm tiefer als der übliche 12-mm-Nippel, ein
+    16-mm-Nippel 4 mm. Anhaltswert – wer eine Herstellerangabe hat, trägt sie
+    von Hand ein.
+    """
+    return max(0.0, laenge - NIPPEL_STANDARD)
+
+
 #: Wo die Speichenköpfe am Flansch sitzen.
 KOPFLAGEN = {
     "gemischt": "gemischt (Standard)",
@@ -188,7 +206,12 @@ class Speichensatz:
 
     ``korrektur_anwenden`` zieht drei Anteile von der Bestelllänge ab:
     die elastische Dehnung, die ``weitung`` von Nabenflansch und Speichenbogen
-    unter Last und eine ``nippel_korrektur`` für längere Nippel.
+    unter Last und ``nippel_verkuerzung`` für längere Nippel.
+
+    ``nippellaenge`` ist die Länge des Nippels in mm, wie sie auf der Packung
+    steht. ``nippel_verkuerzung`` ist der daraus abgeleitete Abzug – die Größe,
+    mit der gerechnet wird. Beides steht getrennt da, weil eine Herstellerangabe
+    von der Faustregel abweichen darf; :func:`nippel_abzug` liefert die Regel.
     """
 
     bauart: str = BAUARTEN[1].name
@@ -197,6 +220,7 @@ class Speichensatz:
     spannung: float = SPANNUNG_STANDARD
     korrektur_anwenden: bool = False
     weitung: float = WEITUNG_STANDARD
+    nippellaenge: float = NIPPEL_STANDARD
     nippel_verkuerzung: float = 0.0
     unterlegscheibe: float = 0.0
     straightpull: bool = False

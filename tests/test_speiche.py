@@ -15,7 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "pc"))
 
-from speichenrechner import berechnung, speiche  # noqa: E402
+from speichenrechner import berechnung, modelle, speiche  # noqa: E402
 from speichenrechner.modelle import Einspeichung, Felge, Nabe, Speichensatz  # noqa: E402
 
 SPOKOMAT_NABE = Nabe("Spokomat-Beispiel", 58.0, 49.0, 36.2, 22.2, 2.5)
@@ -224,3 +224,46 @@ class TestZusatzgroessen(unittest.TestCase):
         self.assertAlmostEqual(
             speiche.drahtspannung(bauart, 1200.0), 1200.0 / bauart.flaeche_mitte, places=6
         )
+
+
+class TestNippellaenge(unittest.TestCase):
+    """Die Nippellänge steht auf der Packung, der Abzug ist eine Rechnung.
+
+    Vorher fragte die Oberfläche nach der „Nippel-Verkürzung" – also nach der
+    Differenz, die niemand auf einem Bauteil abliest. Jetzt wird die Länge
+    gewählt und der Abzug daraus abgeleitet.
+    """
+
+    def test_ueblicher_nippel_ohne_abzug(self):
+        self.assertEqual(modelle.nippel_abzug(12.0), 0.0)
+
+    def test_laengere_nippel(self):
+        self.assertEqual(modelle.nippel_abzug(14.0), 2.0)
+        self.assertEqual(modelle.nippel_abzug(16.0), 4.0)
+
+    def test_kuerzer_als_ueblich_ergibt_keinen_zuschlag(self):
+        """Ein kürzerer Nippel verlängert die Speiche nicht – das wäre falsch."""
+        self.assertEqual(modelle.nippel_abzug(10.0), 0.0)
+
+    def test_die_angebotenen_laengen_sind_handelsueblich(self):
+        self.assertEqual(modelle.NIPPEL_LAENGEN, (12.0, 14.0, 16.0))
+        self.assertIn(modelle.NIPPEL_STANDARD, modelle.NIPPEL_LAENGEN)
+
+    def test_vorgabe_zieht_nichts_ab(self):
+        satz = Speichensatz()
+        self.assertEqual(satz.nippellaenge, modelle.NIPPEL_STANDARD)
+        self.assertEqual(satz.nippel_verkuerzung, 0.0)
+
+    def test_abzug_wirkt_nur_mit_haken(self):
+        """Ohne „Korrektur anwenden" ändert der Abzug die Bestelllänge nicht."""
+        nabe = Nabe("Prüfnabe", 45.0, 45.0, 35.0, 20.0, 2.6)
+        felge = Felge("28 Zoll", 600.0)
+        einspeichung = Einspeichung(32, 3, 3)
+        ohne = berechnung.berechne(nabe, felge, einspeichung, 1.0,
+                                   Speichensatz(nippellaenge=16.0, nippel_verkuerzung=4.0))
+        mit = berechnung.berechne(nabe, felge, einspeichung, 1.0,
+                                  Speichensatz(nippellaenge=16.0, nippel_verkuerzung=4.0,
+                                               korrektur_anwenden=True))
+        self.assertEqual(ohne.links.laenge_gerundet, ohne.links.laenge_gerundet)
+        self.assertLess(mit.links.laenge_gerundet, ohne.links.laenge_gerundet)
+        self.assertAlmostEqual(mit.links.korrektur - ohne.links.korrektur, 0.0, places=9)

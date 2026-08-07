@@ -16,6 +16,12 @@ import { aufnahme as aufnahmeVon } from "./katalog.js";
 
 const SPEICHER = "speichenrechner.eingaben";
 
+/** Länge eines gewöhnlichen Nippels in mm – dieselbe Regel wie in modelle.py. */
+const NIPPEL_STANDARD = 12.0;
+
+/** Wie viel kürzer die Speiche bei dieser Nippellänge sein darf, in mm. */
+const nippelAbzug = (laenge) => Math.max(0, laenge - NIPPEL_STANDARD);
+
 /** Bauart und Ritzelaufnahme der zuletzt gewählten Nabe – für die Skizze. */
 let bauform = { art: "", aufnahme: "" };
 
@@ -64,6 +70,8 @@ function eingabeLesen() {
       : Number(feld.value.replace(",", "."));
   }
   werte.verteilung = $("verteilung").value;
+  const wahl = $("nippellaenge").value;
+  werte.nippellaenge = wahl === "eigen" ? NIPPEL_STANDARD : Number(wahl);
   werte.speichenzahl = Math.round(werte.speichenzahl);
   werte.kreuzungen_links = Math.round(werte.kreuzungen_links);
   werte.kreuzungen_rechts = Math.round(werte.kreuzungen_rechts);
@@ -241,6 +249,15 @@ function laden() {
     $("korrektur-anwenden").checked = Boolean(s.korrektur_anwenden);
   }
 
+  // Passt der Abzug zur Länge, zeigt die Liste die Länge; sonst „eigener Abzug",
+  // damit ein von Hand eingetragener Wert nicht überschrieben wird.
+  const laenge = gespeichert.nippellaenge ?? NIPPEL_STANDARD;
+  const abzug = gespeichert.nippel_verkuerzung ?? 0;
+  const passt = [12, 14, 16].includes(laenge)
+    && Math.abs(nippelAbzug(laenge) - abzug) < 0.01;
+  $("nippellaenge").value = passt ? String(laenge) : "eigen";
+  $("nippel-verkuerzung").disabled = passt;
+
   $("gekoppelt").checked =
     gespeichert.kreuzungen_links === gespeichert.kreuzungen_rechts;
   $("kreuzungen-rechts").disabled = $("gekoppelt").checked;
@@ -401,6 +418,16 @@ $("felgenkategorie").addEventListener("change", () => {
 });
 $("felgentyp").addEventListener("change", () => { felgeninfoSetzen(); anzeigen(); });
 
+/** Setzt den Abzug aus der Nippellänge – oder gibt das Feld frei. */
+function nippelAbzugSetzen() {
+  const wahl = $("nippellaenge").value;
+  const eigen = wahl === "eigen";
+  $("nippel-verkuerzung").disabled = !eigen;
+  if (!eigen) $("nippel-verkuerzung").value = nippelAbzug(Number(wahl));
+}
+
+$("nippellaenge").addEventListener("change", () => { nippelAbzugSetzen(); anzeigen(); });
+
 for (const knopf of document.querySelectorAll(".umschalter button")) {
   knopf.addEventListener("click", () => {
     for (const anderer of document.querySelectorAll(".umschalter button")) {
@@ -442,6 +469,7 @@ $("zuruecksetzen").addEventListener("click", () => {
 
 katalogAufbauen();
 laden();
+nippelAbzugSetzen();
 $("kreuzungen-rechts").disabled = $("gekoppelt").checked;
 anzeigen();
 

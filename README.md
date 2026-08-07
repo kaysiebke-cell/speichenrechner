@@ -169,9 +169,13 @@ nemo-desktop --quit && (nemo-desktop &)
    bedeutet radial. Bei „2:1“ trägt die rechte Seite doppelt so viele Speichen.
 4. **Speichen** – Bauart, Zielspannung, Kopflage und Straightpull. Über den
    Stift-Knopf lassen sich Abschnittsmaße und E-Modul frei einstellen.
-5. **Nippel und Korrektur** – Unterlegscheiben, Nippel-Verkürzung und Weitung.
-   Der Haken zieht die Summe aus Dehnung, Weitung und Nippel-Verkürzung von der
-   Bestelllänge ab.
+5. **Nippel und Korrektur** – Unterlegscheiben, **Nippellänge** und Weitung.
+   Bei der Nippellänge wählt man, was auf der Packung steht – 12 mm (üblich),
+   14 mm oder 16 mm; der Abzug darunter ergibt sich daraus (12 → 0,0 mm,
+   14 → 2,0 mm, 16 → 4,0 mm) und ist gesperrt. Wer eine Herstellerangabe hat,
+   wählt „eigener Abzug“ und tippt sie ein. Der Haken zieht die Summe aus
+   Dehnung, Weitung und diesem Abzug von der Bestelllänge ab – **ohne den Haken
+   wirkt der Abzug nicht.**
 
 Das Ergebnis erscheint sofort: gerundete Länge je Seite, der exakte Wert, der
 Speichenwinkel, was zu bestellen ist, das Spannungsverhältnis, Dehnung, Gewicht
