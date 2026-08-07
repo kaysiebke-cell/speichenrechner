@@ -527,6 +527,66 @@ footer { margin-top: 1.5rem; }
       </label>
     </fieldset>
 
+    <fieldset>
+      <legend>Speichen</legend>
+      <select id="speichenbauart" class="voll" aria-label="Speichenbauart"></select>
+      <label class="zeile">
+        <span>Zielspannung</span>
+        <input type="number" id="spannung" inputmode="numeric" step="50" min="0" max="2000" value="1000">
+        <span class="einheit-feld">N</span>
+      </label>
+      <label class="zeile">
+        <span>Kopflage</span>
+        <select id="kopf">
+          <option value="gemischt">gemischt (üblich)</option>
+          <option value="innen">alle Köpfe innen</option>
+          <option value="außen">alle Köpfe außen</option>
+        </select>
+      </label>
+      <label class="zeile">
+        <span>Flanschdicke</span>
+        <input type="number" id="flanschdicke" inputmode="decimal" step="0.1" min="0" max="12" value="3.2">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="haken">
+        <input type="checkbox" id="straightpull">
+        <span>Straightpull – Speichen ohne Bogen</span>
+      </label>
+      <p class="klein">Die Flanschdicke zählt nur bei einseitiger Kopflage: dann sitzt
+        der Ansatzpunkt um eine halbe Flanschdicke neben der Flanschmitte. Bei
+        Straightpull entfällt außerdem der Abzug fürs Speichenloch.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Nippel und Korrektur</legend>
+      <label class="zeile">
+        <span>Nippel-Verkürzung</span>
+        <input type="number" id="nippel-verkuerzung" inputmode="decimal" step="0.1" min="0" max="6" value="0">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="zeile">
+        <span>Unterlegscheiben</span>
+        <input type="number" id="unterlegscheibe" inputmode="decimal" step="0.1" min="0" max="4" value="0">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="zeile">
+        <span>Weitung</span>
+        <input type="number" id="weitung" inputmode="decimal" step="0.05" min="0" max="1" value="0.1">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="haken">
+        <input type="checkbox" id="korrektur-anwenden">
+        <span>Korrektur von der Bestelllänge abziehen</span>
+      </label>
+      <p class="klein">Der Haken zieht Dehnung, Weitung und Nippel-Verkürzung von der
+        Bestelllänge ab. Ohne ihn steht dort die Länge im gespannten Laufrad – das,
+        was klassische Rechner ausgeben.</p>
+      <p class="klein">Längere Nippel (14 oder 16 mm statt 12 mm) brauchen weniger
+        Speichenlänge im Gewinde; der Erfahrungswert dafür gehört in die
+        Nippel-Verkürzung. Unterlegscheiben unter dem Nippel heben den Sitz an und
+        vergrößern den wirksamen ERD um das Doppelte ihrer Dicke.</p>
+    </fieldset>
+
     <button type="button" id="zuruecksetzen" class="flach">Eingaben zurücksetzen</button>
   </form>
 
@@ -3911,6 +3971,212 @@ const FELGEN_VORLAGEN = [
 ];
 
 
+// ===== js/speiche.js =====================================================
+
+// Die Speiche selbst: Bauart, Dehnung unter Spannung, Gewicht und Ton.
+//
+// Wortgetreue Übertragung von speichenrechner/speiche.py. Die Namen sind
+// absichtlich dieselben, damit man beide Fassungen nebeneinander lesen kann.
+//
+// Die reine Geometrie sagt, wie lang die Speiche im **gespannten** Laufrad
+// sein muss. Verkauft wird sie aber ungespannt, und unter Zug längt sie sich:
+//
+//     ΔL = F/E · Σ (lᵢ / Aᵢ)
+//
+// Eine konifizierte Speiche wird dafür in drei Abschnitte zerlegt – verdicktes
+// Kopfteil, verdickter unterer Teil und dünnes Mittelteil. Im Mittelteil
+// steckt der weitaus größte Anteil der Dehnung.
+//
+// E ist der Elastizitätsmodul. Für nichtrostenden Speichendraht (18/8) wird im
+// Laufradbau mit rund 180 000 N/mm² gerechnet, spürbar weniger als bei
+// gewöhnlichem Baustahl.
+//
+// Der Speichenton folgt der Saitenformel:
+//
+//     f = 1/(2·L) · √(F / µ)      mit  µ = ρ · A
+//
+// Er gilt für eine frei schwingende Saite. Am eingespeichten Rad schwingt nur
+// der Abschnitt zwischen der letzten Kreuzung und dem Nippel – der klingt
+// höher. Der Wert taugt zum Vergleich der Speichen untereinander, ein
+// Tensiometer bleibt genauer.
+
+/** Elastizitätsmodul nichtrostender Speichen in N/mm². */
+const E_MODUL = 180000.0;
+
+/** Dichte Stahl in kg/m³ bzw. g/mm³. */
+const DICHTE = 7850.0;
+const DICHTE_G_MM3 = 7.85e-3;
+
+/** Übliche Speichenspannung in N (Richtwert für die stärker gespannte Seite). */
+const SPANNUNG_STANDARD = 1000.0;
+
+/** Übliche Weitung von Nabenflansch und Speichenbogen unter Last, in mm. */
+const WEITUNG_STANDARD = 0.1;
+
+/** Name der frei einstellbaren Bauart. */
+const EIGENE_BAUART = "eigene Maße …";
+
+/** Deutsche Notennamen – H statt B. */
+const NOTEN = ["c", "cis", "d", "dis", "e", "f", "fis", "g", "gis", "a", "ais", "h"];
+
+const flaecheAusDurchmesser = (durchmesser) => Math.PI / 4.0 * durchmesser ** 2;
+
+/**
+ * Eine Speichenbauart, zerlegt in ihre drei Abschnitte.
+ *
+ * `laenge_kopf`/`laenge_unten` sind die verdickten Enden, der Rest der Speiche
+ * hat den Mittelquerschnitt. `flaeche_mitte_direkt` überschreibt die Berechnung
+ * aus dem Durchmesser – nötig bei flachen Messerspeichen.
+ */
+function bauart(name, durchmesserKopf, durchmesserUnten, durchmesserMitte,
+                       laengeKopf = 15.0, laengeUnten = 20.0, flaecheMitteDirekt = null) {
+  return {
+    name,
+    durchmesser_kopf: durchmesserKopf,
+    durchmesser_unten: durchmesserUnten,
+    durchmesser_mitte: durchmesserMitte,
+    laenge_kopf: laengeKopf,
+    laenge_unten: laengeUnten,
+    flaeche_mitte_direkt: flaecheMitteDirekt,
+    flaeche_kopf: flaecheAusDurchmesser(durchmesserKopf),
+    flaeche_unten: flaecheAusDurchmesser(durchmesserUnten),
+    flaeche_mitte: flaecheMitteDirekt !== null
+      ? flaecheMitteDirekt
+      : flaecheAusDurchmesser(durchmesserMitte),
+  };
+}
+
+/** Gängige Bauarten. Die Abschnittslängen sind Näherungen – Hersteller weichen ab. */
+const BAUARTEN = [
+  bauart("2,0 mm durchgehend (14 G)", 2.0, 2.0, 2.0, 0.0, 0.0),
+  bauart("2,0/1,8/2,0 doppelt konifiziert", 2.0, 2.0, 1.8),
+  bauart("2,0/1,7/2,0 doppelt konifiziert", 2.0, 2.0, 1.7),
+  bauart("2,0/1,7/1,8 dreifach konifiziert", 2.0, 1.8, 1.7),
+  bauart("2,0/1,5/2,0 sehr leicht", 2.0, 2.0, 1.5),
+  bauart("1,8/1,6/1,8 dünn", 1.8, 1.8, 1.6),
+  bauart("Messerspeiche flach, ≈ 2,3 × 1,2 mm", 2.0, 2.0, 0.0, 15.0, 20.0, 2.2),
+];
+
+/** Startwerte der frei einstellbaren Bauart (entspricht 2,0/1,7/1,8). */
+const EIGENE_VORGABE = {
+  durchmesser_kopf: 2.0,
+  durchmesser_unten: 1.8,
+  durchmesser_mitte: 1.7,
+  laenge_kopf: 15.0,
+  laenge_unten: 20.0,
+};
+
+/** Sucht eine Bauart; `eigene` liefert die frei eingestellten Maße. */
+function bauartNachName(name, eigene = null) {
+  if (name === EIGENE_BAUART) {
+    const w = { ...EIGENE_VORGABE, ...(eigene || {}) };
+    return bauart(EIGENE_BAUART, w.durchmesser_kopf, w.durchmesser_unten,
+                  w.durchmesser_mitte, w.laenge_kopf, w.laenge_unten);
+  }
+  for (const b of BAUARTEN) {
+    if (b.name === name) return b;
+  }
+  return BAUARTEN[0];
+}
+
+/** Zerlegt die Speiche in `[Länge, Querschnitt]`-Abschnitte. */
+function abschnitte(b, laenge) {
+  const enden = b.laenge_kopf + b.laenge_unten;
+  let kopf;
+  let unten;
+  if (enden >= Math.max(laenge - 10.0, 0.0)) {
+    // Sehr kurze Speiche: Enden anteilig kürzen, damit nichts negativ wird.
+    const anteil = enden > 0 ? Math.max(laenge - 10.0, 0.0) / enden : 0.0;
+    kopf = b.laenge_kopf * anteil;
+    unten = b.laenge_unten * anteil;
+  } else {
+    kopf = b.laenge_kopf;
+    unten = b.laenge_unten;
+  }
+
+  const mitte = Math.max(laenge - kopf - unten, 0.0);
+  return [
+    [kopf, b.flaeche_kopf],
+    [unten, b.flaeche_unten],
+    [mitte, b.flaeche_mitte],
+  ];
+}
+
+/** Elastische Längung in mm bei `spannung` in Newton. */
+function dehnung(b, laenge, spannung, eModul = E_MODUL) {
+  if (laenge <= 0 || spannung <= 0 || eModul <= 0) return 0.0;
+  let nachgiebigkeit = 0.0;
+  for (const [teillaenge, flaeche] of abschnitte(b, laenge)) {
+    if (flaeche > 0) nachgiebigkeit += teillaenge / flaeche;
+  }
+  return spannung / eModul * nachgiebigkeit;
+}
+
+/**
+ * Zugspannung im dünnsten Querschnitt in N/mm².
+ *
+ * Gängiger Speichendraht hält deutlich über 1000 N/mm² aus; der Wert dient dem
+ * Vergleich, die Grenze steht im Datenblatt der Speiche.
+ */
+function drahtspannung(b, spannung) {
+  if (b.flaeche_mitte <= 0) return 0.0;
+  return spannung / b.flaeche_mitte;
+}
+
+/**
+ * Ungefähres Gewicht einer Speiche in Gramm.
+ *
+ * Gerechnet wird das reine Drahtvolumen – Kopf, Bogen und Gewinde sind nicht
+ * enthalten, der wahre Wert liegt einige Zehntel Gramm darüber.
+ *
+ * Heißt in speiche.py schlicht `masse`. Hier braucht sie einen eigenen Namen:
+ * katalog.js hat bereits eine Funktion `masse` (die Einbaubreiten aus einer
+ * Textangabe liest), und die Einzeldatei wirft alle Module in einen Scope –
+ * dort überschriebe die spätere die frühere. tests/test_einzeldatei.py wacht
+ * darüber, dass sich so etwas nicht wieder einschleicht.
+ */
+function speichenmasse(b, laenge) {
+  if (laenge <= 0) return 0.0;
+  let volumen = 0.0;
+  for (const [teillaenge, flaeche] of abschnitte(b, laenge)) {
+    volumen += teillaenge * flaeche;
+  }
+  return volumen * DICHTE_G_MM3;
+}
+
+/**
+ * Grundfrequenz der frei schwingenden Speiche in Hz.
+ *
+ * Maßgeblich ist der dünnste Querschnitt, denn dort liegt der größte Teil der
+ * schwingenden Länge.
+ */
+function frequenz(b, freieLaenge, spannung) {
+  if (freieLaenge <= 0 || spannung <= 0) return 0.0;
+  const flaecheM2 = b.flaeche_mitte * 1e-6;
+  if (flaecheM2 <= 0) return 0.0;
+  const masseJeMeter = DICHTE * flaecheM2;
+  const laengeM = freieLaenge / 1000.0;
+  return 1.0 / (2.0 * laengeM) * Math.sqrt(spannung / masseJeMeter);
+}
+
+/** Nächstgelegener Notenname, z. B. `"g¹"` – leer bei ungültiger Frequenz. */
+function note(hertz) {
+  if (hertz <= 0) return "";
+  const halbtoene = Math.round(12.0 * Math.log2(hertz / 440.0)) + 69;  // MIDI-Nummer
+  // In Python ist % bei negativen Zahlen positiv, in JS nicht – nachhelfen,
+  // sonst greift der Index bei sehr tiefen Tönen ins Leere.
+  const name = NOTEN[((halbtoene % 12) + 12) % 12];
+  const oktave = Math.floor(halbtoene / 12) - 1;
+
+  // Deutsche Schreibweise: große Oktave in Versalien, ab c¹ mit Strichen.
+  if (oktave <= 3) {
+    const striche = "͵".repeat(Math.max(3 - oktave, 0));
+    return name.toUpperCase() + striche;
+  }
+  return name + "¹²³⁴⁵⁶"[Math.min(oktave - 4, 5)];
+}
+
+
 // ===== js/rechnen.js =====================================================
 
 // Mathematik des Speichenrechners – Handy-Fassung.
@@ -3926,6 +4192,13 @@ const FELGEN_VORLAGEN = [
 //
 // Dass diese Fassung dasselbe rechnet wie die Python-Fassung, prüft
 // werkzeuge/pruefwerte_js.mjs gegen data/pruefwerte.json.
+
+// Benannte Einfuhr ohne Umbenennung. Die Einzeldatei fügt alle Module in einen
+// Scope zusammen und streicht die Einfuhrzeilen: ein Namensraum-Objekt
+// (Sternchen-Form) gäbe es dort nicht mehr, und ein Alias über `as` verschwände
+// mitsamt der Zeile. Nur die Originalnamen überleben beides.
+// (Die Zeichenfolge aus dem Schlüsselwort und einem Leerzeichen steht hier
+// bewusst nirgends: einzeldatei_erzeugen.py sucht sie stur im ganzen Text.)
 
 const RUNDUNGSSCHRITTE = [1.0, 0.5, 2.0];
 
@@ -4032,9 +4305,26 @@ function ueblicheKreuzungen(speichenSeite) {
 }
 
 /**
+ * Verschiebung des Ansatzpunktes durch eine einseitige Kopflage.
+ *
+ * Im Normalfall wechseln sich Köpfe innen und außen ab, dann hebt sich der
+ * Versatz auf und es bleibt bei der Flanschmitte.
+ */
+function kopfversatz(flanschdicke, speichen) {
+  if (!speichen || speichen.straightpull) return 0.0;
+  if (speichen.kopf === "innen") return flanschdicke / 2.0;
+  if (speichen.kopf === "außen") return -flanschdicke / 2.0;
+  return 0.0;
+}
+
+/**
  * Rechnet beide Seiten eines Laufrads.
  *
  * ``eingabe`` trägt dieselben Feldnamen wie data/pruefwerte.json.
+ *
+ * Ohne ``speichen`` bleibt es bei der reinen Geometrie. Mit Speichensatz
+ * kommen Spannung je Seite, elastische Dehnung und Speichenton dazu – und auf
+ * Wunsch die um die Dehnung korrigierte Bestelllänge.
  */
 function berechne(eingabe) {
   const {
@@ -4043,25 +4333,38 @@ function berechne(eingabe) {
     flanschabstand_links: aLinks,
     flanschabstand_rechts: aRechts,
     speichenloch = 2.6,
-    erd,
+    flanschdicke = 3.2,
+    erd: erdRoh,
     versatz = 0.0,
     speichenzahl,
     kreuzungen_links: kLinks,
     kreuzungen_rechts: kRechts,
     verteilung = "1:1",
     schritt = 1.0,
+    speichen = null,
   } = eingabe;
+
+  // Unterlegscheiben unter dem Nippel verschieben den Nippelsitz nach außen,
+  // der wirksame ERD wächst also um zweimal ihre Dicke.
+  const erd = erdRoh + 2.0 * (speichen ? (speichen.unterlegscheibe || 0.0) : 0.0);
+
+  // Straightpull-Speichen haben keinen Bogen, der sich am Lochrand anlegt.
+  const loch = (speichen && speichen.straightpull) ? 0.0 : speichenloch;
+
+  // Sitzen alle Köpfe auf derselben Flanschseite, verschiebt sich der
+  // Ansatzpunkt um die halbe Flanschdicke.
+  const versatzKopf = kopfversatz(flanschdicke, speichen);
 
   // Asymmetrische Felge: das Speichenbett wandert nach rechts, damit
   // vergrößert sich der wirksame Abstand links und verkleinert sich rechts.
-  const wirksamLinks = aLinks + versatz;
-  const wirksamRechts = aRechts - versatz;
+  const wirksamLinks = aLinks + versatz + versatzKopf;
+  const wirksamRechts = aRechts - versatz + versatzKopf;
 
   const anzahlLinks = speichenLinks(speichenzahl, verteilung);
   const anzahlRechts = speichenRechts(speichenzahl, verteilung);
 
   const seite = (durchmesser, abstand, kreuzungen, anzahl) => {
-    const laenge = speichenlaenge(erd, durchmesser, abstand, anzahl, kreuzungen, speichenloch);
+    const laenge = speichenlaenge(erd, durchmesser, abstand, anzahl, kreuzungen, loch);
     return {
       laenge,
       laenge_gerundet: runden(laenge, schritt),
@@ -4071,12 +4374,23 @@ function berechne(eingabe) {
       lochabstand: lochabstand(durchmesser, anzahl),
       kreuzungen,
       speichen: anzahl,
+      // Erst der Speichensatz füllt diese Werte – ohne ihn bleiben sie null.
+      spannung: 0.0,
+      dehnung: 0.0,
+      korrektur: 0.0,
+      drahtspannung: 0.0,
+      frequenz: 0.0,
+      gewicht: 0.0,
     };
   };
 
   const links = seite(dLinks, wirksamLinks, kLinks, anzahlLinks);
   const rechts = seite(dRechts, wirksamRechts, kRechts, anzahlRechts);
   const [spannungLinks, spannungRechts] = spannungsanteile(links, rechts);
+
+  if (speichen) {
+    speichenEintragen(links, rechts, speichen, spannungLinks, spannungRechts, schritt);
+  }
 
   return {
     links,
@@ -4085,6 +4399,28 @@ function berechne(eingabe) {
     spannung_rechts_prozent: spannungRechts,
     gleicheBestelllaenge: links.laenge_gerundet === rechts.laenge_gerundet,
   };
+}
+
+/** Ergänzt Spannung, Dehnung, Ton und ggf. die korrigierte Bestelllänge. */
+function speichenEintragen(links, rechts, speichen, spannungLinks, spannungRechts, schritt) {
+  const b = bauartNachName(speichen.bauart, speichen.eigene_bauart);
+  // Ohne Bogen gibt es auch keine Bogenweitung.
+  const weitung = speichen.straightpull ? 0.0 : (speichen.weitung ?? WEITUNG_STANDARD);
+  const zielspannung = speichen.spannung ?? SPANNUNG_STANDARD;
+  const eModul = speichen.e_modul ?? E_MODUL;
+  const nippel = speichen.nippel_verkuerzung || 0.0;
+
+  for (const [ergebnis, anteil] of [[links, spannungLinks], [rechts, spannungRechts]]) {
+    ergebnis.spannung = zielspannung * anteil / 100.0;
+    ergebnis.dehnung = dehnung(b, ergebnis.laenge, ergebnis.spannung, eModul);
+    ergebnis.drahtspannung = drahtspannung(b, ergebnis.spannung);
+    ergebnis.frequenz = frequenz(b, ergebnis.laenge, ergebnis.spannung);
+    ergebnis.gewicht = speichenmasse(b, ergebnis.laenge);
+    ergebnis.korrektur = ergebnis.dehnung + weitung + nippel;
+    if (speichen.korrektur_anwenden) {
+      ergebnis.laenge_gerundet = runden(ergebnis.laenge - ergebnis.korrektur, schritt);
+    }
+  }
 }
 
 /** Was zu bestellen ist – gleiche Bestelllängen werden zusammengefasst. */
@@ -4804,6 +5140,7 @@ function felgeSvg(felgentypName, oesen, erd, breite = 340, hoehe = 170) {
 
 
 
+
 const SPEICHER = "speichenrechner.eingaben";
 
 /** Bauart und Ritzelaufnahme der zuletzt gewählten Nabe – für die Skizze. */
@@ -4822,6 +5159,15 @@ const felder = {
   kreuzungen_rechts: "kreuzungen-rechts",
   verteilung: "verteilung",
   schritt: "rundung",
+  flanschdicke: "flanschdicke",
+};
+
+/** Die Speichen-Ebene: Zahlenfelder des Speichensatzes. */
+const speichenfelder = {
+  spannung: "spannung",
+  weitung: "weitung",
+  nippel_verkuerzung: "nippel-verkuerzung",
+  unterlegscheibe: "unterlegscheibe",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -4848,6 +5194,19 @@ function eingabeLesen() {
   werte.speichenzahl = Math.round(werte.speichenzahl);
   werte.kreuzungen_links = Math.round(werte.kreuzungen_links);
   werte.kreuzungen_rechts = Math.round(werte.kreuzungen_rechts);
+
+  // Der Speichensatz hängt als eigenes Objekt dran – genau wie am PC, wo
+  // berechne() ihn als optionalen Parameter bekommt.
+  const speichen = {};
+  for (const [name, id] of Object.entries(speichenfelder)) {
+    speichen[name] = Number($(id).value.replace(",", "."));
+  }
+  speichen.bauart = $("speichenbauart").value;
+  speichen.kopf = $("kopf").value;
+  speichen.straightpull = $("straightpull").checked;
+  speichen.korrektur_anwenden = $("korrektur-anwenden").checked;
+  werte.speichen = speichen;
+
   return werte;
 }
 
@@ -4938,7 +5297,7 @@ function anzeigen() {
   anzeige.genauRechts.textContent = `exakt ${mm(rechts.laenge, 2)}`;
   anzeige.bestellen.textContent = `Zu bestellen: ${einkaufsliste(ergebnis).join("   ·   ")}`;
 
-  anzeige.kennwerte.textContent = [
+  const zeilen = [
     `Speichenwinkel ${grad(links.speichenwinkel)} / ${grad(rechts.speichenwinkel)}`,
     `Winkel an der Felge ${grad(links.felgenwinkel)} / ${grad(rechts.felgenwinkel)}`,
     `Spannung ${Math.round(ergebnis.spannung_links_prozent)} / `
@@ -4946,7 +5305,21 @@ function anzeigen() {
     `${links.speichen} + ${rechts.speichen} Speichen, `
       + `${links.kreuzungen}- und ${rechts.kreuzungen}-fach`
       + ` (üblich: ${ueblicheKreuzungen(links.speichen)}-fach)`,
-  ].join("  ·  ");
+  ];
+
+  // Die Speichen-Ebene: nur zeigen, wenn eine Zielspannung eingetragen ist –
+  // ohne Spannung gibt es weder Dehnung noch Ton.
+  if (links.spannung > 0) {
+    zeilen.push(
+      `${Math.round(links.spannung)} / ${Math.round(rechts.spannung)} N je Speiche`,
+      `Dehnung ${mm(links.dehnung, 2)} / ${mm(rechts.dehnung, 2)}`,
+      `Ton ${Math.round(links.frequenz)} Hz (${note(links.frequenz)})`
+        + ` / ${Math.round(rechts.frequenz)} Hz (${note(rechts.frequenz)})`,
+      `Draht bis ${Math.round(Math.max(links.drahtspannung, rechts.drahtspannung))} N/mm²`,
+      `${zahl(links.gewicht * links.speichen + rechts.gewicht * rechts.speichen, 0)} g Speichen`,
+    );
+  }
+  anzeige.kennwerte.textContent = zeilen.join("  ·  ");
 
   skizzenZeichnen(eingabe);
 
@@ -4978,6 +5351,23 @@ function laden() {
     if (gespeichert[name] === undefined) continue;
     $(id).value = gespeichert[name];
   }
+
+  // Der Speichensatz liegt als eigenes Objekt im Gedächtnis. Ältere Stände
+  // haben ihn noch nicht – dann bleiben die Vorgaben stehen.
+  const s = gespeichert.speichen;
+  if (s) {
+    for (const [name, id] of Object.entries(speichenfelder)) {
+      if (s[name] === undefined) continue;
+      $(id).value = s[name];
+    }
+    if (s.bauart !== undefined && [...$("speichenbauart").options].some((o) => o.value === s.bauart)) {
+      $("speichenbauart").value = s.bauart;
+    }
+    if (s.kopf !== undefined) $("kopf").value = s.kopf;
+    $("straightpull").checked = Boolean(s.straightpull);
+    $("korrektur-anwenden").checked = Boolean(s.korrektur_anwenden);
+  }
+
   $("gekoppelt").checked =
     gespeichert.kreuzungen_links === gespeichert.kreuzungen_rechts;
   $("kreuzungen-rechts").disabled = $("gekoppelt").checked;
@@ -5101,6 +5491,10 @@ function katalogAufbauen() {
     [["", "alle Kategorien"], ...felgenkategorien().map((k) => [k, k])]);
   felgentypenFuellen();
   felgeninfoSetzen();
+
+  // Speichenbauarten – Vorauswahl wie am PC die zweite (2,0/1,8/2,0).
+  listeFuellen($("speichenbauart"), BAUARTEN.map((b) => [b.name, b.name]),
+               BAUARTEN[1].name);
 }
 
 function herstellerFuellen() {
@@ -5146,8 +5540,12 @@ for (const knopf of document.querySelectorAll(".umschalter button")) {
 
 // ------------------------------------------------------------- Verdrahtung
 
-for (const id of Object.values(felder)) {
+for (const id of [...Object.values(felder), ...Object.values(speichenfelder)]) {
   $(id).addEventListener("input", anzeigen);
+  $(id).addEventListener("change", anzeigen);
+}
+
+for (const id of ["speichenbauart", "kopf", "straightpull", "korrektur-anwenden"]) {
   $(id).addEventListener("change", anzeigen);
 }
 

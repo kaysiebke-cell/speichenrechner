@@ -27,7 +27,8 @@ sys.path.insert(0, str(WURZEL))          # für werkzeuge.*
 sys.path.insert(0, str(WURZEL / "pc"))   # für speichenrechner.*
 
 from speichenrechner import berechnung  # noqa: E402
-from speichenrechner.modelle import Einspeichung, Felge, Nabe  # noqa: E402
+from speichenrechner.modelle import Einspeichung, Felge, Nabe, Speichensatz  # noqa: E402
+from speichenrechner.speiche import BAUARTEN  # noqa: E402
 
 #: Ein Fall ist ``(Name, Nabe, Felge, Einspeichung, Rundungsschritt)``.
 FAELLE = (
@@ -63,29 +64,80 @@ FAELLE = (
      Nabe("eno", 60.0, 60.0, 32.0, 32.0), Felge("f", 602.0), Einspeichung(36, 3, 3), 1.0),
 )
 
+#: Fälle **mit** Speichensatz: ``(Name, Nabe, Felge, Einspeichung, Schritt,
+#: Speichensatz)``. Sie decken die Ebene ab, die es am Handy lange nicht gab –
+#: Spannung, Dehnung, Ton, Gewicht und die korrigierte Bestelllänge. Ohne diese
+#: Fälle bliebe genau der Teil ungeprüft, der zwischen den Fassungen am
+#: leichtesten auseinanderläuft.
+FAELLE_SPEICHEN = (
+    ("Speichensatz Standard, ohne Korrektur",
+     Nabe("h", 45.0, 45.0, 35.0, 20.0, 2.6), Felge("f", 600.0), Einspeichung(32, 3, 3), 1.0,
+     Speichensatz()),
+    ("Korrektur angewandt, 2,0/1,8/2,0 bei 1000 N",
+     Nabe("h", 45.0, 45.0, 35.0, 20.0, 2.6), Felge("f", 600.0), Einspeichung(32, 3, 3), 1.0,
+     Speichensatz(korrektur_anwenden=True)),
+    ("Nippel-Verkürzung 1,5 mm und Unterlegscheiben 0,8 mm",
+     Nabe("h", 45.0, 45.0, 35.0, 20.0, 2.6), Felge("f", 600.0), Einspeichung(32, 3, 3), 1.0,
+     Speichensatz(korrektur_anwenden=True, nippel_verkuerzung=1.5, unterlegscheibe=0.8)),
+    ("Straightpull – kein Bogen, keine Weitung, kein Lochabzug",
+     Nabe("sp", 45.0, 45.0, 35.0, 20.0, 2.6), Felge("f", 600.0), Einspeichung(32, 3, 3), 1.0,
+     Speichensatz(korrektur_anwenden=True, straightpull=True)),
+    ("Köpfe innen – halbe Flanschdicke Versatz",
+     Nabe("ki", 45.0, 45.0, 35.0, 20.0, 2.6, flanschdicke=3.2),
+     Felge("f", 600.0), Einspeichung(32, 3, 3), 1.0, Speichensatz(kopf="innen")),
+    ("Köpfe außen – Versatz andersherum",
+     Nabe("ka", 45.0, 45.0, 35.0, 20.0, 2.6, flanschdicke=4.0),
+     Felge("f", 600.0), Einspeichung(32, 3, 3), 1.0, Speichensatz(kopf="außen")),
+    ("Messerspeiche – Querschnitt direkt vorgegeben",
+     Nabe("me", 45.0, 45.0, 35.0, 20.0, 2.6), Felge("f", 600.0), Einspeichung(24, 2, 2), 1.0,
+     Speichensatz(bauart=BAUARTEN[6].name, korrektur_anwenden=True, spannung=1200.0)),
+    ("durchgehend 2,0 mm, niedrige Spannung",
+     Nabe("du", 45.0, 45.0, 35.0, 20.0, 2.6), Felge("f", 600.0), Einspeichung(36, 3, 3), 1.0,
+     Speichensatz(bauart=BAUARTEN[0].name, spannung=600.0, korrektur_anwenden=True)),
+    ("sehr kurze Speiche – Enden anteilig gekürzt",
+     Nabe("kurz", 38.0, 38.0, 30.0, 30.0, 2.4), Felge("f", 180.0), Einspeichung(28, 2, 2), 1.0,
+     Speichensatz(korrektur_anwenden=True)),
+)
+
 #: So viele Stellen müssen übereinstimmen. Enger als das ist bei Fließkomma
 #: über zwei Sprachen hinweg nicht sinnvoll.
 STELLEN = 9
 
 
-def _satz(name, nabe, felge, einspeichung, schritt) -> dict:
-    ergebnis = berechnung.berechne(nabe, felge, einspeichung, schritt)
+def _satz(name, nabe, felge, einspeichung, schritt, speichen=None) -> dict:
+    ergebnis = berechnung.berechne(nabe, felge, einspeichung, schritt, speichen)
+    eingabe = {
+        "flanschdurchmesser_links": nabe.flanschdurchmesser_links,
+        "flanschdurchmesser_rechts": nabe.flanschdurchmesser_rechts,
+        "flanschabstand_links": nabe.flanschabstand_links,
+        "flanschabstand_rechts": nabe.flanschabstand_rechts,
+        "speichenloch": nabe.speichenloch,
+        "flanschdicke": nabe.flanschdicke,
+        "erd": felge.erd,
+        "versatz": felge.versatz,
+        "speichenzahl": einspeichung.speichenzahl,
+        "kreuzungen_links": einspeichung.kreuzungen_links,
+        "kreuzungen_rechts": einspeichung.kreuzungen_rechts,
+        "verteilung": einspeichung.verteilung,
+        "schritt": schritt,
+    }
+    if speichen is not None:
+        # Nur die Felder, die die Rechnung liest – as_dict() brächte auch
+        # eigene_bauart mit, das hier nie belegt ist.
+        eingabe["speichen"] = {
+            "bauart": speichen.bauart,
+            "e_modul": speichen.e_modul,
+            "spannung": speichen.spannung,
+            "korrektur_anwenden": speichen.korrektur_anwenden,
+            "weitung": speichen.weitung,
+            "nippel_verkuerzung": speichen.nippel_verkuerzung,
+            "unterlegscheibe": speichen.unterlegscheibe,
+            "straightpull": speichen.straightpull,
+            "kopf": speichen.kopf,
+        }
     return {
         "name": name,
-        "eingabe": {
-            "flanschdurchmesser_links": nabe.flanschdurchmesser_links,
-            "flanschdurchmesser_rechts": nabe.flanschdurchmesser_rechts,
-            "flanschabstand_links": nabe.flanschabstand_links,
-            "flanschabstand_rechts": nabe.flanschabstand_rechts,
-            "speichenloch": nabe.speichenloch,
-            "erd": felge.erd,
-            "versatz": felge.versatz,
-            "speichenzahl": einspeichung.speichenzahl,
-            "kreuzungen_links": einspeichung.kreuzungen_links,
-            "kreuzungen_rechts": einspeichung.kreuzungen_rechts,
-            "verteilung": einspeichung.verteilung,
-            "schritt": schritt,
-        },
+        "eingabe": eingabe,
         "erwartet": {
             "laenge_links": round(ergebnis.links.laenge, STELLEN),
             "laenge_rechts": round(ergebnis.rechts.laenge, STELLEN),
@@ -103,6 +155,21 @@ def _satz(name, nabe, felge, einspeichung, schritt) -> dict:
             "speichen_rechts": ergebnis.rechts.speichen,
             "spannung_links_prozent": round(ergebnis.spannung_links_prozent, STELLEN),
             "spannung_rechts_prozent": round(ergebnis.spannung_rechts_prozent, STELLEN),
+            # Die Speichen-Ebene. Ohne Speichensatz stehen hier überall Nullen –
+            # auch das wird geprüft, damit die JavaScript-Fassung ohne
+            # Speichensatz nicht heimlich doch etwas einrechnet.
+            "spannung_links": round(ergebnis.links.spannung, STELLEN),
+            "spannung_rechts": round(ergebnis.rechts.spannung, STELLEN),
+            "dehnung_links": round(ergebnis.links.dehnung, STELLEN),
+            "dehnung_rechts": round(ergebnis.rechts.dehnung, STELLEN),
+            "korrektur_links": round(ergebnis.links.korrektur, STELLEN),
+            "korrektur_rechts": round(ergebnis.rechts.korrektur, STELLEN),
+            "drahtspannung_links": round(ergebnis.links.drahtspannung, STELLEN),
+            "drahtspannung_rechts": round(ergebnis.rechts.drahtspannung, STELLEN),
+            "frequenz_links": round(ergebnis.links.frequenz, STELLEN),
+            "frequenz_rechts": round(ergebnis.rechts.frequenz, STELLEN),
+            "gewicht_links": round(ergebnis.links.gewicht, STELLEN),
+            "gewicht_rechts": round(ergebnis.rechts.gewicht, STELLEN),
         },
     }
 
@@ -158,7 +225,7 @@ def erzeugen() -> dict:
         "hinweis": ("Von werkzeuge/pruefwerte_erzeugen.py aus der Python-Rechnung "
                     "erzeugt. Die JavaScript-Fassung muss dieselben Zahlen liefern."),
         "stellen": STELLEN,
-        "faelle": [_satz(*fall) for fall in FAELLE],
+        "faelle": [_satz(*fall) for fall in (*FAELLE, *FAELLE_SPEICHEN)],
         "katalog": _katalog(),
     }
 

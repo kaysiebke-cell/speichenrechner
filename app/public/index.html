@@ -139,6 +139,66 @@
       </label>
     </fieldset>
 
+    <fieldset>
+      <legend>Speichen</legend>
+      <select id="speichenbauart" class="voll" aria-label="Speichenbauart"></select>
+      <label class="zeile">
+        <span>Zielspannung</span>
+        <input type="number" id="spannung" inputmode="numeric" step="50" min="0" max="2000" value="1000">
+        <span class="einheit-feld">N</span>
+      </label>
+      <label class="zeile">
+        <span>Kopflage</span>
+        <select id="kopf">
+          <option value="gemischt">gemischt (üblich)</option>
+          <option value="innen">alle Köpfe innen</option>
+          <option value="außen">alle Köpfe außen</option>
+        </select>
+      </label>
+      <label class="zeile">
+        <span>Flanschdicke</span>
+        <input type="number" id="flanschdicke" inputmode="decimal" step="0.1" min="0" max="12" value="3.2">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="haken">
+        <input type="checkbox" id="straightpull">
+        <span>Straightpull – Speichen ohne Bogen</span>
+      </label>
+      <p class="klein">Die Flanschdicke zählt nur bei einseitiger Kopflage: dann sitzt
+        der Ansatzpunkt um eine halbe Flanschdicke neben der Flanschmitte. Bei
+        Straightpull entfällt außerdem der Abzug fürs Speichenloch.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Nippel und Korrektur</legend>
+      <label class="zeile">
+        <span>Nippel-Verkürzung</span>
+        <input type="number" id="nippel-verkuerzung" inputmode="decimal" step="0.1" min="0" max="6" value="0">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="zeile">
+        <span>Unterlegscheiben</span>
+        <input type="number" id="unterlegscheibe" inputmode="decimal" step="0.1" min="0" max="4" value="0">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="zeile">
+        <span>Weitung</span>
+        <input type="number" id="weitung" inputmode="decimal" step="0.05" min="0" max="1" value="0.1">
+        <span class="einheit-feld">mm</span>
+      </label>
+      <label class="haken">
+        <input type="checkbox" id="korrektur-anwenden">
+        <span>Korrektur von der Bestelllänge abziehen</span>
+      </label>
+      <p class="klein">Der Haken zieht Dehnung, Weitung und Nippel-Verkürzung von der
+        Bestelllänge ab. Ohne ihn steht dort die Länge im gespannten Laufrad – das,
+        was klassische Rechner ausgeben.</p>
+      <p class="klein">Längere Nippel (14 oder 16 mm statt 12 mm) brauchen weniger
+        Speichenlänge im Gewinde; der Erfahrungswert dafür gehört in die
+        Nippel-Verkürzung. Unterlegscheiben unter dem Nippel heben den Sitz an und
+        vergrößern den wirksamen ERD um das Doppelte ihrer Dicke.</p>
+    </fieldset>
+
     <button type="button" id="zuruecksetzen" class="flach">Eingaben zurücksetzen</button>
   </form>
 

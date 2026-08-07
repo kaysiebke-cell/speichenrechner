@@ -12,6 +12,17 @@
 // Dass diese Fassung dasselbe rechnet wie die Python-Fassung, prüft
 // werkzeuge/pruefwerte_js.mjs gegen data/pruefwerte.json.
 
+// Benannte Einfuhr ohne Umbenennung. Die Einzeldatei fügt alle Module in einen
+// Scope zusammen und streicht die Einfuhrzeilen: ein Namensraum-Objekt
+// (Sternchen-Form) gäbe es dort nicht mehr, und ein Alias über `as` verschwände
+// mitsamt der Zeile. Nur die Originalnamen überleben beides.
+// (Die Zeichenfolge aus dem Schlüsselwort und einem Leerzeichen steht hier
+// bewusst nirgends: einzeldatei_erzeugen.py sucht sie stur im ganzen Text.)
+import {
+  bauartNachName, dehnung, drahtspannung, E_MODUL, frequenz, speichenmasse,
+  SPANNUNG_STANDARD, WEITUNG_STANDARD,
+} from "./speiche.js";
+
 export const RUNDUNGSSCHRITTE = [1.0, 0.5, 2.0];
 
 /** Sehnenwinkel in Grad aus der Speichenzahl **einer** Flanschseite. */
@@ -117,9 +128,26 @@ export function ueblicheKreuzungen(speichenSeite) {
 }
 
 /**
+ * Verschiebung des Ansatzpunktes durch eine einseitige Kopflage.
+ *
+ * Im Normalfall wechseln sich Köpfe innen und außen ab, dann hebt sich der
+ * Versatz auf und es bleibt bei der Flanschmitte.
+ */
+function kopfversatz(flanschdicke, speichen) {
+  if (!speichen || speichen.straightpull) return 0.0;
+  if (speichen.kopf === "innen") return flanschdicke / 2.0;
+  if (speichen.kopf === "außen") return -flanschdicke / 2.0;
+  return 0.0;
+}
+
+/**
  * Rechnet beide Seiten eines Laufrads.
  *
  * ``eingabe`` trägt dieselben Feldnamen wie data/pruefwerte.json.
+ *
+ * Ohne ``speichen`` bleibt es bei der reinen Geometrie. Mit Speichensatz
+ * kommen Spannung je Seite, elastische Dehnung und Speichenton dazu – und auf
+ * Wunsch die um die Dehnung korrigierte Bestelllänge.
  */
 export function berechne(eingabe) {
   const {
@@ -128,25 +156,38 @@ export function berechne(eingabe) {
     flanschabstand_links: aLinks,
     flanschabstand_rechts: aRechts,
     speichenloch = 2.6,
-    erd,
+    flanschdicke = 3.2,
+    erd: erdRoh,
     versatz = 0.0,
     speichenzahl,
     kreuzungen_links: kLinks,
     kreuzungen_rechts: kRechts,
     verteilung = "1:1",
     schritt = 1.0,
+    speichen = null,
   } = eingabe;
+
+  // Unterlegscheiben unter dem Nippel verschieben den Nippelsitz nach außen,
+  // der wirksame ERD wächst also um zweimal ihre Dicke.
+  const erd = erdRoh + 2.0 * (speichen ? (speichen.unterlegscheibe || 0.0) : 0.0);
+
+  // Straightpull-Speichen haben keinen Bogen, der sich am Lochrand anlegt.
+  const loch = (speichen && speichen.straightpull) ? 0.0 : speichenloch;
+
+  // Sitzen alle Köpfe auf derselben Flanschseite, verschiebt sich der
+  // Ansatzpunkt um die halbe Flanschdicke.
+  const versatzKopf = kopfversatz(flanschdicke, speichen);
 
   // Asymmetrische Felge: das Speichenbett wandert nach rechts, damit
   // vergrößert sich der wirksame Abstand links und verkleinert sich rechts.
-  const wirksamLinks = aLinks + versatz;
-  const wirksamRechts = aRechts - versatz;
+  const wirksamLinks = aLinks + versatz + versatzKopf;
+  const wirksamRechts = aRechts - versatz + versatzKopf;
 
   const anzahlLinks = speichenLinks(speichenzahl, verteilung);
   const anzahlRechts = speichenRechts(speichenzahl, verteilung);
 
   const seite = (durchmesser, abstand, kreuzungen, anzahl) => {
-    const laenge = speichenlaenge(erd, durchmesser, abstand, anzahl, kreuzungen, speichenloch);
+    const laenge = speichenlaenge(erd, durchmesser, abstand, anzahl, kreuzungen, loch);
     return {
       laenge,
       laenge_gerundet: runden(laenge, schritt),
@@ -156,12 +197,23 @@ export function berechne(eingabe) {
       lochabstand: lochabstand(durchmesser, anzahl),
       kreuzungen,
       speichen: anzahl,
+      // Erst der Speichensatz füllt diese Werte – ohne ihn bleiben sie null.
+      spannung: 0.0,
+      dehnung: 0.0,
+      korrektur: 0.0,
+      drahtspannung: 0.0,
+      frequenz: 0.0,
+      gewicht: 0.0,
     };
   };
 
   const links = seite(dLinks, wirksamLinks, kLinks, anzahlLinks);
   const rechts = seite(dRechts, wirksamRechts, kRechts, anzahlRechts);
   const [spannungLinks, spannungRechts] = spannungsanteile(links, rechts);
+
+  if (speichen) {
+    speichenEintragen(links, rechts, speichen, spannungLinks, spannungRechts, schritt);
+  }
 
   return {
     links,
@@ -170,6 +222,28 @@ export function berechne(eingabe) {
     spannung_rechts_prozent: spannungRechts,
     gleicheBestelllaenge: links.laenge_gerundet === rechts.laenge_gerundet,
   };
+}
+
+/** Ergänzt Spannung, Dehnung, Ton und ggf. die korrigierte Bestelllänge. */
+function speichenEintragen(links, rechts, speichen, spannungLinks, spannungRechts, schritt) {
+  const b = bauartNachName(speichen.bauart, speichen.eigene_bauart);
+  // Ohne Bogen gibt es auch keine Bogenweitung.
+  const weitung = speichen.straightpull ? 0.0 : (speichen.weitung ?? WEITUNG_STANDARD);
+  const zielspannung = speichen.spannung ?? SPANNUNG_STANDARD;
+  const eModul = speichen.e_modul ?? E_MODUL;
+  const nippel = speichen.nippel_verkuerzung || 0.0;
+
+  for (const [ergebnis, anteil] of [[links, spannungLinks], [rechts, spannungRechts]]) {
+    ergebnis.spannung = zielspannung * anteil / 100.0;
+    ergebnis.dehnung = dehnung(b, ergebnis.laenge, ergebnis.spannung, eModul);
+    ergebnis.drahtspannung = drahtspannung(b, ergebnis.spannung);
+    ergebnis.frequenz = frequenz(b, ergebnis.laenge, ergebnis.spannung);
+    ergebnis.gewicht = speichenmasse(b, ergebnis.laenge);
+    ergebnis.korrektur = ergebnis.dehnung + weitung + nippel;
+    if (speichen.korrektur_anwenden) {
+      ergebnis.laenge_gerundet = runden(ergebnis.laenge - ergebnis.korrektur, schritt);
+    }
+  }
 }
 
 /** Was zu bestellen ist – gleiche Bestelllängen werden zusammengefasst. */

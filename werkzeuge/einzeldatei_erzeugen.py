@@ -31,7 +31,8 @@ QUELLE = WURZEL / "app" / "public"
 ZIEL = WURZEL / "app" / "speichenrechner-handy.html"
 
 #: Reihenfolge zählt: wer benutzt wird, muss vorher stehen.
-MODULE = ("js/daten.js", "js/rechnen.js", "js/katalog.js", "js/zeichnung.js", "js/app.js")
+MODULE = ("js/daten.js", "js/speiche.js", "js/rechnen.js", "js/katalog.js",
+          "js/zeichnung.js", "js/app.js")
 
 
 def _ohne_module(quelltext: str) -> str:
