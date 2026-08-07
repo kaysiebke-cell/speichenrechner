@@ -4,6 +4,7 @@
 // Python-Fassung geprüft. Hier passiert nur Oberfläche.
 
 import { berechne, einkaufsliste, grad, mm, ueblicheKreuzungen, zahl } from "./rechnen.js";
+import { BAUARTEN, note } from "./speiche.js";
 import {
   artenMitAnzahl, bezeichnung, felgenbeschreibung, felgenFussnoten, felgenkategorien,
   felgentyp, felgentypen, felgenwarnungen, flanschabstaende, flanschdurchmesserPaar,
@@ -31,6 +32,15 @@ const felder = {
   kreuzungen_rechts: "kreuzungen-rechts",
   verteilung: "verteilung",
   schritt: "rundung",
+  flanschdicke: "flanschdicke",
+};
+
+/** Die Speichen-Ebene: Zahlenfelder des Speichensatzes. */
+const speichenfelder = {
+  spannung: "spannung",
+  weitung: "weitung",
+  nippel_verkuerzung: "nippel-verkuerzung",
+  unterlegscheibe: "unterlegscheibe",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -57,6 +67,19 @@ function eingabeLesen() {
   werte.speichenzahl = Math.round(werte.speichenzahl);
   werte.kreuzungen_links = Math.round(werte.kreuzungen_links);
   werte.kreuzungen_rechts = Math.round(werte.kreuzungen_rechts);
+
+  // Der Speichensatz hängt als eigenes Objekt dran – genau wie am PC, wo
+  // berechne() ihn als optionalen Parameter bekommt.
+  const speichen = {};
+  for (const [name, id] of Object.entries(speichenfelder)) {
+    speichen[name] = Number($(id).value.replace(",", "."));
+  }
+  speichen.bauart = $("speichenbauart").value;
+  speichen.kopf = $("kopf").value;
+  speichen.straightpull = $("straightpull").checked;
+  speichen.korrektur_anwenden = $("korrektur-anwenden").checked;
+  werte.speichen = speichen;
+
   return werte;
 }
 
@@ -147,7 +170,7 @@ function anzeigen() {
   anzeige.genauRechts.textContent = `exakt ${mm(rechts.laenge, 2)}`;
   anzeige.bestellen.textContent = `Zu bestellen: ${einkaufsliste(ergebnis).join("   ·   ")}`;
 
-  anzeige.kennwerte.textContent = [
+  const zeilen = [
     `Speichenwinkel ${grad(links.speichenwinkel)} / ${grad(rechts.speichenwinkel)}`,
     `Winkel an der Felge ${grad(links.felgenwinkel)} / ${grad(rechts.felgenwinkel)}`,
     `Spannung ${Math.round(ergebnis.spannung_links_prozent)} / `
@@ -155,7 +178,21 @@ function anzeigen() {
     `${links.speichen} + ${rechts.speichen} Speichen, `
       + `${links.kreuzungen}- und ${rechts.kreuzungen}-fach`
       + ` (üblich: ${ueblicheKreuzungen(links.speichen)}-fach)`,
-  ].join("  ·  ");
+  ];
+
+  // Die Speichen-Ebene: nur zeigen, wenn eine Zielspannung eingetragen ist –
+  // ohne Spannung gibt es weder Dehnung noch Ton.
+  if (links.spannung > 0) {
+    zeilen.push(
+      `${Math.round(links.spannung)} / ${Math.round(rechts.spannung)} N je Speiche`,
+      `Dehnung ${mm(links.dehnung, 2)} / ${mm(rechts.dehnung, 2)}`,
+      `Ton ${Math.round(links.frequenz)} Hz (${note(links.frequenz)})`
+        + ` / ${Math.round(rechts.frequenz)} Hz (${note(rechts.frequenz)})`,
+      `Draht bis ${Math.round(Math.max(links.drahtspannung, rechts.drahtspannung))} N/mm²`,
+      `${zahl(links.gewicht * links.speichen + rechts.gewicht * rechts.speichen, 0)} g Speichen`,
+    );
+  }
+  anzeige.kennwerte.textContent = zeilen.join("  ·  ");
 
   skizzenZeichnen(eingabe);
 
@@ -187,6 +224,23 @@ function laden() {
     if (gespeichert[name] === undefined) continue;
     $(id).value = gespeichert[name];
   }
+
+  // Der Speichensatz liegt als eigenes Objekt im Gedächtnis. Ältere Stände
+  // haben ihn noch nicht – dann bleiben die Vorgaben stehen.
+  const s = gespeichert.speichen;
+  if (s) {
+    for (const [name, id] of Object.entries(speichenfelder)) {
+      if (s[name] === undefined) continue;
+      $(id).value = s[name];
+    }
+    if (s.bauart !== undefined && [...$("speichenbauart").options].some((o) => o.value === s.bauart)) {
+      $("speichenbauart").value = s.bauart;
+    }
+    if (s.kopf !== undefined) $("kopf").value = s.kopf;
+    $("straightpull").checked = Boolean(s.straightpull);
+    $("korrektur-anwenden").checked = Boolean(s.korrektur_anwenden);
+  }
+
   $("gekoppelt").checked =
     gespeichert.kreuzungen_links === gespeichert.kreuzungen_rechts;
   $("kreuzungen-rechts").disabled = $("gekoppelt").checked;
@@ -310,6 +364,10 @@ function katalogAufbauen() {
     [["", "alle Kategorien"], ...felgenkategorien().map((k) => [k, k])]);
   felgentypenFuellen();
   felgeninfoSetzen();
+
+  // Speichenbauarten – Vorauswahl wie am PC die zweite (2,0/1,8/2,0).
+  listeFuellen($("speichenbauart"), BAUARTEN.map((b) => [b.name, b.name]),
+               BAUARTEN[1].name);
 }
 
 function herstellerFuellen() {
@@ -355,8 +413,12 @@ for (const knopf of document.querySelectorAll(".umschalter button")) {
 
 // ------------------------------------------------------------- Verdrahtung
 
-for (const id of Object.values(felder)) {
+for (const id of [...Object.values(felder), ...Object.values(speichenfelder)]) {
   $(id).addEventListener("input", anzeigen);
+  $(id).addEventListener("change", anzeigen);
+}
+
+for (const id of ["speichenbauart", "kopf", "straightpull", "korrektur-anwenden"]) {
   $(id).addEventListener("change", anzeigen);
 }
 

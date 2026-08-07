@@ -8,6 +8,7 @@ Module auskommen, sonst läuft sie unter ``file://`` nicht.
 
 from __future__ import annotations
 
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -39,6 +40,31 @@ class TestEinzeldatei(unittest.TestCase):
         for verboten in ("import ", "export ", 'src="js/', 'href="css/', "manifest.json"):
             with self.subTest(verboten=verboten):
                 self.assertNotIn(verboten, self.inhalt)
+
+    def test_keine_doppelten_namen_ueber_die_module(self):
+        """Zwei Module dürfen nicht denselben Namen auf oberster Ebene tragen.
+
+        Getrennt sind die Module gegeneinander abgeschottet – zusammengefügt
+        landen sie in **einem** Scope, und die spätere Deklaration überschreibt
+        die frühere. Das schlägt still zu: `speiche.js` und `katalog.js` hatten
+        beide ein `masse`, die Handy-Fassung rief daraufhin die falsche
+        Funktion auf und zeigte nur noch Striche statt Längen. Nichts an dieser
+        Datei sah dabei verdächtig aus, denn einzeln lief jedes Modul.
+        """
+        namen = {}
+        doppelt = []
+        muster = re.compile(
+            r"^(?:export\s+)?(?:function|const|let|var|class)\s+([A-Za-z_$][\w$]*)", re.M
+        )
+        for name_modul in einzeldatei_erzeugen.MODULE:
+            quelltext = (einzeldatei_erzeugen.QUELLE / name_modul).read_text(encoding="utf-8")
+            for treffer in muster.finditer(quelltext):
+                name = treffer.group(1)
+                if name in namen and namen[name] != name_modul:
+                    doppelt.append(f"{name} in {namen[name]} und {name_modul}")
+                namen.setdefault(name, name_modul)
+        self.assertEqual(doppelt, [], "Namen kollidieren in der Einzeldatei: "
+                                      + ", ".join(doppelt))
 
     def test_alles_ist_drin(self):
         for muster in ("<style>", "NABEN = [", "FELGENTYPEN = [",

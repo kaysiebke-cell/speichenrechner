@@ -554,21 +554,27 @@ JavaScript (`app/public/js/rechnen.js`). Zwei Fassungen driften auseinander, wen
 nichts sie zusammenhält. Das Band dazwischen sind gemeinsame Prüfwerte:
 
 ```bash
-python3 werkzeuge/pruefwerte_erzeugen.py   # Python rechnet 14 Fälle vor
+python3 werkzeuge/pruefwerte_erzeugen.py   # Python rechnet 23 Fälle vor
 node werkzeuge/pruefwerte_js.mjs           # JavaScript muss dieselben Zahlen liefern
 ```
 
 `data/pruefwerte.json` enthält zwei Sorten Prüfwerte:
 
-* **14 Rechenfälle** mit Längen, Speichen- und Felgenwinkel, Sehnenwinkel,
-  Lochabstand und Spannungsverhältnis – symmetrisch und unsymmetrisch, radial
-  bis 4-fach, 2:1-Verteilung, Felgenversatz, ein 12-Zoll-Kinderrad und der
-  Spokomat-Abgleich.
+* **14 Rechenfälle zur Geometrie** mit Längen, Speichen- und Felgenwinkel,
+  Sehnenwinkel, Lochabstand und Spannungsverhältnis – symmetrisch und
+  unsymmetrisch, radial bis 4-fach, 2:1-Verteilung, Felgenversatz, ein
+  12-Zoll-Kinderrad und der Spokomat-Abgleich.
+* **9 Rechenfälle mit Speichensatz**: Spannung je Seite in Newton, elastische
+  Dehnung, Ton, Gewicht und die korrigierte Bestelllänge – mit und ohne
+  Korrektur, mit Nippel-Verkürzung und Unterlegscheiben, Straightpull, beide
+  einseitigen Kopflagen, Messerspeiche und eine sehr kurze Speiche, bei der die
+  verdickten Enden anteilig gekürzt werden. Ohne Speichensatz müssen auf beiden
+  Seiten Nullen stehen – auch das wird geprüft.
 * **den ausgewerteten Katalog**: für *jede* der 230 Naben und *jeden* der 17
   Felgentypen die gelesenen Werte – Flanschmaße, Speichenloch, Lochzahlen,
   Ritzelaufnahme, Merkmale – dazu die Zähler der Filterlisten.
 
-Zusammen **2841 Einzelwerte**, die beide Fassungen auf neun Stellen gleich
+Zusammen **3261 Einzelwerte**, die beide Fassungen auf neun Stellen gleich
 treffen müssen. Die Schreibweisen der Tabelle (`47,5 (22,5/25)`,
 `58 (symmetrisch)`, `Ø100`, `entfällt (Singlespeed, kein Freilauf)`) sind über
 Jahre gewachsen; liest JavaScript eine davon anders, stünde auf dem Handy eine
@@ -724,6 +730,7 @@ app/                         Handy-Fassung
     index.html               eine Seite, Ergebnis oben
     css/stil.css             Aktenlage-Gestaltung, hell/dunkel nach Gerät
     js/rechnen.js            dieselben Formeln wie berechnung.py
+    js/speiche.js            dieselben Formeln wie speiche.py
     js/katalog.js            dieselbe Auswertung wie tabelle.py und katalog.py
     js/daten.js              erzeugt aus data/ – nicht von Hand ändern
     js/app.js                Oberfläche verdrahten

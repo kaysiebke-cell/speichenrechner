@@ -39,6 +39,20 @@ const zuPruefen = [
   ["speichen_rechts", (e) => e.rechts.speichen],
   ["spannung_links_prozent", (e) => e.spannung_links_prozent],
   ["spannung_rechts_prozent", (e) => e.spannung_rechts_prozent],
+  // Die Speichen-Ebene: Spannung je Seite, Dehnung, Korrektur, Ton, Gewicht.
+  // Ohne Speichensatz müssen hier auf beiden Seiten Nullen stehen.
+  ["spannung_links", (e) => e.links.spannung],
+  ["spannung_rechts", (e) => e.rechts.spannung],
+  ["dehnung_links", (e) => e.links.dehnung],
+  ["dehnung_rechts", (e) => e.rechts.dehnung],
+  ["korrektur_links", (e) => e.links.korrektur],
+  ["korrektur_rechts", (e) => e.rechts.korrektur],
+  ["drahtspannung_links", (e) => e.links.drahtspannung],
+  ["drahtspannung_rechts", (e) => e.rechts.drahtspannung],
+  ["frequenz_links", (e) => e.links.frequenz],
+  ["frequenz_rechts", (e) => e.rechts.frequenz],
+  ["gewicht_links", (e) => e.links.gewicht],
+  ["gewicht_rechts", (e) => e.rechts.gewicht],
 ];
 
 let geprueft = 0;
