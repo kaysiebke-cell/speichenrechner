@@ -1,5 +1,17 @@
 # Speichenrechner
 
+> **⬇️ [Aufs Handy: speichenrechner-handy.html herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner-handy.html)**
+>
+> Eine Datei, 140 KB, alles drin – Rechnung, 230 Naben, 17 Felgentypen, Skizzen.
+> Herunterladen, auf dem Handy öffnen, fertig. Kein Server, kein Netz, keine
+> Installation. Ausführlich: **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
+
+**PC:**
+
+```bash
+python3 speichenrechner.py
+```
+
 Speichenlängen für Fahrradlaufräder berechnen. Zwei Fassungen, ein Repo,
 **getrennte Ordner**:
 
@@ -67,11 +79,15 @@ anklickbares Icon auf dem Schreibtisch. Wieder entfernen:
 pc/install.sh --entfernen
 ```
 
-Direkt starten geht auch ohne Installation:
+Direkt starten geht auch ohne Installation – aus der Wurzel oder direkt:
 
 ```bash
-python3 pc/speichenrechner.py
+python3 speichenrechner.py
 ```
+
+Das Skript in der Wurzel reicht nur an `pc/speichenrechner.py` durch. So
+funktioniert der gewohnte Aufruf weiter, obwohl die Anwendung seit der Trennung
+in `pc/` liegt – und alte Verknüpfungen brechen nicht.
 
 ### Wenn nichts passiert
 
@@ -658,6 +674,7 @@ Naben und Felgen lassen sich als Vorlage speichern.
 Die Funktionen liegen in getrennten, kurzen Modulen:
 
 ```
+speichenrechner.py           reicht an pc/ durch – der gewohnte Aufruf
 pc/                          PC-Anwendung
   speichenrechner.py         Startskript
   install.sh                 Menüeintrag und Icon anlegen
