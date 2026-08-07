@@ -193,16 +193,34 @@ main { max-width: 34rem; margin: 0 auto; padding: 0 1rem; }
 /* -------------------------------------------------------------- Formular */
 
 fieldset {
+  position: relative;
   background: var(--karte);
   border: 1px solid var(--linie);
   border-radius: var(--radius);
-  padding: 0.6rem 1rem 1rem;
+  /* Oben Platz für die Überschrift, die absolut darüber liegt (siehe legend). */
+  padding: 2.9rem 1rem 1rem;
   margin: 0 0 1rem;
   box-shadow: var(--schatten-klein);
 }
 
+/* Eine <legend> sitzt von Haus aus AUF dem oberen Rahmen und schneidet ihn
+   dafür auf. Bei den flachen Papierkästen sieht das unruhig aus – der
+   Assistent setzt seine Überschriften als eigene Zeile IM Kasten, bei
+   durchgehendem Rahmen.
+   `position:absolute` nimmt ihr das zuverlässig: aus dem Fluss genommen,
+   schneidet sie nichts mehr auf, und der Platz dafür kommt aus dem
+   padding-top des fieldsets.
+   Zwei Wege, die hier NICHT taugen: `float` schiebt die Felder darunter neben
+   die Überschrift statt unter sie – die Auswahlpaare lagen dann außerhalb des
+   Kastens. Und `display:block` allein genügt Chromium nicht, dort sitzt die
+   Legende weiter auf dem Rahmen. */
 legend {
-  padding: 0 0.4rem;
+  position: absolute;
+  top: 0.85rem;
+  left: 1rem;
+  right: 1rem;
+  padding: 0;
+  margin: 0;
   font-family: var(--serif);
   font-size: 1.05rem;
   font-weight: 400;
