@@ -2,7 +2,10 @@
 
 ## ⬇️ Aufs Handy — die App herunterladen
 
-**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)**
+**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/latest/download/speichenrechner.apk)**
+
+Der Link führt immer auf die neueste veröffentlichte Fassung – er zeigte
+vorher auf ein festes Release und veraltete mit jeder Änderung.
 
 Antippen, installieren, fertig — danach liegt der Speichenrechner als App im
 Menü. 3,3 MB, läuft ohne Netz, **verlangt kein Internet, keine Dateien, keinen
@@ -65,6 +68,16 @@ python3 -m http.server 8765 --directory app/public --bind 0.0.0.0
 Dann `http://<PC-IP>:8765/` am Handy öffnen. Dieselben Dateien liegen unter
 <https://kaysiebke-cell.github.io/speichenrechner/> und stecken in der APK –
 `app/public/` ist die eine Quelle für alle drei.
+
+![Speichenrechner am Handy, hell und dunkel](data/screenshot-handy.png)
+
+So sieht die Handy-Fassung aus: Papierton statt Weiß, Petrol als einzige
+Akzentfarbe, Serifen für die Überschriften und die beiden Längen, flache Kästen
+mit feinem Rahmen – dieselbe Handschrift wie im Aktenlage-Assistenten. Ob hell
+oder dunkel, entscheidet das Gerät.
+
+Am PC sieht es anders aus, und das mit Absicht – dort folgt die Anwendung dem
+eingestellten Mint-Theme:
 
 ![Speichenrechner im dunklen Mint-Theme](data/screenshot.png)
 

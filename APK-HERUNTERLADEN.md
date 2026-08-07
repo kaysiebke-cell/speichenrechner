@@ -1,6 +1,6 @@
 # Speichenrechner aufs Handy
 
-**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)**
+**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/latest/download/speichenrechner.apk)**
 (3,3 MB) — das ist der bequemste Weg: antippen, installieren, fertig. Android
 fragt beim ersten Mal nach **„Aus dieser Quelle installieren"**, weil die APK mit
 dem Debug-Schlüssel signiert und nicht über den Play Store verteilt ist.
@@ -49,12 +49,18 @@ Ein Tag erzeugt zusätzlich ein Release, an dem die APK direkt hängt – ohne Z
 und ohne Anmeldung bei GitHub:
 
 ```bash
-git tag v1.4.0
-git push origin v1.4.0
+git tag v1.5.0
+git push origin v1.5.0
 ```
 
 Danach liegt sie unter
 [Releases](https://github.com/kaysiebke-cell/speichenrechner/releases).
+Der Ablauf hängt die APK als `speichenrechner.apk` an – unter genau dem Namen,
+den die Download-Links oben erwarten – und die Einzeldatei gleich dazu.
+
+**Wichtig:** Erst der Tag erzeugt eine neue APK zum Herunterladen. Ein Push
+allein baut zwar eine, aber nur als Artifact unter „Actions"; der Link oben
+zeigt weiter auf die Fassung des letzten Tags.
 
 ## Was die App darf
 

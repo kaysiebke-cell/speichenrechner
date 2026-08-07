@@ -58,20 +58,30 @@ jobs:
           mkdir -p apk
           cp app/android/app/build/outputs/apk/debug/app-debug.apk \
              "apk/Speichenrechner-${GITHUB_SHA:0:7}.apk"
+          # Fürs Release zusätzlich unter festem Namen: README und
+          # APK-HERUNTERLADEN.md verlinken „speichenrechner.apk“. Mit der
+          # Fassung im Dateinamen ginge dieser Link bei jedem Tag ins Leere.
+          cp app/android/app/build/outputs/apk/debug/app-debug.apk \
+             "apk/speichenrechner.apk"
           ls -la apk
 
       - name: APK als Download bereitstellen
         uses: actions/upload-artifact@v4
         with:
           name: Speichenrechner-APK
-          path: apk/*.apk
+          path: apk/Speichenrechner-*.apk
           if-no-files-found: error
 
+      # Ans Release kommt die APK unter festem Namen, dazu die Einzeldatei für
+      # den Weg ohne Server. Ein Test hält app/speichenrechner-handy.html auf
+      # dem Stand von app/public/, sie kann direkt aus dem Checkout mit.
       - name: Bei einem Tag zusätzlich ein Release anlegen
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: apk/*.apk
+          files: |
+            apk/speichenrechner.apk
+            app/speichenrechner-handy.html
           body: |
             Speichenrechner als Android-App. Die APK ist mit dem Debug-Schlüssel
             signiert – zum Installieren muss „Unbekannte Quellen" bzw.
