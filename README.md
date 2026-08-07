@@ -2,16 +2,16 @@
 
 ## ⬇️ Aufs Handy — die App herunterladen
 
-**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)** — richtige App im Menü, 3,3 MB, ohne jede Berechtigung.
+**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)**
 
-**➡️ [speichenrechner-handy.html herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner-handy.html)** — eine Datei, 140 KB, ohne Installation: herunterladen und im Browser öffnen.
+Antippen, installieren, fertig — danach liegt der Speichenrechner als App im
+Menü. 3,3 MB, läuft ohne Netz, **verlangt kein Internet, keine Dateien, keinen
+Standort**. Android fragt beim ersten Mal nach „Aus dieser Quelle installieren“,
+weil die APK mit dem Debug-Schlüssel signiert und nicht über den Play Store
+verteilt ist.
 
-Oder ohne Download im Browser: **<https://kaysiebke-cell.github.io/speichenrechner/>**
-— dort „Zum Startbildschirm hinzufügen“, dann läuft sie wie eine App und auch
-ohne Empfang.
-
-Alle drei enthalten dasselbe: Rechnung, 230 Naben, 17 Felgentypen, Skizzen.
-Ausführlich samt Stolpersteinen: **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
+Drin ist alles: Rechnung, 230 Naben, 17 Felgentypen, Skizzen.
+Anleitung samt Stolpersteinen: **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
 
 **PC:**
 
@@ -40,19 +40,31 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 * **Handy** – eine Web-Fassung in `app/public/`, die ohne Netz läuft und sich auf
   dem Startbildschirm ablegen lässt, plus eine Android-App darum herum.
 
-## Die vier Wege aufs Handy
+## Was die App darf
 
-| Weg | Vorteil |
-|---|---|
-| **[APK](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)** | echte App im Menü, ohne jede Berechtigung |
-| **[Einzeldatei](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner-handy.html)** | eine Datei, keine Installation, kein Server |
-| **[GitHub Pages](https://kaysiebke-cell.github.io/speichenrechner/)** | immer die neueste Fassung, von überall, installierbar über „Zum Startbildschirm hinzufügen“ |
-| **Eigenes WLAN** – `python3 -m http.server 8765 --directory app/public --bind 0.0.0.0`, dann `http://<PC-IP>:8765/` am Handy | zum Ausprobieren während der Arbeit am Rechner |
+**Nichts, was sie nicht braucht.** Geprüft an der gebauten APK:
 
-Die Einzeldatei entsteht aus `app/public/` und wird mit
-`python3 werkzeuge/einzeldatei_erzeugen.py` erneuert; ein Test schlägt an, wenn
-sie veraltet ist. Ihr fehlt gegenüber der Web-Fassung nur der Service Worker
-und der Eintrag auf dem Startbildschirm – gerechnet wird genauso.
+```
+Paket            de.speichenrechner.app  1.4.0
+Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
+enthalten        assets/www/ – index.html, css, 5 Skripte, Icons
+```
+
+Gerechnet wird auf dem Gerät. Die einzige Berechtigung im Paket heißt
+`DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION` und kommt von der
+AndroidX-Bibliothek; sie wird nicht abgefragt und gilt nur innerhalb der App.
+
+## Zum Ausprobieren am Rechner
+
+Wer die Handy-Fassung während der Arbeit am PC ansehen will, braucht keine APK:
+
+```bash
+python3 -m http.server 8765 --directory app/public --bind 0.0.0.0
+```
+
+Dann `http://<PC-IP>:8765/` am Handy öffnen. Dieselben Dateien liegen unter
+<https://kaysiebke-cell.github.io/speichenrechner/> und stecken in der APK –
+`app/public/` ist die eine Quelle für alle drei.
 
 ![Speichenrechner im dunklen Mint-Theme](data/screenshot.png)
 

@@ -5,22 +5,19 @@
 fragt beim ersten Mal nach **„Aus dieser Quelle installieren"**, weil die APK mit
 dem Debug-Schlüssel signiert und nicht über den Play Store verteilt ist.
 
-Darunter drei weitere Wege, falls du keine App installieren willst.
+Das ist der Weg. Darunter steht nur noch, was zu tun ist, wenn die
+Installation hakt.
 
-## 0. Eine einzige Datei (funktioniert sofort)
+## Wenn die Installation hakt
 
-**[`app/speichenrechner-handy.html`](app/speichenrechner-handy.html)** – 123 KB,
-alles drin. Herunterladen, aufs Handy kopieren (Kabel, Speicherkarte, an sich
-selbst schicken) und im Browser öffnen. Kein Server, kein Netz, keine
-Installation. Auch als Anhang an den
-[Releases](https://github.com/kaysiebke-cell/speichenrechner/releases) – über
-GitHub direkt am Handy ist das der zuverlässigere Weg, weil eine `.html` im
-Repo als Quelltext angezeigt statt geladen wird.
+Android blockt Installationen aus fremden Quellen zunächst. Beim Antippen der
+APK erscheint „Aus Sicherheitsgründen …“; dort auf **Einstellungen** und den
+Schalter für den Browser bzw. die Dateien-App umlegen. Danach nochmal antippen.
 
-Ihr fehlt nur der Service Worker und der Startbildschirm-Eintrag; die Rechnung
-und der Katalog sind dieselben.
+Bleibt es dabei, hilft der Weg über den Browser – da ist keine Installation
+nötig:
 
-## 1. Über das Netz (kein Download nötig)
+## Ohne Installation: über das Netz
 
 **https://kaysiebke-cell.github.io/speichenrechner/**
 
