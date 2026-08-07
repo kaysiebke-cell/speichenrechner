@@ -528,8 +528,11 @@ Branch `gh-pages`, von dem Pages ausliefert. Auf dem Handy dann
 „Zum Startbildschirm hinzufügen“ – danach startet sie wie eine App, im
 Vollbild und ohne Adresszeile, und rechnet auch ohne Empfang weiter.
 
-Die Farben folgen der Geräteeinstellung über `prefers-color-scheme`, hell wie
-dunkel – wie am PC das Mint-Theme.
+Die Handy-Fassung ist gestaltet wie der Aktenlage-Assistent: Papierton statt
+Weiß, Petrol als einzige Akzentfarbe, Serifen für Überschriften und die großen
+Zahlen, flache Kästen mit feinem Rahmen. Ob hell oder dunkel, entscheidet
+weiterhin das Gerät über `prefers-color-scheme`; einen eigenen Umschalter gibt
+es nicht. Anders als am PC, wo die Anwendung dem Mint-Theme folgt.
 
 ### Dieselbe Rechnung zweimal – und wie sie zusammenbleibt
 
@@ -706,7 +709,7 @@ pc/                          PC-Anwendung
 app/                         Handy-Fassung
   public/                    Web-App – ohne Bauschritt, ohne Fremdcode
     index.html               eine Seite, Ergebnis oben
-    css/stil.css             folgt hell/dunkel des Geräts
+    css/stil.css             Aktenlage-Gestaltung, hell/dunkel nach Gerät
     js/rechnen.js            dieselben Formeln wie berechnung.py
     js/katalog.js            dieselbe Auswertung wie tabelle.py und katalog.py
     js/daten.js              erzeugt aus data/ – nicht von Hand ändern
