@@ -48,7 +48,7 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 **Nichts, was sie nicht braucht.** Geprüft an der gebauten APK:
 
 ```
-Paket            de.speichenrechner.app  1.4.0
+Paket            de.speichenrechner.app  1.5.0
 Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
 enthalten        assets/www/ – index.html, css, 5 Skripte, Icons
 ```
