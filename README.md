@@ -1,10 +1,17 @@
 # Speichenrechner
 
-> **⬇️ [Aufs Handy: speichenrechner-handy.html herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner-handy.html)**
->
-> Eine Datei, 140 KB, alles drin – Rechnung, 230 Naben, 17 Felgentypen, Skizzen.
-> Herunterladen, auf dem Handy öffnen, fertig. Kein Server, kein Netz, keine
-> Installation. Ausführlich: **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
+## ⬇️ Aufs Handy — die App herunterladen
+
+**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)** — richtige App im Menü, 3,3 MB, ohne jede Berechtigung.
+
+**➡️ [speichenrechner-handy.html herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner-handy.html)** — eine Datei, 140 KB, ohne Installation: herunterladen und im Browser öffnen.
+
+Oder ohne Download im Browser: **<https://kaysiebke-cell.github.io/speichenrechner/>**
+— dort „Zum Startbildschirm hinzufügen“, dann läuft sie wie eine App und auch
+ohne Empfang.
+
+Alle drei enthalten dasselbe: Rechnung, 230 Naben, 17 Felgentypen, Skizzen.
+Ausführlich samt Stolpersteinen: **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
 
 **PC:**
 
@@ -33,21 +40,14 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 * **Handy** – eine Web-Fassung in `app/public/`, die ohne Netz läuft und sich auf
   dem Startbildschirm ablegen lässt, plus eine Android-App darum herum.
 
-## Aufs Handy holen
+## Die vier Wege aufs Handy
 
-**Der kürzeste Weg: [`app/speichenrechner-handy.html`](app/speichenrechner-handy.html)
-herunterladen und auf dem Handy öffnen.** Eine Datei, 123 KB, alles drin –
-Rechnung, 230 Naben, 17 Felgentypen. Kein Server, kein Netz, keine
-Installation. Zu finden auch bei den
-[Releases](https://github.com/kaysiebke-cell/speichenrechner/releases) als
-Anhang, das lädt am Handy zuverlässiger als ein Blick in den Quelltext.
-
-| Weg | funktioniert | Vorteil |
-|---|---|---|
-| **Einzeldatei** `app/speichenrechner-handy.html` | sofort | eine Datei, keine Voraussetzungen |
-| **Eigenes WLAN** – `python3 -m http.server 8765 --directory app/public --bind 0.0.0.0`, dann `http://<PC-IP>:8765/` am Handy | sofort, solange der PC läuft | lässt sich über „Zum Startbildschirm hinzufügen“ als App ablegen, danach auch ohne PC |
-| **GitHub Pages** – <https://kaysiebke-cell.github.io/speichenrechner/> | sobald GitHub die Seite gebaut hat | immer die neueste Fassung, von überall |
-| **APK** – siehe [APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md) | sobald ein Actions-Runner frei ist | echte App im Menü, ohne Berechtigungen |
+| Weg | Vorteil |
+|---|---|
+| **[APK](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)** | echte App im Menü, ohne jede Berechtigung |
+| **[Einzeldatei](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner-handy.html)** | eine Datei, keine Installation, kein Server |
+| **[GitHub Pages](https://kaysiebke-cell.github.io/speichenrechner/)** | immer die neueste Fassung, von überall, installierbar über „Zum Startbildschirm hinzufügen“ |
+| **Eigenes WLAN** – `python3 -m http.server 8765 --directory app/public --bind 0.0.0.0`, dann `http://<PC-IP>:8765/` am Handy | zum Ausprobieren während der Arbeit am Rechner |
 
 Die Einzeldatei entsteht aus `app/public/` und wird mit
 `python3 werkzeuge/einzeldatei_erzeugen.py` erneuert; ein Test schlägt an, wenn

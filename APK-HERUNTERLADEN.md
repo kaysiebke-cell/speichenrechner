@@ -1,7 +1,11 @@
 # Speichenrechner aufs Handy
 
-Drei Wege. Der erste funktioniert immer, der dritte gibt eine richtige App im
-Menü.
+**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)**
+(3,3 MB) — das ist der bequemste Weg: antippen, installieren, fertig. Android
+fragt beim ersten Mal nach **„Aus dieser Quelle installieren"**, weil die APK mit
+dem Debug-Schlüssel signiert und nicht über den Play Store verteilt ist.
+
+Darunter drei weitere Wege, falls du keine App installieren willst.
 
 ## 0. Eine einzige Datei (funktioniert sofort)
 
@@ -25,9 +29,11 @@ Danach startet sie wie eine App – Vollbild, ohne Adresszeile – und rechnet
 **auch ohne Empfang** weiter, weil sie sich beim ersten Aufruf komplett auf dem
 Gerät ablegt.
 
-## 2. Als APK herunterladen
+## 2. Als APK aus einem Actions-Lauf
 
-Die APK wird bei jedem Push von GitHub gebaut:
+Die fertige APK hängt am [Release](https://github.com/kaysiebke-cell/speichenrechner/releases)
+– das ist der einfache Weg. Wer die APK zu einem bestimmten Stand braucht,
+holt sie direkt aus dem Lauf:
 
 1. **[Actions](https://github.com/kaysiebke-cell/speichenrechner/actions/workflows/android.yml)**
    öffnen.
