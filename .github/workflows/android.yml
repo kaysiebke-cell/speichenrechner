@@ -29,6 +29,22 @@ jobs:
       - name: Code auschecken
         uses: actions/checkout@v4
 
+      # Bei einem Tag muss die App dieselbe Fassung melden wie das Release.
+      # Sonst entsteht eine APK, die sich als die alte ausgibt – und schlimmer:
+      # mit unverändertem versionCode verweigert Android die Installation über
+      # die schon vorhandene App. Genau so ist v1.6.0 entstanden.
+      - name: Fassung gegen den Tag prüfen
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          name=$(sed -n 's/.*versionName *"\([^"]*\)".*/\1/p' app/android/app/build.gradle)
+          code=$(sed -n 's/.*versionCode *\([0-9]*\).*/\1/p' app/android/app/build.gradle)
+          echo "Tag ${GITHUB_REF_NAME}, versionName ${name}, versionCode ${code}"
+          if [ "v${name}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::Der Tag ${GITHUB_REF_NAME} passt nicht zu versionName ${name}."
+            echo "Erst die Fassungsnummern hochziehen, dann den Tag darauf setzen."
+            exit 1
+          fi
+
       - name: JDK 17 einrichten
         uses: actions/setup-java@v4
         with:
