@@ -2,7 +2,10 @@
 
 ## ⬇️ Aufs Handy — die App herunterladen
 
-**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/download/v1.4.0/speichenrechner.apk)**
+**➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/latest/download/speichenrechner.apk)**
+
+Der Link führt immer auf die neueste veröffentlichte Fassung – er zeigte
+vorher auf ein festes Release und veraltete mit jeder Änderung.
 
 Antippen, installieren, fertig — danach liegt der Speichenrechner als App im
 Menü. 3,3 MB, läuft ohne Netz, **verlangt kein Internet, keine Dateien, keinen
@@ -45,7 +48,7 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 **Nichts, was sie nicht braucht.** Geprüft an der gebauten APK:
 
 ```
-Paket            de.speichenrechner.app  1.4.0
+Paket            de.speichenrechner.app  1.5.0
 Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
 enthalten        assets/www/ – index.html, css, 5 Skripte, Icons
 ```
@@ -65,6 +68,16 @@ python3 -m http.server 8765 --directory app/public --bind 0.0.0.0
 Dann `http://<PC-IP>:8765/` am Handy öffnen. Dieselben Dateien liegen unter
 <https://kaysiebke-cell.github.io/speichenrechner/> und stecken in der APK –
 `app/public/` ist die eine Quelle für alle drei.
+
+![Speichenrechner am Handy, hell und dunkel](data/screenshot-handy.png)
+
+So sieht die Handy-Fassung aus: Papierton statt Weiß, Petrol als einzige
+Akzentfarbe, Serifen für die Überschriften und die beiden Längen, flache Kästen
+mit feinem Rahmen – dieselbe Handschrift wie im Aktenlage-Assistenten. Ob hell
+oder dunkel, entscheidet das Gerät.
+
+Am PC sieht es anders aus, und das mit Absicht – dort folgt die Anwendung dem
+eingestellten Mint-Theme:
 
 ![Speichenrechner im dunklen Mint-Theme](data/screenshot.png)
 
@@ -528,8 +541,11 @@ Branch `gh-pages`, von dem Pages ausliefert. Auf dem Handy dann
 „Zum Startbildschirm hinzufügen“ – danach startet sie wie eine App, im
 Vollbild und ohne Adresszeile, und rechnet auch ohne Empfang weiter.
 
-Die Farben folgen der Geräteeinstellung über `prefers-color-scheme`, hell wie
-dunkel – wie am PC das Mint-Theme.
+Die Handy-Fassung ist gestaltet wie der Aktenlage-Assistent: Papierton statt
+Weiß, Petrol als einzige Akzentfarbe, Serifen für Überschriften und die großen
+Zahlen, flache Kästen mit feinem Rahmen. Ob hell oder dunkel, entscheidet
+weiterhin das Gerät über `prefers-color-scheme`; einen eigenen Umschalter gibt
+es nicht. Anders als am PC, wo die Anwendung dem Mint-Theme folgt.
 
 ### Dieselbe Rechnung zweimal – und wie sie zusammenbleibt
 
@@ -706,7 +722,7 @@ pc/                          PC-Anwendung
 app/                         Handy-Fassung
   public/                    Web-App – ohne Bauschritt, ohne Fremdcode
     index.html               eine Seite, Ergebnis oben
-    css/stil.css             folgt hell/dunkel des Geräts
+    css/stil.css             Aktenlage-Gestaltung, hell/dunkel nach Gerät
     js/rechnen.js            dieselben Formeln wie berechnung.py
     js/katalog.js            dieselbe Auswertung wie tabelle.py und katalog.py
     js/daten.js              erzeugt aus data/ – nicht von Hand ändern

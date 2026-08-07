@@ -8,37 +8,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Speichenrechner</title>
 <meta name="description" content="Speichenlängen für Fahrradlaufräder – rechnet ohne Netz.">
-<meta name="theme-color" content="#1f2225">
+<meta name="theme-color" content="#F7F6F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#24272d" media="(prefers-color-scheme: dark)">
 <style>
 /* Speichenrechner – Handy-Fassung.
  *
- * Wie am PC bringt die Anwendung kein eigenes Farbschema mit: sie folgt der
- * Einstellung des Geräts (hell/dunkel) über prefers-color-scheme. Keine
- * Schriften, keine Bibliotheken von außen – die Seite muss ohne Netz laufen.
+ * Gestaltung wie im Aktenlage-Assistenten: Papierton statt Weiß, Petrol als
+ * einzige Akzentfarbe, Serifen für Überschriften und die großen Zahlen,
+ * flache Kästen (3 px) mit feinem Rahmen und einer Andeutung von Erhebung.
+ *
+ * Hell/Dunkel folgt weiterhin dem Gerät (prefers-color-scheme) – die App
+ * bringt keinen eigenen Umschalter mit. Keine Schriften, keine Bibliotheken
+ * von außen: die Seite muss ohne Netz laufen. Die Schriftfamilien sind reine
+ * Systemschriften, die überall vorhanden sind.
  */
 
 :root {
-  --grund: #f6f6f6;
-  --karte: #ffffff;
-  --text: #1c1e20;
-  --schwach: #6a6f75;
-  --linie: #d6d9dc;
-  --akzent: #0a5fd6;
-  --warnung-grund: #fff3e0;
-  --warnung-text: #8a4b00;
+  /* Die Variablennamen bleiben deutsch wie im übrigen Projekt; dahinter
+     stehen jetzt die Werte aus dem Aktenlage-Stylesheet. */
+  --grund: #EDECE5;        /* Papier – der Seitenhintergrund */
+  --karte: #F7F6F1;        /* Papier, leicht angehoben – Kästen */
+  --oben: #ffffff;         /* Eingabefelder, damit sie sich abheben */
+  --text: #232930;
+  --schwach: #565f68;
+  --linie: #d8d6cc;
+  --akzent: #2B4C5C;       /* Petrol */
+  --akzent-tief: #1B333F;
+  --gut: #4B7B5D;
+  --warnung: #C08A2E;
+  --warnung-grund: #F5E9D3;
+  --warnung-text: #232930; /* Text bleibt Tinte; die Farbe trägt der Rand */
+
+  --radius: 3px;
+
+  /* Dezente Erhebung – gerade so viel, dass der Papier-Charakter bleibt. */
+  --schatten-klein: 0 1px 2px rgba(27, 51, 63, 0.06);
+  --schatten-karte: 0 1px 2px rgba(27, 51, 63, 0.05), 0 2px 6px rgba(27, 51, 63, 0.05);
+
+  --serif: "Iowan Old Style", "Palatino Linotype", "URW Palladio", Palatino, Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --grund: #1f2225;
-    --karte: #282c30;
-    --text: #e4e6e8;
-    --schwach: #a0a6ac;
-    --linie: #3a3f45;
-    --akzent: #5aa2ff;
-    --warnung-grund: #4a3a1c;
-    --warnung-text: #ffd79a;
+    --grund: #1a1c20;
+    --karte: #24272d;
+    --oben: #2b2f36;
+    --text: #e7e9ec;
+    --schwach: #9aa2ac;
+    --linie: #3a3e45;
+    --akzent: #6aa3bd;
+    --akzent-tief: #a4c7d8;
+    --gut: #74b98d;
+    --warnung: #d7a24e;
+    --warnung-grund: #332b1b;
+    --warnung-text: #e7e9ec;
+
+    /* Im Dunkeln kräftiger, sonst ist von der Erhebung nichts zu sehen. */
+    --schatten-klein: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --schatten-karte: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    color-scheme: dark;
   }
+
+  /* Fallback, falls color-scheme bei den Aufklappmenüs nicht durchgreift. */
+  select, option, optgroup { background: var(--oben); color: var(--text); }
 }
 
 * { box-sizing: border-box; }
@@ -48,33 +85,53 @@ body {
   padding: 0 0 2rem;
   background: var(--grund);
   color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--sans);
   font-size: 16px;
   line-height: 1.45;
   -webkit-text-size-adjust: 100%;
 }
 
+/* Kopfzeile als angehobenes Blatt mit feiner Trennlinie – wie die Topbar
+   im Aktenlage-Assistenten, aber ohne Reiter und Bildmarke. */
 header {
-  padding: 1rem 1rem 0.5rem;
+  padding: 1rem 1rem 0.7rem;
   padding-top: max(1rem, env(safe-area-inset-top));
+  background: var(--karte);
+  border-bottom: 1px solid var(--linie);
+  box-shadow: var(--schatten-klein);
 }
 
-h1 { margin: 0; font-size: 1.35rem; }
-.unterzeile { margin: 0.1rem 0 0; color: var(--schwach); font-size: 0.85rem; }
+h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+/* Zweifarbige Wortmarke wie dort: der erste Teil Petrol, der zweite Grün. */
+.wortmarke__a { color: var(--akzent); }
+.wortmarke__b { color: var(--gut); }
+
+.unterzeile { margin: 0.15rem 0 0; color: var(--schwach); font-size: 0.78rem; }
 
 main { max-width: 34rem; margin: 0 auto; padding: 0 1rem; }
 
 /* ------------------------------------------------------------- Ergebnis */
 
+/* Der Ergebniskasten trägt die farbige Kante links – das Aktendeckel-Motiv
+   aus dem Assistenten. Er ist das eine Element, auf das es hier ankommt. */
 .ergebnis {
   position: sticky;
   top: 0;
   z-index: 2;
   background: var(--karte);
   border: 1px solid var(--linie);
-  border-radius: 12px;
+  border-left: 6px solid var(--akzent);
+  border-radius: var(--radius);
   padding: 0.9rem 1rem;
-  margin: 0.5rem 0 1rem;
+  margin: 0.9rem 0 1rem;
+  box-shadow: var(--schatten-karte);
 }
 
 .seiten { display: flex; gap: 1rem; }
@@ -82,16 +139,19 @@ main { max-width: 34rem; margin: 0 auto; padding: 0 1rem; }
 
 .beschriftung {
   display: block;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--schwach);
 }
 
 .seite strong {
-  font-size: 2rem;
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
+  color: var(--akzent-tief);
 }
 
 .einheit { color: var(--schwach); font-size: 0.85rem; margin-left: 0.2rem; }
@@ -101,30 +161,53 @@ main { max-width: 34rem; margin: 0 auto; padding: 0 1rem; }
   padding-top: 0.7rem;
   border-top: 1px solid var(--linie);
   font-weight: 600;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
 }
 
+/* Warnhinweis: die Farbe trägt der linke Rand, der Text bleibt lesbar. */
 .hinweis {
   margin: 0.7rem 0 0;
-  padding: 0.5rem 0.7rem;
+  padding: 0.55rem 0.75rem;
   background: var(--warnung-grund);
   color: var(--warnung-text);
-  border-radius: 8px;
+  border-left: 4px solid var(--warnung);
+  border-radius: var(--radius);
   font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 .klein { font-size: 0.8rem; color: var(--schwach); margin: 0.4rem 0 0; }
+
+/* Errechnete Werte in Schreibmaschinenschrift – so stehen die Ziffern
+   untereinander und heben sich von den Erklärtexten ab. Nur die Zahlenzeilen:
+   #nabeninfo und #felgeninfo tragen ganze Sätze und bleiben serifenlos. */
+#genau-links, #genau-rechts, #kennwerte {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+}
+/* Eigene Zeile unter der großen Zahl. Als inline-Element hing „exakt“ sonst
+   hinter dem „mm“ und der Wert rutschte allein in die nächste Zeile. */
+#genau-links, #genau-rechts { display: block; }
 
 /* -------------------------------------------------------------- Formular */
 
 fieldset {
   background: var(--karte);
   border: 1px solid var(--linie);
-  border-radius: 12px;
+  border-radius: var(--radius);
   padding: 0.6rem 1rem 1rem;
   margin: 0 0 1rem;
+  box-shadow: var(--schatten-klein);
 }
 
-legend { padding: 0 0.35rem; font-weight: 600; }
+legend {
+  padding: 0 0.4rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--akzent-tief);
+}
 
 .zeile {
   display: grid;
@@ -132,11 +215,14 @@ legend { padding: 0 0.35rem; font-weight: 600; }
   gap: 0.6rem;
   align-items: center;
   padding: 0.3rem 0;
+  font-size: 0.9rem;
 }
 
 .zeile.kopf {
   padding: 0 0 0.1rem;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--schwach);
 }
 .zeile.kopf span { text-align: center; }
@@ -145,13 +231,14 @@ legend { padding: 0 0.35rem; font-weight: 600; }
 input[type="number"], select {
   width: 100%;
   padding: 0.55rem 0.5rem;
+  font-family: var(--sans);
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
   text-align: right;
   color: var(--text);
-  background: var(--grund);
+  background: var(--oben);
   border: 1px solid var(--linie);
-  border-radius: 8px;
+  border-radius: var(--radius);
 }
 
 select { text-align: left; grid-column: 2 / 4; }
@@ -170,11 +257,12 @@ select { text-align: left; grid-column: 2 / 4; }
 
 input[type="search"] {
   padding: 0.55rem 0.6rem;
+  font-family: var(--sans);
   font-size: 1rem;
   color: var(--text);
-  background: var(--grund);
+  background: var(--oben);
   border: 1px solid var(--linie);
-  border-radius: 8px;
+  border-radius: var(--radius);
 }
 
 input:focus, select:focus, button:focus {
@@ -189,19 +277,25 @@ input:focus, select:focus, button:focus {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0 0.2rem;
+  font-size: 0.9rem;
 }
-.haken input { width: 1.15rem; height: 1.15rem; }
+.haken input { width: 1.15rem; height: 1.15rem; accent-color: var(--akzent); }
 
+/* Knöpfe wie im Assistenten: Umriss in Petrol, kein Farbklecks. */
 button.flach {
   display: block;
   width: 100%;
-  padding: 0.7rem;
-  font-size: 0.95rem;
-  color: var(--text);
-  background: var(--karte);
-  border: 1px solid var(--linie);
-  border-radius: 10px;
+  padding: 0.65rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--akzent-tief);
+  background: transparent;
+  border: 1.5px solid var(--akzent);
+  border-radius: var(--radius);
+  cursor: pointer;
 }
+button.flach:hover { background: var(--karte); }
 
 footer { margin-top: 1.5rem; }
 
@@ -217,27 +311,40 @@ footer { margin-top: 1.5rem; }
 .skizzen {
   background: var(--karte);
   border: 1px solid var(--linie);
-  border-radius: 12px;
+  border-radius: var(--radius);
   padding: 0.6rem 0.8rem 0.8rem;
   margin: 0 0 1rem;
+  box-shadow: var(--schatten-klein);
 }
 
-.umschalter { display: flex; gap: 0.4rem; margin-bottom: 0.4rem; }
+.umschalter { display: flex; gap: 0.4rem; margin-bottom: 0.5rem; }
 
 .umschalter button {
   flex: 1 1 0;
   padding: 0.45rem;
-  font-size: 0.85rem;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
   color: var(--schwach);
-  background: var(--grund);
-  border: 1px solid var(--linie);
-  border-radius: 8px;
+  background: transparent;
+  border: 1.5px solid var(--linie);
+  border-radius: var(--radius);
+  cursor: pointer;
 }
 
+/* Der gewählte Reiter wird gefüllt – am Handy ist das eindeutiger als die
+   Unterstreichung, die der Assistent am PC benutzt. */
 .umschalter button.aktiv {
-  color: var(--text);
+  color: #fff;
+  background: var(--akzent);
   border-color: var(--akzent);
-  font-weight: 600;
+}
+
+/* Muss NACH der Regel oben stehen: gleiche Spezifität, die spätere gewinnt.
+   Im Dunkeln ist Petrol aufgehellt – auf dieser Fläche wäre Weiß kaum zu
+   lesen, dort trägt der gewählte Reiter dunkle Schrift. */
+@media (prefers-color-scheme: dark) {
+  .umschalter button.aktiv { color: #0e1418; }
 }
 
 .skizze { display: block; width: 100%; height: auto; }
@@ -278,7 +385,7 @@ footer { margin-top: 1.5rem; }
 <body>
 
 <header>
-  <h1>Speichenrechner</h1>
+  <h1><span class="wortmarke__a">Speichen</span><span class="wortmarke__b">rechner</span></h1>
   <p class="unterzeile">Speichenlängen für Fahrradlaufräder</p>
 </header>
 
