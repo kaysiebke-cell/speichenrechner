@@ -58,9 +58,57 @@ export function antrieb(art, aufnahme) {
 export const schalenart = (art) => (["Dynamo", "Nabenschaltung"].includes(art)
   ? "gross" : "normal");
 
+/**
+ * Die Form eines Nabendynamos, abgelesen an der Werkszeichnung der SON 28 –
+ * als Verhältnis zum Lochkreisradius, damit sie auch für einen SONdelux passt.
+ *
+ * Der Körper ist **eine Kugel** zwischen den Flanschen: Scheitel in der Mitte,
+ * zu beiden Seiten in eine Hohlkehle auslaufend. Daraus steigt je eine schmale
+ * Rippe mit rundem Kopf zum Speichenloch – ihre Spitze ist der höchste Punkt.
+ * Nach außen folgt ein flaches, breites Achsband mit zwei Stufen.
+ */
+export const DYNAMO = {
+  scheitel: 1.045, kehle: 0.72, rippe: 1.081, fuss: 0.76,
+  kugelEnde: 0.77, rippeHalb: 1.7, absatz: 0.49, band: 0.43, achse: 0.17,
+};
+
+/** Die Kontur eines Nabendynamos – Kugel, Hohlkehle, Rippe, Achsband. */
+export function dynamoStationen(aLinks, aRechts, rLinks, rRechts, schritte = 40) {
+  const d = DYNAMO;
+  const bezug = Math.max(Math.min(rLinks, rRechts), 1);
+  const scheitel = bezug * d.scheitel;
+  const kehle = bezug * d.kehle;
+  const fuss = bezug * d.fuss;
+  const breit = d.rippeHalb;
+
+  const seite = (a, rLoch, vz) => {
+    const rippe = rLoch + (d.rippe - 1) * bezug;
+    const ende = a * d.kugelEnde;
+    const punkte = [];
+    for (let n = 1; n <= schritte; n += 1) {
+      const x = (ende * n) / schritte;
+      punkte.push([vz * x, scheitel - (scheitel - kehle) * (x / ende) ** 2.2]);
+    }
+    punkte.push([vz * (a - breit - 1.5), kehle + (fuss - kehle) * 0.35]);
+    punkte.push([vz * (a - breit), fuss]);
+    punkte.push([vz * (a - breit), rippe - 1], [vz * (a - breit * 0.4), rippe],
+                [vz * (a + breit * 0.4), rippe], [vz * (a + breit), rippe - 1],
+                [vz * (a + breit), fuss]);
+    punkte.push([vz * (a + 5), bezug * d.absatz], [vz * (a + 10), bezug * d.absatz],
+                [vz * (a + 10), bezug * d.band], [vz * (a + 22), bezug * d.band],
+                [vz * (a + 22), bezug * d.achse], [vz * (a + 29), bezug * d.achse]);
+    return punkte;
+  };
+
+  return [...seite(aLinks, rLinks, -1).reverse(), [0, scheitel],
+          ...seite(aRechts, rRechts, +1)];
+}
+
 /** Die Nabe als `[x, Radius]` in mm, ab der Nabenmitte. */
 export function stationen(aLinks, aRechts, rLinks, rRechts,
-                          antriebsart = "kassette", schalenArt = "normal") {
+                          antriebsart = "kassette", schalenArt = "normal", art = "") {
+  // Ein Nabendynamo hat eine eigene Gestalt, siehe DYNAMO.
+  if (art === "Dynamo") return dynamoStationen(aLinks, aRechts, rLinks, rRechts);
   const g = GESTALT;
   const rFl = rLinks + g.flanschrand;
   const rFr = rRechts + g.flanschrand;
@@ -218,7 +266,7 @@ export function nabeSvg(nabe, breite = 340, hoehe = 190) {
   const antriebsart = antrieb(nabe.art, nabe.aufnahme);
   const schalenArt = schalenart(nabe.art);
   const liste = stationen(nabe.flanschabstand_links, nabe.flanschabstand_rechts,
-                          rLinks, rRechts, antriebsart, schalenArt);
+                          rLinks, rRechts, antriebsart, schalenArt, nabe.art);
 
   const spanneX = liste[liste.length - 1][0] - liste[0][0];
   const spanneR = Math.max(...liste.map(([, r]) => r));

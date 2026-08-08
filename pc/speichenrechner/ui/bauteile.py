@@ -114,6 +114,68 @@ def _schale(
             min(gestalt.taille, deckel * 0.76))
 
 
+#: Die Form eines Nabendynamos, abgelesen an der Werkszeichnung der SON 28 –
+#: als Verhältnis zum Radius des Lochkreises, damit sie auch für einen
+#: SONdelux mit anderem Lochkreis stimmt.
+#:
+#: Der Körper ist **eine Kugel** zwischen den Flanschen: Scheitel in der Mitte,
+#: zu beiden Seiten in eine Hohlkehle auslaufend. Daraus steigt je eine schmale
+#: Rippe mit rundem Kopf zum Speichenloch – ihre Spitze ist der höchste Punkt,
+#: dort wird der Lochkreis gemessen. Nach außen folgt ein flaches, breites
+#: Achsband mit zwei Stufen.
+DYNAMO = {
+    "scheitel": 1.045,     # Kugelscheitel, etwas über dem Lochkreis
+    "kehle": 0.72,         # tiefste Stelle zwischen Kugel und Rippe
+    "rippe": 1.081,        # Spitze der Rippe – der höchste Punkt
+    "fuss": 0.76,          # Fuß der Rippe
+    "kugel_ende": 0.77,    # wo die Kugel ausläuft, als Anteil des Flanschabstands
+    "rippe_halb": 1.7,     # halbe Rippenbreite in mm
+    "absatz": 0.49,        # Bund hinter der Rippe
+    "band": 0.43,          # das flache Achsband
+    "achse": 0.17,         # Achsstummel
+}
+
+
+def _dynamo_stationen(a_l: float, a_r: float, r_l: float, r_r: float,
+                      schritte: int = 40) -> list[tuple[float, float]]:
+    """Die Kontur eines Nabendynamos – Kugel, Hohlkehle, Rippe, Achsband."""
+    d = DYNAMO
+    r_bezug = max(min(r_l, r_r), 1.0)
+    scheitel = r_bezug * d["scheitel"]
+    kehle = r_bezug * d["kehle"]
+    fuss = r_bezug * d["fuss"]
+    breit = d["rippe_halb"]
+
+    def seite(a: float, r_loch: float, vz: int) -> list[tuple[float, float]]:
+        """Von der Nabenmitte nach außen; ``vz`` ist -1 links, +1 rechts."""
+        rippe = r_loch + (d["rippe"] - 1.0) * r_bezug
+        ende = a * d["kugel_ende"]
+        punkte = []
+        # Kugel: Scheitel in der Mitte, läuft weich in die Kehle
+        for nummer in range(1, schritte + 1):
+            x = ende * nummer / schritte
+            anteil = (x / ende) ** 2.2
+            punkte.append((vz * x, scheitel - (scheitel - kehle) * anteil))
+        # Hohlkehle bis an den Rippenfuß
+        punkte.append((vz * (a - breit - 1.5), kehle + (fuss - kehle) * 0.35))
+        punkte.append((vz * (a - breit), fuss))
+        # Rippe mit rundem Kopf
+        punkte += [(vz * (a - breit), rippe - 1.0), (vz * (a - breit * 0.4), rippe),
+                   (vz * (a + breit * 0.4), rippe), (vz * (a + breit), rippe - 1.0),
+                   (vz * (a + breit), fuss)]
+        # Absätze nach außen: Bund, Achsband, Achsstummel
+        punkte += [(vz * (a + 5.0), r_bezug * d["absatz"]),
+                   (vz * (a + 10.0), r_bezug * d["absatz"]),
+                   (vz * (a + 10.0), r_bezug * d["band"]),
+                   (vz * (a + 22.0), r_bezug * d["band"]),
+                   (vz * (a + 22.0), r_bezug * d["achse"]),
+                   (vz * (a + 29.0), r_bezug * d["achse"])]
+        return punkte
+
+    links = [(x, r) for x, r in reversed(seite(a_l, r_l, -1))]
+    return links + [(0.0, scheitel)] + seite(a_r, r_r, +1)
+
+
 def _stationen(
     abstand_links: float,
     abstand_rechts: float,
@@ -122,6 +184,7 @@ def _stationen(
     antrieb: str = "kassette",
     schale: str = "normal",
     gestalt: Gestalt = GESTALT,
+    art: str = "",
 ) -> list[tuple[float, float]]:
     """Die Nabe als ``(x, Radius)`` in mm, ab der Nabenmitte.
 
@@ -133,6 +196,11 @@ def _stationen(
     (``keiner``, also eine Vorderradnabe). ``schale`` macht den Nabenkörper
     bei Dynamo und Nabenschaltung dick.
     """
+    if art == "Dynamo":
+        # Ein Nabendynamo hat eine eigene Gestalt, siehe DYNAMO.
+        return _dynamo_stationen(abstand_links, abstand_rechts,
+                                 radius_links, radius_rechts)
+
     g = gestalt
     a_l, a_r = abstand_links, abstand_rechts
     r_fl = radius_links + g.flanschrand
@@ -354,7 +422,7 @@ def nabe_seitenansicht(
         a_l, a_r, r_l, r_r = 35.0, 20.0, 22.5, 22.5
         antrieb, schale, art = "kassette", "normal", ""
 
-    stationen = _stationen(a_l, a_r, r_l, r_r, antrieb, schale)
+    stationen = _stationen(a_l, a_r, r_l, r_r, antrieb, schale, art=art)
 
     # Maßstab: die ganze Kontur soll mit etwas Luft in die Fläche passen –
     # in der Breite wie in der Höhe, mit demselben Faktor.
