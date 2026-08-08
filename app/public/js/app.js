@@ -6,11 +6,11 @@
 import { berechne, einkaufsliste, grad, mm, ueblicheKreuzungen, zahl } from "./rechnen.js";
 import { BAUARTEN, note } from "./speiche.js";
 import {
-  artenMitAnzahl, bezeichnung, felgenbeschreibung, felgenFussnoten, felgenkategorien,
+  alleNaben, artenMitAnzahl, bezeichnung, felgenbeschreibung, felgenFussnoten, felgenkategorien,
   felgentyp, felgentypen, felgenwarnungen, flanschabstaende, flanschdurchmesserPaar,
   herstellerMitAnzahl, listentext, lochzahlen, oesenStufe, speichenlochMm, suche,
 } from "./katalog.js";
-import { FELGEN_VORLAGEN, NABEN_VORLAGEN } from "./daten.js";
+import { FASSUNG, FELGEN_VORLAGEN, NABEN_VORLAGEN } from "./daten.js";
 import { felgeSvg, nabeSvg } from "./zeichnung.js";
 import { aufnahme as aufnahmeVon } from "./katalog.js";
 
@@ -466,6 +466,10 @@ $("zuruecksetzen").addEventListener("click", () => {
   } catch (_fehler) { /* nichts zu tun */ }
   location.reload();
 });
+
+// Fassung anzeigen – daran erkennt man, ob das Gerät die neueste Seite hat.
+$("fassung").textContent = `Fassung ${FASSUNG} · ${alleNaben().length} Naben, `
+  + `${felgentypen().length} Felgentypen`;
 
 katalogAufbauen();
 laden();

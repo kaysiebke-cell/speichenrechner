@@ -367,6 +367,7 @@ footer { margin-top: 1.5rem; }
 .skizze .achse { fill: var(--text); fill-opacity: 0.55; }
 .skizze .detail { stroke: var(--text); stroke-opacity: 0.45; stroke-width: 1; }
 .skizze .bohrung { fill: var(--grund); stroke: var(--akzent); stroke-width: 1.2; }
+.skizze .anschluss { fill: var(--text); fill-opacity: 0.55; stroke: var(--linie); }
 .skizze .oese { fill: none; stroke: var(--text); stroke-opacity: 0.6; stroke-width: 1.2; }
 .skizze .blech {
   fill: none;

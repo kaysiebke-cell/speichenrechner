@@ -30,7 +30,10 @@ const TAILLE_SCHRITTE = 14;
 /** `[Bund, Rohr, Taille]` in mm – bei „gross“ füllt die Schale fast den Flansch. */
 function schale(art, radiusLinks, radiusRechts) {
   const kleinster = Math.max(Math.min(radiusLinks, radiusRechts), 1.0);
-  if (art === "gross") return [kleinster * 0.86, kleinster * 0.82, kleinster * 0.76];
+  // Eine Trommel, keine Taille: bei Dynamo und Getriebenabe füllt das
+  // Innenleben die Schale bis kurz unter den Flansch aus – so zeigt es die
+  // Werkszeichnung der SON 28.
+  if (art === "gross") return [kleinster * 0.88, kleinster * 0.86, kleinster * 0.84];
   const deckel = kleinster * 0.80;
   return [
     Math.min(GESTALT.bund, deckel),
@@ -236,15 +239,28 @@ export function nabeSvg(nabe, breite = 340, hoehe = 190) {
     }
   }
 
-  // Rändelung am Lagersitz links
+  // Rändelung am Lagersitz links – das ist der Verschlussring einer
+  // Scheibenbremsnabe. Ein Nabendynamo hat dort eine glatte Endkappe und
+  // stattdessen rechts den Kabelanschluss.
   const [bund] = schale(schalenArt, rLinks, rRechts);
+  const istDynamo = nabe.art === "Dynamo";
   const sitzHalb = Math.min(GESTALT.sitz, bund * 0.92) * skala * 0.94;
   let riffel = "";
-  const rx1 = xFl - GESTALT.sitzAb * skala;
-  const rx2 = xFl - GESTALT.bundAb * skala;
-  for (let x = rx1 + 1.5; x < rx2; x += Math.max(2, 0.9 * skala)) {
-    riffel += `<line x1="${rund(x)}" y1="${rund(mitteY - sitzHalb)}" `
-      + `x2="${rund(x)}" y2="${rund(mitteY + sitzHalb)}"/>`;
+  if (istDynamo) {
+    const xk = xFr + GESTALT.bundAb * skala;
+    const breite = Math.max(2 * skala, 3);
+    for (const versatz of [-0.45, 0.45]) {
+      const y = mitteY + versatz * bund * skala;
+      riffel += `<rect x="${rund(xk)}" y="${rund(y - breite / 2)}" `
+        + `width="${rund(breite * 1.6)}" height="${rund(breite)}" class="anschluss"/>`;
+    }
+  } else {
+    const rx1 = xFl - GESTALT.sitzAb * skala;
+    const rx2 = xFl - GESTALT.bundAb * skala;
+    for (let x = rx1 + 1.5; x < rx2; x += Math.max(2, 0.9 * skala)) {
+      riffel += `<line x1="${rund(x)}" y1="${rund(mitteY - sitzHalb)}" `
+        + `x2="${rund(x)}" y2="${rund(mitteY + sitzHalb)}"/>`;
+    }
   }
 
   const loch = Math.max(1.9, 0.95 * skala);

@@ -97,7 +97,11 @@ def _schale(
     """
     kleinster = max(min(radius_links, radius_rechts), 1.0)
     if schale == "gross":
-        return kleinster * 0.86, kleinster * 0.82, kleinster * 0.76
+        # Eine Trommel, keine Taille: bei Dynamo und Getriebenabe füllt das
+        # Innenleben die Schale bis kurz unter den Flansch aus. Die
+        # Werkszeichnung der SON 28 zeigt genau das – der Körper läuft von
+        # Flansch zu Flansch fast gerade durch.
+        return kleinster * 0.88, kleinster * 0.86, kleinster * 0.84
     deckel = kleinster * 0.80
     return (min(gestalt.bund, deckel),
             min(gestalt.rohr, deckel * 0.88),
@@ -214,6 +218,19 @@ def _riffelung(ctx, farben: zg.Farben, x1: float, x2: float, mitte_y: float,
         x += teilung
 
 
+def _anschluss(ctx, farben: zg.Farben, x: float, mitte_y: float, hoehe: float,
+               skala: float) -> None:
+    """Der Kabelanschluss eines Nabendynamos – zwei Kontakte an der Schale."""
+    breite = max(2.0 * skala, 3.0)
+    for versatz in (-0.45, 0.45):
+        y = mitte_y + versatz * hoehe
+        ctx.rectangle(x, y - breite / 2, breite * 1.6, breite)
+        ctx.set_source_rgba(*farben.getoent(farben.metall, 0.55))
+        ctx.fill_preserve()
+        zg.setze(ctx, farben.linie, 1.0)
+        ctx.stroke()
+
+
 def bohrung(ctx, farben: zg.Farben, x: float, y: float, radius: float) -> None:
     """Speichenloch als echte Bohrung: dunkel mit hellem Rand."""
     ctx.arc(x, y, radius, 0, 2 * math.pi)
@@ -306,10 +323,10 @@ def nabe_seitenansicht(
         a_l, a_r = nabe.flanschabstand_links, nabe.flanschabstand_rechts
         r_l = nabe.flanschdurchmesser_links / 2.0
         r_r = nabe.flanschdurchmesser_rechts / 2.0
-        antrieb, schale = nabe.antrieb, nabe.schale
+        antrieb, schale, art = nabe.antrieb, nabe.schale, nabe.art
     else:
         a_l, a_r, r_l, r_r = 35.0, 20.0, 22.5, 22.5
-        antrieb, schale = "kassette", "normal"
+        antrieb, schale, art = "kassette", "normal", ""
 
     stationen = _stationen(a_l, a_r, r_l, r_r, antrieb, schale)
 
@@ -348,11 +365,18 @@ def nabe_seitenansicht(
     _antriebsseite(ctx, farben, stationen, mitte_x, mitte_y, skala,
                    x_flansch_rechts, hoch, antrieb)
 
-    # Rändelung am linken Lagersitz
+    # Rändelung am linken Lagersitz – das ist der Verschlussring einer
+    # Scheibenbremsnabe. Ein Nabendynamo hat dort eine glatte Endkappe; die
+    # Werkszeichnung der SON 28 zeigt keinen solchen Ring.
     bund, _, _ = _schale(g, schale, r_l, r_r)
-    _riffelung(ctx, farben,
-               x_flansch_links - g.sitz_ab * skala, x_flansch_links - g.bund_ab * skala,
-               mitte_y, min(g.sitz, bund * 0.92) * skala * 0.94, max(2.0, 0.9 * skala))
+    if art != "Dynamo":
+        _riffelung(ctx, farben,
+                   x_flansch_links - g.sitz_ab * skala, x_flansch_links - g.bund_ab * skala,
+                   mitte_y, min(g.sitz, bund * 0.92) * skala * 0.94, max(2.0, 0.9 * skala))
+    else:
+        # Stattdessen der Kabelanschluss rechts – das Kennzeichen eines Dynamos.
+        _anschluss(ctx, farben, x_flansch_rechts + g.bund_ab * skala, mitte_y,
+                   bund * skala, skala)
 
     # Speichenlöcher auf dem Lochkreis – der Bezug für den Flansch-Ø.
     loch = max(1.9, 0.95 * skala)

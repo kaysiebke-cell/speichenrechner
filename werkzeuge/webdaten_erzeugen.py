@@ -104,6 +104,12 @@ def _vorlagen() -> list[dict]:
     return naben, felgen
 
 
+def _fassung() -> str:
+    """Die Fassung der PC-Anwendung – dieselbe Nummer für beide Seiten."""
+    from speichenrechner import VERSION
+    return VERSION
+
+
 def erzeugen() -> str:
     naben = _naben()
     felgentypen, fussnoten = _felgen()
@@ -121,6 +127,7 @@ def erzeugen() -> str:
     )
     return (
         kopf
+        + block("FASSUNG", _fassung())
         + block("NABEN", naben)
         + block("FELGENTYPEN", felgentypen)
         + block("FELGEN_FUSSNOTEN", fussnoten)

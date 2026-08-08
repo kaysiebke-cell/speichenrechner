@@ -4,6 +4,8 @@
 // es beim nächsten Lauf des Werkzeugs; die Tabelle und naben_zusatz.json
 // sind die Quelle der Wahrheit.
 
+export const FASSUNG = "1.6.1";
+
 export const NABEN = [
 {
 "hersteller": "SON (Schmidt Maschinenbau)",
@@ -3280,11 +3282,11 @@ export const NABEN_VORLAGEN = [
 },
 {
 "name": "SON 28 Nabendynamo (Felgenbremse, 100 mm)",
-"flanschdurchmesser_links": 69.0,
-"flanschdurchmesser_rechts": 69.0,
+"flanschdurchmesser_links": 54.0,
+"flanschdurchmesser_rechts": 54.0,
 "flanschabstand_links": 31.0,
 "flanschabstand_rechts": 31.0,
-"speichenloch": 2.0,
+"speichenloch": 2.8,
 "art": "Dynamo",
 "aufnahme": ""
 },

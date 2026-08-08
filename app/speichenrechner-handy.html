@@ -380,6 +380,7 @@ footer { margin-top: 1.5rem; }
 .skizze .achse { fill: var(--text); fill-opacity: 0.55; }
 .skizze .detail { stroke: var(--text); stroke-opacity: 0.45; stroke-width: 1; }
 .skizze .bohrung { fill: var(--grund); stroke: var(--akzent); stroke-width: 1.2; }
+.skizze .anschluss { fill: var(--text); fill-opacity: 0.55; stroke: var(--linie); }
 .skizze .oese { fill: none; stroke: var(--text); stroke-opacity: 0.6; stroke-width: 1.2; }
 .skizze .blech {
   fill: none;
@@ -608,6 +609,9 @@ footer { margin-top: 1.5rem; }
       und dieselben Skizzen. Beide Fassungen werden gegen 2841 Werte aus der
       Python-Fassung geprüft.
     </p>
+    <!-- Die Fassung sichtbar: sonst lässt sich nicht erkennen, ob das Gerät
+         noch eine alte Seite aus dem Cache zeigt. -->
+    <p class="klein" id="fassung"></p>
     <p class="klein">
       Angaben ohne Gewähr – ERD und Nabenmaße vor dem Bestellen nachmessen.
     </p>
@@ -622,6 +626,8 @@ footer { margin-top: 1.5rem; }
 // Quelle sind die JSON-Dateien in data/. Wer hier etwas ändert, verliert
 // es beim nächsten Lauf des Werkzeugs; die Tabelle und naben_zusatz.json
 // sind die Quelle der Wahrheit.
+
+const FASSUNG = "1.6.1";
 
 const NABEN = [
 {
@@ -3899,11 +3905,11 @@ const NABEN_VORLAGEN = [
 },
 {
 "name": "SON 28 Nabendynamo (Felgenbremse, 100 mm)",
-"flanschdurchmesser_links": 69.0,
-"flanschdurchmesser_rechts": 69.0,
+"flanschdurchmesser_links": 54.0,
+"flanschdurchmesser_rechts": 54.0,
 "flanschabstand_links": 31.0,
 "flanschabstand_rechts": 31.0,
-"speichenloch": 2.0,
+"speichenloch": 2.8,
 "art": "Dynamo",
 "aufnahme": ""
 },
@@ -4844,7 +4850,10 @@ const TAILLE_SCHRITTE = 14;
 /** `[Bund, Rohr, Taille]` in mm – bei „gross“ füllt die Schale fast den Flansch. */
 function schale(art, radiusLinks, radiusRechts) {
   const kleinster = Math.max(Math.min(radiusLinks, radiusRechts), 1.0);
-  if (art === "gross") return [kleinster * 0.86, kleinster * 0.82, kleinster * 0.76];
+  // Eine Trommel, keine Taille: bei Dynamo und Getriebenabe füllt das
+  // Innenleben die Schale bis kurz unter den Flansch aus – so zeigt es die
+  // Werkszeichnung der SON 28.
+  if (art === "gross") return [kleinster * 0.88, kleinster * 0.86, kleinster * 0.84];
   const deckel = kleinster * 0.80;
   return [
     Math.min(GESTALT.bund, deckel),
@@ -5050,15 +5059,28 @@ function nabeSvg(nabe, breite = 340, hoehe = 190) {
     }
   }
 
-  // Rändelung am Lagersitz links
+  // Rändelung am Lagersitz links – das ist der Verschlussring einer
+  // Scheibenbremsnabe. Ein Nabendynamo hat dort eine glatte Endkappe und
+  // stattdessen rechts den Kabelanschluss.
   const [bund] = schale(schalenArt, rLinks, rRechts);
+  const istDynamo = nabe.art === "Dynamo";
   const sitzHalb = Math.min(GESTALT.sitz, bund * 0.92) * skala * 0.94;
   let riffel = "";
-  const rx1 = xFl - GESTALT.sitzAb * skala;
-  const rx2 = xFl - GESTALT.bundAb * skala;
-  for (let x = rx1 + 1.5; x < rx2; x += Math.max(2, 0.9 * skala)) {
-    riffel += `<line x1="${rund(x)}" y1="${rund(mitteY - sitzHalb)}" `
-      + `x2="${rund(x)}" y2="${rund(mitteY + sitzHalb)}"/>`;
+  if (istDynamo) {
+    const xk = xFr + GESTALT.bundAb * skala;
+    const breite = Math.max(2 * skala, 3);
+    for (const versatz of [-0.45, 0.45]) {
+      const y = mitteY + versatz * bund * skala;
+      riffel += `<rect x="${rund(xk)}" y="${rund(y - breite / 2)}" `
+        + `width="${rund(breite * 1.6)}" height="${rund(breite)}" class="anschluss"/>`;
+    }
+  } else {
+    const rx1 = xFl - GESTALT.sitzAb * skala;
+    const rx2 = xFl - GESTALT.bundAb * skala;
+    for (let x = rx1 + 1.5; x < rx2; x += Math.max(2, 0.9 * skala)) {
+      riffel += `<line x1="${rund(x)}" y1="${rund(mitteY - sitzHalb)}" `
+        + `x2="${rund(x)}" y2="${rund(mitteY + sitzHalb)}"/>`;
+    }
   }
 
   const loch = Math.max(1.9, 0.95 * skala);
@@ -5605,6 +5627,10 @@ $("zuruecksetzen").addEventListener("click", () => {
   } catch (_fehler) { /* nichts zu tun */ }
   location.reload();
 });
+
+// Fassung anzeigen – daran erkennt man, ob das Gerät die neueste Seite hat.
+$("fassung").textContent = `Fassung ${FASSUNG} · ${alleNaben().length} Naben, `
+  + `${felgentypen().length} Felgentypen`;
 
 katalogAufbauen();
 laden();

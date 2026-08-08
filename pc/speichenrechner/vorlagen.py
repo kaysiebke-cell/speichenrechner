@@ -72,7 +72,9 @@ NABEN_VORLAGEN: tuple[Nabe, ...] = (
     Nabe("Rohloff SPEEDHUB 500/14 A12 (148 mm, asym.)", 100.0, 100.0, 32.0, 26.0, 2.7,
          art="Nabenschaltung", aufnahme="Schraubritzel"),
     # SON: Flanschabstände laut Datenblatt, Speichenloch Ø 2,0 mm.
-    Nabe("SON 28 Nabendynamo (Felgenbremse, 100 mm)", 69.0, 69.0, 31.0, 31.0, 2.0,
+    # Lochkreis Ø 54 mm und Speichenloch Ø 2,8 mm stehen so in der Werkszeichnung
+    # von Schmidt. Hier stand vorher Ø 69 – falsch, und um 3 mm zu kurze Speichen.
+    Nabe("SON 28 Nabendynamo (Felgenbremse, 100 mm)", 54.0, 54.0, 31.0, 31.0, 2.8,
          art="Dynamo"),
     Nabe("SON 28 Disc 6-Loch Nabendynamo", 59.0, 54.0, 22.5, 25.0, 2.0, art="Dynamo"),
     Nabe("SONdelux Nabendynamo (Felgenbremse)", 54.0, 54.0, 25.0, 25.0, 2.0, art="Dynamo"),
