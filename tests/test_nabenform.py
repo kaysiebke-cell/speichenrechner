@@ -156,12 +156,46 @@ class TestKontur(unittest.TestCase):
         self.assertEqual(kassette, self.bauteile.GESTALT.freilauf)
         self.assertEqual(gewinde, self.bauteile.GEWINDE_RADIUS)
 
+    @staticmethod
+    def _radius_bei(stationen, x_gesucht: float) -> float:
+        """Radius der Kontur an einer Stelle, zwischen den Stationen gemittelt.
+
+        Nicht über die Stationen in der Nähe: eine glatte Trommel hat zwischen
+        den Flanschen gar keine Zwischenpunkte, weil eine Gerade keine braucht.
+        """
+        vorher = None
+        for x, r in stationen:
+            if vorher is not None and vorher[0] <= x_gesucht <= x:
+                weite = x - vorher[0]
+                anteil = (x_gesucht - vorher[0]) / weite if weite else 0.0
+                return vorher[1] + (r - vorher[1]) * anteil
+            vorher = (x, r)
+        raise AssertionError(f"x = {x_gesucht} liegt außerhalb der Kontur")
+
     def test_grosse_schale_ist_dicker(self):
         schmal = self._stationen(Nabe(art="Hinterrad", aufnahme="Kassette"), r=50.0)
         dick = self._stationen(Nabe(art="Nabenschaltung", aufnahme="Schraubritzel"), r=50.0)
-        mitte_schmal = min(r for x, r in schmal if abs(x) < 5)
-        mitte_dick = min(r for x, r in dick if abs(x) < 5)
-        self.assertGreater(mitte_dick, 2 * mitte_schmal)
+        self.assertGreater(self._radius_bei(dick, 0.0),
+                           2 * self._radius_bei(schmal, 0.0))
+
+    def test_getriebenabe_ist_eine_glatte_trommel(self):
+        """Zwischen den Flanschen darf die Schale weder Kehle noch Taille haben.
+
+        Anlass: dort standen zwei tiefe Hohlkehlen mit einem Band dazwischen –
+        aus einer falsch gelesenen Zeichnung der SON 28. Eine Rohloff SPEEDHUB
+        ist eine gerade Trommel, eine Shimano Nexus ebenso.
+        """
+        for a_l, a_r in ((29.0, 29.0), (32.0, 26.0), (35.0, 20.0)):
+            with self.subTest(a=(a_l, a_r)):
+                nabe = Nabe(flanschabstand_links=a_l, flanschabstand_rechts=a_r,
+                            art="Nabenschaltung", aufnahme="Schraubritzel")
+                stationen = self._stationen(nabe, r=50.0)
+                uebergang = self.bauteile.GESTALT.uebergang
+                innen = [r for x, r in stationen
+                         if -a_l + uebergang <= x <= a_r - uebergang]
+                self.assertTrue(innen)
+                self.assertAlmostEqual(min(innen), max(innen), places=9,
+                                       msg="Die Trommel ist nicht durchgehend gerade")
 
     def test_koerper_bleibt_unter_dem_flansch(self):
         """Bei kleinem Lochkreis darf der Nabenkörper nicht dicker sein als der Flansch.

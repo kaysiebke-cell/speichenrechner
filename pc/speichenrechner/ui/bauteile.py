@@ -69,11 +69,6 @@ class Gestalt:
     freilauf_ab: float = 3.0
     freilauf_bis: float = 30.0
 
-    # Nur für die dicke Schale (Dynamo, Nabenschaltung), aus der Werkszeichnung
-    # der SON 28 abgelesen: wie tief die Hohlkehle neben dem Flansch einschneidet
-    # und wie breit das Mittelband dazwischen stehen bleibt.
-    kehle_tiefe: float = 0.72
-    band_breite: float = 0.34
     kappe_rechts: float = 36.0
     stummel_rechts: float = 44.0
 
@@ -251,24 +246,18 @@ def _stationen(
     bis = a_r - g.uebergang
     if bis > von:
         if schale == "gross":
-            # Nachgezogen an der Werkszeichnung der SON 28: neben jedem Flansch
-            # eine tiefe runde Hohlkehle, dazwischen das Mittelband auf vollem
-            # Durchmesser – dort steht bei der echten Nabe die Gravur. Kein
-            # durchlaufender Zylinder und keine Taille.
-            kehle = taille * g.kehle_tiefe
-            band = (bis - von) * g.band_breite / 2.0
-            mitte = (von + bis) / 2.0
-            for nummer in range(TAILLE_SCHRITTE * 2 + 1):
-                anteil = nummer / (TAILLE_SCHRITTE * 2)
-                x = von + anteil * (bis - von)
-                if abs(x - mitte) <= band:
-                    stationen.append((x, rohr))          # Mittelband
-                    continue
-                # Lage in der Hohlkehle: 0 am Flansch, 1 am Bandrand
-                weite = (bis - von) / 2.0 - band
-                lage = (abs(x - mitte) - band) / weite if weite > 0 else 1.0
-                bogen = math.sin(lage * math.pi)          # 0 … 1 … 0
-                stationen.append((x, rohr - (rohr - kehle) * bogen))
+            # Getriebenabe: eine glatte Trommel. Das Getriebe füllt die Schale
+            # aus, die Flansche sitzen als Ringe an ihren Enden – so sieht eine
+            # Rohloff SPEEDHUB aus, und eine Shimano Nexus ebenso.
+            #
+            # Hier standen einmal zwei tiefe Hohlkehlen mit einem Band
+            # dazwischen. Die stammten aus einer falsch gelesenen Zeichnung der
+            # SON 28 und haben an einer Getriebenabe nichts verloren. Der
+            # Nabendynamo hat inzwischen seine eigene Kontur, siehe DYNAMO.
+            #
+            # Zwischen ``von`` und ``bis`` liegt damit nichts: die Kontur läuft
+            # als Gerade auf vollem Durchmesser durch.
+            pass
         else:
             # Kettennabe: eine weiche Taille, mit Kosinus abgetastet.
             for nummer in range(TAILLE_SCHRITTE + 1):
