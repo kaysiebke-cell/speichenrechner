@@ -68,6 +68,12 @@ class Gestalt:
     uebergang: float = 5.0      # bis der Bund ins Rohr übergeht
     freilauf_ab: float = 3.0
     freilauf_bis: float = 30.0
+
+    # Nur für die dicke Schale (Dynamo, Nabenschaltung), aus der Werkszeichnung
+    # der SON 28 abgelesen: wie tief die Hohlkehle neben dem Flansch einschneidet
+    # und wie breit das Mittelband dazwischen stehen bleibt.
+    kehle_tiefe: float = 0.72
+    band_breite: float = 0.34
     kappe_rechts: float = 36.0
     stummel_rechts: float = 44.0
 
@@ -146,15 +152,35 @@ def _stationen(
         (-a_l + dicke, bund), (-a_l + g.uebergang, rohr),
     ]
 
-    # Taille als Kosinus abgetastet – ein weicher Bogen statt einer Kante.
     von = -a_l + g.uebergang
     bis = a_r - g.uebergang
     if bis > von:
-        for nummer in range(TAILLE_SCHRITTE + 1):
-            anteil = nummer / TAILLE_SCHRITTE
-            x = von + anteil * (bis - von)
-            hub = (math.cos(anteil * 2 * math.pi - math.pi) + 1) / 2
-            stationen.append((x, taille + (rohr - taille) * hub))
+        if schale == "gross":
+            # Nachgezogen an der Werkszeichnung der SON 28: neben jedem Flansch
+            # eine tiefe runde Hohlkehle, dazwischen das Mittelband auf vollem
+            # Durchmesser – dort steht bei der echten Nabe die Gravur. Kein
+            # durchlaufender Zylinder und keine Taille.
+            kehle = taille * g.kehle_tiefe
+            band = (bis - von) * g.band_breite / 2.0
+            mitte = (von + bis) / 2.0
+            for nummer in range(TAILLE_SCHRITTE * 2 + 1):
+                anteil = nummer / (TAILLE_SCHRITTE * 2)
+                x = von + anteil * (bis - von)
+                if abs(x - mitte) <= band:
+                    stationen.append((x, rohr))          # Mittelband
+                    continue
+                # Lage in der Hohlkehle: 0 am Flansch, 1 am Bandrand
+                weite = (bis - von) / 2.0 - band
+                lage = (abs(x - mitte) - band) / weite if weite > 0 else 1.0
+                bogen = math.sin(lage * math.pi)          # 0 … 1 … 0
+                stationen.append((x, rohr - (rohr - kehle) * bogen))
+        else:
+            # Kettennabe: eine weiche Taille, mit Kosinus abgetastet.
+            for nummer in range(TAILLE_SCHRITTE + 1):
+                anteil = nummer / TAILLE_SCHRITTE
+                x = von + anteil * (bis - von)
+                hub = (math.cos(anteil * 2 * math.pi - math.pi) + 1) / 2
+                stationen.append((x, taille + (rohr - taille) * hub))
 
     stationen += [
         (a_r - g.uebergang, rohr), (a_r - dicke, bund),

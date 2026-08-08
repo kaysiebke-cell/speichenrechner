@@ -4847,6 +4847,10 @@ const GEWINDE_LAENGE = 16.0;
 const GEWINDE_RADIUS = 13.0;
 const TAILLE_SCHRITTE = 14;
 
+/** Hohlkehle und Mittelband der dicken Schale – aus der SON-Zeichnung. */
+const KEHLE_TIEFE = 0.72;
+const BAND_BREITE = 0.34;
+
 /** `[Bund, Rohr, Taille]` in mm – bei „gross“ füllt die Schale fast den Flansch. */
 function schale(art, radiusLinks, radiusRechts) {
   const kleinster = Math.max(Math.min(radiusLinks, radiusRechts), 1.0);
@@ -4895,14 +4899,32 @@ function stationen(aLinks, aRechts, rLinks, rRechts,
     [-aLinks + dicke, bund], [-aLinks + g.uebergang, rohr],
   ];
 
-  // Taille als Kosinus abgetastet – ein weicher Bogen statt einer Kante.
   const von = -aLinks + g.uebergang;
   const bis = aRechts - g.uebergang;
   if (bis > von) {
-    for (let n = 0; n <= TAILLE_SCHRITTE; n += 1) {
-      const anteil = n / TAILLE_SCHRITTE;
-      const hub = (Math.cos(anteil * 2 * Math.PI - Math.PI) + 1) / 2;
-      liste.push([von + anteil * (bis - von), taille + (rohr - taille) * hub]);
+    if (schalenArt === "gross") {
+      // Nachgezogen an der Werkszeichnung der SON 28: neben jedem Flansch eine
+      // tiefe runde Hohlkehle, dazwischen das Mittelband auf vollem Durchmesser.
+      const kehle = taille * KEHLE_TIEFE;
+      const band = ((bis - von) * BAND_BREITE) / 2;
+      const mitte = (von + bis) / 2;
+      const weite = (bis - von) / 2 - band;
+      for (let n = 0; n <= TAILLE_SCHRITTE * 2; n += 1) {
+        const anteil = n / (TAILLE_SCHRITTE * 2);
+        const x = von + anteil * (bis - von);
+        if (Math.abs(x - mitte) <= band) {
+          liste.push([x, rohr]);
+          continue;
+        }
+        const lage = weite > 0 ? (Math.abs(x - mitte) - band) / weite : 1;
+        liste.push([x, rohr - (rohr - kehle) * Math.sin(lage * Math.PI)]);
+      }
+    } else {
+      for (let n = 0; n <= TAILLE_SCHRITTE; n += 1) {
+        const anteil = n / TAILLE_SCHRITTE;
+        const hub = (Math.cos(anteil * 2 * Math.PI - Math.PI) + 1) / 2;
+        liste.push([von + anteil * (bis - von), taille + (rohr - taille) * hub]);
+      }
     }
   }
 
