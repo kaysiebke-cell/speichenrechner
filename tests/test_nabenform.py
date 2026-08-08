@@ -183,5 +183,94 @@ class TestKontur(unittest.TestCase):
                     self.assertLess(max(innen), radius, "Körper dicker als der Flansch")
 
 
+class TestDynamoKugel(unittest.TestCase):
+    """Der Generatorkörper ist ein Drehteil und muss rund bleiben.
+
+    Anlass: die Kugel wurde aus zwei Hälften gebaut, und jede Hälfte nahm
+    ihren eigenen Flanschabstand als Länge. Bei der SON 28 mit 37/19 mm war
+    die linke Hälfte 28,5 mm lang, die rechte 14,6 mm – gleicher Scheitel,
+    halbe Länge. Die kurze Seite stürzte ab, der Körper sah abgeschnitten aus.
+    """
+
+    # SON 28 mit Scheibenbremsaufnahme: die unsymmetrischste Bauform im Katalog.
+    A_LINKS, A_RECHTS, RADIUS = 37.0, 19.0, 27.0
+
+    def setUp(self):
+        from speichenrechner.ui import bauteile
+        self.bauteile = bauteile
+
+    def _kugel(self, a_l=None, a_r=None):
+        """Nur der Kugelabschnitt, ohne Kehle, Rippe und Achsband.
+
+        Abgegrenzt über die Länge des Körpers, nicht über den Radius: die
+        Hohlkehle daneben steigt wieder an und käme sonst mit ins Bild.
+        """
+        a_l = self.A_LINKS if a_l is None else a_l
+        a_r = self.A_RECHTS if a_r is None else a_r
+        stationen = self.bauteile._dynamo_stationen(a_l, a_r, self.RADIUS, self.RADIUS)
+        mitte = (a_r - a_l) / 2.0
+        halb = (a_l + a_r) / 2.0 * self.bauteile.DYNAMO["kugel_ende"]
+        return [(x, r) for x, r in stationen if abs(x - mitte) <= halb + 1e-6]
+
+    def test_kugel_ist_um_ihre_eigene_mitte_symmetrisch(self):
+        kugel = self._kugel()
+        mitte = (self.A_RECHTS - self.A_LINKS) / 2.0
+        links = min(x for x, _ in kugel)
+        rechts = max(x for x, _ in kugel)
+        self.assertAlmostEqual(rechts - mitte, mitte - links, places=6,
+                               msg="Die Kugel ist zur Seite verzogen")
+
+    def test_scheitel_liegt_in_der_kugelmitte(self):
+        kugel = self._kugel()
+        hoechster = max(kugel, key=lambda p: p[1])
+        self.assertAlmostEqual(hoechster[0], (self.A_RECHTS - self.A_LINKS) / 2.0,
+                               places=6)
+
+    def test_beide_haelften_sind_gleich_hoch_gewoelbt(self):
+        """Gespiegelt an der Kugelmitte müssen sich die Radien decken."""
+        kugel = self._kugel()
+        mitte = (self.A_RECHTS - self.A_LINKS) / 2.0
+        nach_x = {round(x - mitte, 6): r for x, r in kugel}
+        for versatz, radius in nach_x.items():
+            gegen = nach_x.get(round(-versatz, 6))
+            if gegen is not None:
+                self.assertAlmostEqual(radius, gegen, places=6)
+
+    def test_der_scheitel_ist_gerundet_und_nicht_spitz(self):
+        """Am Scheitel muss die Kontur flach auslaufen, sonst wird sie eckig."""
+        kugel = sorted(self._kugel())
+        mitte = (self.A_RECHTS - self.A_LINKS) / 2.0
+        # Nur eine Flanke: über den Scheitel hinweg sind beide Enden gleich
+        # hoch, die Differenz wäre null und der Test bewiese nichts.
+        nah = [p for p in kugel if 0.0 <= p[0] - mitte < 3.0]
+        rand = [p for p in kugel if 8.0 < p[0] - mitte < 14.0]
+        self.assertTrue(nah and rand)
+
+        def steigung(punkte):
+            punkte = sorted(punkte)
+            breite = punkte[-1][0] - punkte[0][0]
+            return abs(punkte[-1][1] - punkte[0][1]) / breite if breite else 0.0
+
+        self.assertLess(steigung(nah), steigung(rand) * 0.5,
+                        "Der Scheitel fällt so steil ab wie die Flanke")
+
+    def test_symmetrische_nabe_bleibt_mittig(self):
+        """Bei gleichen Flanschabständen sitzt die Kugel auf der Nabenmitte."""
+        kugel = self._kugel(a_l=28.0, a_r=28.0)
+        hoechster = max(kugel, key=lambda p: p[1])
+        self.assertAlmostEqual(hoechster[0], 0.0, places=6)
+
+    def test_kugel_bleibt_zwischen_den_flanschen(self):
+        """Sie darf die Rippen nicht überlaufen – sonst verschwindet der Flansch."""
+        for a_l, a_r in ((37.0, 19.0), (28.0, 28.0), (19.0, 37.0), (50.0, 12.0)):
+            with self.subTest(a=(a_l, a_r)):
+                kugel = self.bauteile._dynamo_stationen(a_l, a_r, self.RADIUS, self.RADIUS)
+                mitte = (a_r - a_l) / 2.0
+                halb = (a_l + a_r) / 2.0 * self.bauteile.DYNAMO["kugel_ende"]
+                self.assertLess(mitte + halb, a_r, "Kugel läuft über die rechte Rippe")
+                self.assertGreater(mitte - halb, -a_l, "Kugel läuft über die linke Rippe")
+                self.assertTrue(kugel)
+
+
 if __name__ == "__main__":
     unittest.main()

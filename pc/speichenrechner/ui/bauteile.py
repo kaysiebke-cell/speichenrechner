@@ -135,10 +135,23 @@ DYNAMO = {
     "achse": 0.17,         # Achsstummel
 }
 
+#: Wie weit der Kugelabschnitt reicht, in Grad ab dem Scheitel. Kleiner heißt
+#: flacher; bei 90° stünde die Kugel am Rand senkrecht und sähe abgeschnitten
+#: aus, statt in die Hohlkehle überzugehen.
+KUGEL_WINKEL = 78.0
+
 
 def _dynamo_stationen(a_l: float, a_r: float, r_l: float, r_r: float,
                       schritte: int = 40) -> list[tuple[float, float]]:
-    """Die Kontur eines Nabendynamos – Kugel, Hohlkehle, Rippe, Achsband."""
+    """Die Kontur eines Nabendynamos – Kugel, Hohlkehle, Rippe, Achsband.
+
+    Die Kugel ist **ein Drehteil**: sie ist um ihre eigene Mitte rund, nicht
+    um die Felgenmittelebene. Bei einer Scheibenbremsnabe wie der SON 28
+    (37/19 mm) liegen die Flansche unterschiedlich weit außen – der Generator
+    darin bleibt trotzdem derselbe Körper. Rechnete man jede Hälfte aus ihrem
+    eigenen Flanschabstand, wäre die linke Hälfte doppelt so lang wie die
+    rechte: gleicher Scheitel, halbe Länge, und die kurze Seite stürzt ab.
+    """
     d = DYNAMO
     r_bezug = max(min(r_l, r_r), 1.0)
     scheitel = r_bezug * d["scheitel"]
@@ -146,19 +159,33 @@ def _dynamo_stationen(a_l: float, a_r: float, r_l: float, r_r: float,
     fuss = r_bezug * d["fuss"]
     breit = d["rippe_halb"]
 
-    def seite(a: float, r_loch: float, vz: int) -> list[tuple[float, float]]:
-        """Von der Nabenmitte nach außen; ``vz`` ist -1 links, +1 rechts."""
-        rippe = r_loch + (d["rippe"] - 1.0) * r_bezug
-        ende = a * d["kugel_ende"]
+    # Mitte und halbe Länge des Körpers, gemessen zwischen den Flanschen.
+    kugel_mitte = (a_r - a_l) / 2.0
+    kugel_halb = (a_l + a_r) / 2.0 * d["kugel_ende"]
+
+    def kugel() -> list[tuple[float, float]]:
+        """Ein echter Kugelabschnitt: waagerecht am Scheitel, schräg am Rand.
+
+        Über den Winkel abgetastet, nicht über x – sonst wird der Scheitel
+        eckig. ``KUGEL_WINKEL`` sagt, wie weit der Abschnitt reicht, bevor
+        die Hohlkehle übernimmt.
+        """
+        endwinkel = math.radians(KUGEL_WINKEL)
+        tiefe = 1.0 - math.cos(endwinkel)
         punkte = []
-        # Kugel: Scheitel in der Mitte, läuft weich in die Kehle
-        for nummer in range(1, schritte + 1):
-            x = ende * nummer / schritte
-            anteil = (x / ende) ** 2.2
-            punkte.append((vz * x, scheitel - (scheitel - kehle) * anteil))
+        for nummer in range(-schritte, schritte + 1):
+            winkel = endwinkel * nummer / schritte
+            x = kugel_mitte + kugel_halb * math.sin(winkel) / math.sin(endwinkel)
+            hoehe = (math.cos(winkel) - math.cos(endwinkel)) / tiefe
+            punkte.append((x, kehle + (scheitel - kehle) * hoehe))
+        return punkte
+
+    def seite(a: float, r_loch: float, vz: int) -> list[tuple[float, float]]:
+        """Vom Kugelrand nach außen; ``vz`` ist -1 links, +1 rechts."""
+        rippe = r_loch + (d["rippe"] - 1.0) * r_bezug
         # Hohlkehle bis an den Rippenfuß
-        punkte.append((vz * (a - breit - 1.5), kehle + (fuss - kehle) * 0.35))
-        punkte.append((vz * (a - breit), fuss))
+        punkte = [(vz * (a - breit - 1.5), kehle + (fuss - kehle) * 0.35),
+                  (vz * (a - breit), fuss)]
         # Rippe mit rundem Kopf
         punkte += [(vz * (a - breit), rippe - 1.0), (vz * (a - breit * 0.4), rippe),
                    (vz * (a + breit * 0.4), rippe), (vz * (a + breit), rippe - 1.0),
@@ -173,7 +200,7 @@ def _dynamo_stationen(a_l: float, a_r: float, r_l: float, r_r: float,
         return punkte
 
     links = [(x, r) for x, r in reversed(seite(a_l, r_l, -1))]
-    return links + [(0.0, scheitel)] + seite(a_r, r_r, +1)
+    return links + kugel() + seite(a_r, r_r, +1)
 
 
 def _stationen(

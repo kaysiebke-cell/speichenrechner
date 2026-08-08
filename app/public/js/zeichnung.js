@@ -72,7 +72,15 @@ export const DYNAMO = {
   kugelEnde: 0.77, rippeHalb: 1.7, absatz: 0.49, band: 0.43, achse: 0.17,
 };
 
-/** Die Kontur eines Nabendynamos – Kugel, Hohlkehle, Rippe, Achsband. */
+/** Wie weit der Kugelabschnitt reicht, in Grad ab dem Scheitel. */
+export const KUGEL_WINKEL = 78;
+
+/** Die Kontur eines Nabendynamos – Kugel, Hohlkehle, Rippe, Achsband.
+ *
+ * Die Kugel ist ein Drehteil: um ihre eigene Mitte rund, nicht um die
+ * Felgenmittelebene. Sonst wäre bei 37/19 mm die linke Hälfte doppelt so
+ * lang wie die rechte – gleicher Scheitel, halbe Länge, kein Ball.
+ */
 export function dynamoStationen(aLinks, aRechts, rLinks, rRechts, schritte = 40) {
   const d = DYNAMO;
   const bezug = Math.max(Math.min(rLinks, rRechts), 1);
@@ -81,14 +89,28 @@ export function dynamoStationen(aLinks, aRechts, rLinks, rRechts, schritte = 40)
   const fuss = bezug * d.fuss;
   const breit = d.rippeHalb;
 
+  // Mitte und halbe Länge des Körpers, gemessen zwischen den Flanschen.
+  const kugelMitte = (aRechts - aLinks) / 2;
+  const kugelHalb = ((aLinks + aRechts) / 2) * d.kugelEnde;
+
+  // Ein echter Kugelabschnitt: über den Winkel abgetastet, nicht über x –
+  // sonst wird der Scheitel eckig.
+  const kugel = () => {
+    const endwinkel = (KUGEL_WINKEL * Math.PI) / 180;
+    const tiefe = 1 - Math.cos(endwinkel);
+    const punkte = [];
+    for (let n = -schritte; n <= schritte; n += 1) {
+      const winkel = (endwinkel * n) / schritte;
+      const x = kugelMitte + (kugelHalb * Math.sin(winkel)) / Math.sin(endwinkel);
+      const hoehe = (Math.cos(winkel) - Math.cos(endwinkel)) / tiefe;
+      punkte.push([x, kehle + (scheitel - kehle) * hoehe]);
+    }
+    return punkte;
+  };
+
   const seite = (a, rLoch, vz) => {
     const rippe = rLoch + (d.rippe - 1) * bezug;
-    const ende = a * d.kugelEnde;
     const punkte = [];
-    for (let n = 1; n <= schritte; n += 1) {
-      const x = (ende * n) / schritte;
-      punkte.push([vz * x, scheitel - (scheitel - kehle) * (x / ende) ** 2.2]);
-    }
     punkte.push([vz * (a - breit - 1.5), kehle + (fuss - kehle) * 0.35]);
     punkte.push([vz * (a - breit), fuss]);
     punkte.push([vz * (a - breit), rippe - 1], [vz * (a - breit * 0.4), rippe],
@@ -100,7 +122,7 @@ export function dynamoStationen(aLinks, aRechts, rLinks, rRechts, schritte = 40)
     return punkte;
   };
 
-  return [...seite(aLinks, rLinks, -1).reverse(), [0, scheitel],
+  return [...seite(aLinks, rLinks, -1).reverse(), ...kugel(),
           ...seite(aRechts, rRechts, +1)];
 }
 
