@@ -217,6 +217,70 @@ class TestKontur(unittest.TestCase):
                     self.assertLess(max(innen), radius, "Körper dicker als der Flansch")
 
 
+class TestRohloffForm(unittest.TestCase):
+    """Die Trommel mit ausgerundeten Schultern gehört der Rohloff allein.
+
+    Anlass: die Form war an der „dicken Schale“ festgemacht und galt damit für
+    jede Nabenschaltung – auch für Shimano Nexus und Sturmey-Archer, die anders
+    aussehen.
+    """
+
+    def setUp(self):
+        from speichenrechner.ui import bauteile
+        self.bauteile = bauteile
+
+    def test_erkannt_wird_am_namen(self):
+        for name, erwartet in (
+            ("Rohloff SPEEDHUB 500/14 CC", "rohloff"),
+            ("Rohloff SPEEDHUB 500/14 A12 (148 mm, asym.)", "rohloff"),
+            ("SPEEDHUB 500/14 TS", "rohloff"),
+            ("Shimano Nexus SG-C6001-8R", ""),
+            ("Sturmey-Archer S-RF3", ""),
+            ("Eigene Nabe", ""),
+            ("", ""),
+        ):
+            with self.subTest(name=name):
+                self.assertEqual(Nabe(name=name).bauform, erwartet)
+
+    def test_alle_rohloff_im_katalog_werden_erkannt(self):
+        from speichenrechner import katalog
+        eintraege = katalog.als_listeneintraege(hersteller="Rohloff")
+        self.assertTrue(eintraege, "keine Rohloff im Katalog")
+        for beschriftung, eintrag in eintraege:
+            with self.subTest(modell=eintrag.modell):
+                self.assertEqual(Nabe(name=eintrag.bezeichnung).bauform, "rohloff")
+
+    def _kontur(self, bauform: str):
+        return self.bauteile._stationen(
+            29.0, 29.0, 50.0, 50.0, "gewinde", "gross",
+            art="Nabenschaltung", bauform=bauform,
+        )
+
+    def test_rohloff_faellt_ausgerundet_ab(self):
+        """Neben dem Flansch braucht die Kehle viele Zwischenstufen."""
+        rohloff = self._kontur("rohloff")
+        andere = self._kontur("")
+        links_rohloff = [r for x, r in rohloff if -44.0 < x < -30.5]
+        links_andere = [r for x, r in andere if -44.0 < x < -30.5]
+        self.assertGreater(len(links_rohloff), len(links_andere) + 4,
+                           "Die Rohloff-Schulter ist nicht ausgerundet")
+
+    def test_ohne_rohloff_bleiben_die_absaetze(self):
+        """Eine Nexus behält die eckigen Drehabsätze – nur zwei Radien."""
+        andere = self._kontur("")
+        aussen = {round(r, 6) for x, r in andere if -44.0 < x < -30.5}
+        self.assertLessEqual(len(aussen), 2)
+
+    def test_beide_bleiben_zwischen_den_flanschen_gerade(self):
+        for bauform in ("rohloff", ""):
+            with self.subTest(bauform=bauform or "allgemein"):
+                uebergang = self.bauteile.GESTALT.uebergang
+                innen = [r for x, r in self._kontur(bauform)
+                         if -29.0 + uebergang <= x <= 29.0 - uebergang]
+                self.assertTrue(innen)
+                self.assertAlmostEqual(min(innen), max(innen), places=9)
+
+
 class TestDynamoKugel(unittest.TestCase):
     """Der Generatorkörper ist ein Drehteil und muss rund bleiben.
 

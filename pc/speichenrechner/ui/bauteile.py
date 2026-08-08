@@ -68,6 +68,7 @@ class Gestalt:
     uebergang: float = 5.0      # bis der Bund ins Rohr übergeht
     freilauf_ab: float = 3.0
     freilauf_bis: float = 30.0
+    kehle_ab: float = 12.0      # Länge der Kehle neben dem Flansch, nur Rohloff
 
     kappe_rechts: float = 36.0
     stummel_rechts: float = 44.0
@@ -198,6 +199,28 @@ def _dynamo_stationen(a_l: float, a_r: float, r_l: float, r_r: float,
     return links + kugel() + seite(a_r, r_r, +1)
 
 
+def _kehle(x_flansch: float, r_flansch: float, x_aussen: float, r_aussen: float,
+           schritte: int = 10) -> list[tuple[float, float]]:
+    """Ausgerundeter Übergang zwischen Flanschfuß und Lagersitz.
+
+    Nach der Umrisszeichnung der Rohloff SPEEDHUB: vom Flansch nach außen
+    fällt die Schale erst langsam und dann steil ab – ein Viertelbogen, keine
+    eckige Stufe und auch kein gerader Kegel.
+
+    Die Punkte kommen so heraus, wie die Kontur sie braucht: nach steigendem
+    ``x`` sortiert, gleich ob die Kehle links oder rechts sitzt.
+    """
+    punkte = []
+    for nummer in range(schritte + 1):
+        anteil = nummer / schritte          # 0 am Flansch, 1 außen
+        x = x_flansch + (x_aussen - x_flansch) * anteil
+        bogen = math.sqrt(max(0.0, 1.0 - anteil * anteil))
+        punkte.append((x, r_aussen + (r_flansch - r_aussen) * bogen))
+    if x_aussen < x_flansch:
+        punkte.reverse()
+    return punkte
+
+
 def _stationen(
     abstand_links: float,
     abstand_rechts: float,
@@ -207,6 +230,7 @@ def _stationen(
     schale: str = "normal",
     gestalt: Gestalt = GESTALT,
     art: str = "",
+    bauform: str = "",
 ) -> list[tuple[float, float]]:
     """Die Nabe als ``(x, Radius)`` in mm, ab der Nabenmitte.
 
@@ -236,8 +260,18 @@ def _stationen(
     stationen = [
         (-a_l - g.stummel, achse), (-a_l - g.kappe_ab, achse),
         (-a_l - g.kappe_ab, kappe), (-a_l - g.sitz_ab, kappe),
-        (-a_l - g.sitz_ab, sitz), (-a_l - g.bund_ab, sitz),
-        (-a_l - g.bund_ab, bund), (-a_l - dicke, bund),
+        (-a_l - g.sitz_ab, sitz),
+    ]
+    if bauform == "rohloff":
+        # Nur die Rohloff: ihre Schale fällt neben dem Flansch in einer
+        # ausgerundeten Kehle zum Lagersitz ab, nicht in eckigen Absätzen.
+        # Nachgezeichnet an der Umrisszeichnung der SPEEDHUB. Eine Shimano
+        # Nexus hat diese Form nicht und behält die Absätze.
+        stationen += _kehle(-a_l - dicke, bund, -a_l - g.sitz_ab, sitz)
+    else:
+        stationen += [(-a_l - g.bund_ab, sitz), (-a_l - g.bund_ab, bund),
+                      (-a_l - dicke, bund)]
+    stationen += [
         (-a_l - dicke, r_fl), (-a_l + dicke, r_fl),
         (-a_l + dicke, bund), (-a_l + g.uebergang, rohr),
     ]
@@ -266,22 +300,35 @@ def _stationen(
                 hub = (math.cos(anteil * 2 * math.pi - math.pi) + 1) / 2
                 stationen.append((x, taille + (rohr - taille) * hub))
 
+    # Wo die Antriebsseite anfängt und mit welchem Radius – die Kehle der
+    # Getriebenabe muss genau dort ankommen, sonst klafft eine Stufe.
+    if antrieb == "kassette":
+        antrieb_radius = g.freilauf
+    elif antrieb == "gewinde":
+        antrieb_radius = GEWINDE_RADIUS
+    else:
+        antrieb_radius = sitz
+    antrieb_ab = g.kehle_ab if bauform == "rohloff" else g.freilauf_ab
+
     stationen += [
         (a_r - g.uebergang, rohr), (a_r - dicke, bund),
         (a_r - dicke, r_fr), (a_r + dicke, r_fr),
-        (a_r + dicke, bund), (a_r + g.freilauf_ab, bund),
     ]
+    if bauform == "rohloff":
+        stationen += _kehle(a_r + dicke, bund, a_r + antrieb_ab, antrieb_radius)
+    else:
+        stationen += [(a_r + dicke, bund), (a_r + antrieb_ab, bund)]
 
     if antrieb == "kassette":
         stationen += [
-            (a_r + g.freilauf_ab, g.freilauf), (a_r + g.freilauf_bis, g.freilauf),
+            (a_r + antrieb_ab, g.freilauf), (a_r + g.freilauf_bis, g.freilauf),
             (a_r + g.freilauf_bis, kappe), (a_r + g.kappe_rechts, kappe),
             (a_r + g.kappe_rechts, achse), (a_r + g.stummel_rechts, achse),
         ]
     elif antrieb == "gewinde":
-        ende = a_r + g.freilauf_ab + GEWINDE_LAENGE
+        ende = a_r + antrieb_ab + GEWINDE_LAENGE
         stationen += [
-            (a_r + g.freilauf_ab, GEWINDE_RADIUS), (ende, GEWINDE_RADIUS),
+            (a_r + antrieb_ab, GEWINDE_RADIUS), (ende, GEWINDE_RADIUS),
             (ende, kappe), (ende + 7, kappe),
             (ende + 7, achse), (ende + 15, achse),
         ]
@@ -434,11 +481,13 @@ def nabe_seitenansicht(
         r_l = nabe.flanschdurchmesser_links / 2.0
         r_r = nabe.flanschdurchmesser_rechts / 2.0
         antrieb, schale, art = nabe.antrieb, nabe.schale, nabe.art
+        bauform = nabe.bauform
     else:
         a_l, a_r, r_l, r_r = 35.0, 20.0, 22.5, 22.5
-        antrieb, schale, art = "kassette", "normal", ""
+        antrieb, schale, art, bauform = "kassette", "normal", "", ""
 
-    stationen = _stationen(a_l, a_r, r_l, r_r, antrieb, schale, art=art)
+    stationen = _stationen(a_l, a_r, r_l, r_r, antrieb, schale,
+                           art=art, bauform=bauform)
 
     # Maßstab: die ganze Kontur soll mit etwas Luft in die Fläche passen –
     # in der Breite wie in der Höhe, mit demselben Faktor.

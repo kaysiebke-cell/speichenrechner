@@ -20,7 +20,8 @@ export const GESTALT = {
   achse: 5.0, kappe: 8.5, sitz: 12.0, bund: 13.5, rohr: 11.0, taille: 9.5,
   freilauf: 17.0, flanschdicke: 1.4, flanschrand: 2.5,
   stummel: 30.0, kappeAb: 22.0, sitzAb: 15.0, bundAb: 7.0, uebergang: 5.0,
-  freilaufAb: 3.0, freilaufBis: 30.0, kappeRechts: 36.0, stummelRechts: 44.0,
+  freilaufAb: 3.0, freilaufBis: 30.0, kehleAb: 12.0,
+  kappeRechts: 36.0, stummelRechts: 44.0,
 };
 
 export const GEWINDE_LAENGE = 16.0;
@@ -122,9 +123,36 @@ export function dynamoStationen(aLinks, aRechts, rLinks, rRechts, schritte = 40)
           ...seite(aRechts, rRechts, +1)];
 }
 
+/** Woran eine Rohloff im Namen zu erkennen ist – ihre Form gilt nur für sie. */
+const ROHLOFF_KENNUNG = ["rohloff", "speedhub"];
+
+/** Sonderform einer bestimmten Nabe, sonst leer. Bisher nur „rohloff“.
+ *
+ * Heißt nicht `bauform`: die Einzeldatei legt alle Module in einen Namensraum,
+ * und dort gibt es in app.js schon eine Variable dieses Namens.
+ */
+export function nabenBauform(name = "") {
+  const text = String(name).toLowerCase();
+  return ROHLOFF_KENNUNG.some((k) => text.includes(k)) ? "rohloff" : "";
+}
+
+/** Ausgerundeter Übergang zwischen Flanschfuß und Lagersitz – siehe _kehle. */
+function kehle(xFlansch, rFlansch, xAussen, rAussen, schritte = 10) {
+  const punkte = [];
+  for (let n = 0; n <= schritte; n += 1) {
+    const anteil = n / schritte;
+    const x = xFlansch + (xAussen - xFlansch) * anteil;
+    const bogen = Math.sqrt(Math.max(0, 1 - anteil * anteil));
+    punkte.push([x, rAussen + (rFlansch - rAussen) * bogen]);
+  }
+  if (xAussen < xFlansch) punkte.reverse();
+  return punkte;
+}
+
 /** Die Nabe als `[x, Radius]` in mm, ab der Nabenmitte. */
 export function stationen(aLinks, aRechts, rLinks, rRechts,
-                          antriebsart = "kassette", schalenArt = "normal", art = "") {
+                          antriebsart = "kassette", schalenArt = "normal", art = "",
+                          form = "") {
   // Ein Nabendynamo hat eine eigene Gestalt, siehe DYNAMO.
   if (art === "Dynamo") return dynamoStationen(aLinks, aRechts, rLinks, rRechts);
   const g = GESTALT;
@@ -139,11 +167,21 @@ export function stationen(aLinks, aRechts, rLinks, rRechts,
   const liste = [
     [-aLinks - g.stummel, achse], [-aLinks - g.kappeAb, achse],
     [-aLinks - g.kappeAb, kappe], [-aLinks - g.sitzAb, kappe],
-    [-aLinks - g.sitzAb, sitz], [-aLinks - g.bundAb, sitz],
-    [-aLinks - g.bundAb, bund], [-aLinks - dicke, bund],
+    [-aLinks - g.sitzAb, sitz],
+  ];
+  if (form === "rohloff") {
+    // Nur die Rohloff: ihre Schale fällt neben dem Flansch in einer
+    // ausgerundeten Kehle zum Lagersitz ab, nicht in eckigen Absätzen. Eine
+    // Shimano Nexus hat diese Form nicht und behält die Absätze.
+    liste.push(...kehle(-aLinks - dicke, bund, -aLinks - g.sitzAb, sitz));
+  } else {
+    liste.push([-aLinks - g.bundAb, sitz], [-aLinks - g.bundAb, bund],
+               [-aLinks - dicke, bund]);
+  }
+  liste.push(
     [-aLinks - dicke, rFl], [-aLinks + dicke, rFl],
     [-aLinks + dicke, bund], [-aLinks + g.uebergang, rohr],
-  ];
+  );
 
   const von = -aLinks + g.uebergang;
   const bis = aRechts - g.uebergang;
@@ -166,22 +204,32 @@ export function stationen(aLinks, aRechts, rLinks, rRechts,
     }
   }
 
+  // Wo die Antriebsseite anfängt und mit welchem Radius – die Kehle der
+  // Getriebenabe muss genau dort ankommen, sonst klafft eine Stufe.
+  const antriebRadius = antriebsart === "kassette" ? g.freilauf
+    : antriebsart === "gewinde" ? GEWINDE_RADIUS : sitz;
+  const antriebAb = form === "rohloff" ? g.kehleAb : g.freilaufAb;
+
   liste.push(
     [aRechts - g.uebergang, rohr], [aRechts - dicke, bund],
     [aRechts - dicke, rFr], [aRechts + dicke, rFr],
-    [aRechts + dicke, bund], [aRechts + g.freilaufAb, bund],
   );
+  if (form === "rohloff") {
+    liste.push(...kehle(aRechts + dicke, bund, aRechts + antriebAb, antriebRadius));
+  } else {
+    liste.push([aRechts + dicke, bund], [aRechts + antriebAb, bund]);
+  }
 
   if (antriebsart === "kassette") {
     liste.push(
-      [aRechts + g.freilaufAb, g.freilauf], [aRechts + g.freilaufBis, g.freilauf],
+      [aRechts + antriebAb, g.freilauf], [aRechts + g.freilaufBis, g.freilauf],
       [aRechts + g.freilaufBis, kappe], [aRechts + g.kappeRechts, kappe],
       [aRechts + g.kappeRechts, achse], [aRechts + g.stummelRechts, achse],
     );
   } else if (antriebsart === "gewinde") {
-    const ende = aRechts + g.freilaufAb + GEWINDE_LAENGE;
+    const ende = aRechts + antriebAb + GEWINDE_LAENGE;
     liste.push(
-      [aRechts + g.freilaufAb, GEWINDE_RADIUS], [ende, GEWINDE_RADIUS],
+      [aRechts + antriebAb, GEWINDE_RADIUS], [ende, GEWINDE_RADIUS],
       [ende, kappe], [ende + 7, kappe],
       [ende + 7, achse], [ende + 15, achse],
     );
@@ -276,7 +324,8 @@ export function nabeSvg(nabe, breite = 340, hoehe = 190) {
   const antriebsart = antrieb(nabe.art, nabe.aufnahme);
   const schalenArt = schalenart(nabe.art);
   const liste = stationen(nabe.flanschabstand_links, nabe.flanschabstand_rechts,
-                          rLinks, rRechts, antriebsart, schalenArt, nabe.art);
+                          rLinks, rRechts, antriebsart, schalenArt, nabe.art,
+                          nabenBauform(nabe.name));
 
   const spanneX = liste[liste.length - 1][0] - liste[0][0];
   const spanneR = Math.max(...liste.map(([, r]) => r));

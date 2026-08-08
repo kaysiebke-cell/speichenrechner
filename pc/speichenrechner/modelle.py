@@ -25,6 +25,11 @@ OHNE_ANTRIEB = ("Vorderrad", "Dynamo")
 #: Nabenschaltung das Getriebe. Beide sind deutlich dicker als eine Kettennabe.
 GROSSE_SCHALE = ("Dynamo", "Nabenschaltung")
 
+#: Woran eine Rohloff im Namen zu erkennen ist. Ihr Gehäuse hat eine eigene
+#: Form – eine Trommel mit ausgerundeten Schultern – und die gilt **nur** für
+#: sie, nicht für jede Nabenschaltung: eine Shimano Nexus sieht anders aus.
+ROHLOFF_KENNUNG = ("rohloff", "speedhub")
+
 
 @dataclass
 class Nabe:
@@ -84,6 +89,18 @@ class Nabe:
     def schale(self) -> str:
         """``gross`` bei Dynamo und Nabenschaltung, sonst ``normal``."""
         return "gross" if self.art in GROSSE_SCHALE else "normal"
+
+    @property
+    def bauform(self) -> str:
+        """Sonderform einer bestimmten Nabe, sonst leer.
+
+        Bisher nur ``rohloff``: die SPEEDHUB hat eine Trommel mit
+        ausgerundeten Schultern. Das ist ihre Form und nicht die aller
+        Nabenschaltungen – erkannt wird sie am Namen, denn der trägt bei
+        Katalog wie Vorlage den Hersteller.
+        """
+        text = self.name.lower()
+        return "rohloff" if any(k in text for k in ROHLOFF_KENNUNG) else ""
 
     @property
     def merkmale(self) -> tuple[str, ...]:
