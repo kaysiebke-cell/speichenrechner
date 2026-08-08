@@ -256,14 +256,32 @@ class TestRohloffForm(unittest.TestCase):
             art="Nabenschaltung", bauform=bauform,
         )
 
-    def test_rohloff_faellt_ausgerundet_ab(self):
-        """Neben dem Flansch braucht die Kehle viele Zwischenstufen."""
+    def test_rohloff_kommt_aus_der_umrisszeichnung(self):
+        """Nicht gerechnet, sondern nachgezeichnet – Punkt für Punkt."""
         rohloff = self._kontur("rohloff")
+        self.assertEqual(len(rohloff), len(self.bauteile.ROHLOFF_KONTUR))
         andere = self._kontur("")
-        links_rohloff = [r for x, r in rohloff if -44.0 < x < -30.5]
-        links_andere = [r for x, r in andere if -44.0 < x < -30.5]
-        self.assertGreater(len(links_rohloff), len(links_andere) + 4,
-                           "Die Rohloff-Schulter ist nicht ausgerundet")
+        self.assertNotEqual(len(rohloff), len(andere))
+
+    def test_flansche_stehen_an_ihrer_stelle(self):
+        """Die Spitzen der beiden Rippen liegen auf den Flanschabständen."""
+        for a_l, a_r in ((29.0, 29.0), (32.0, 26.0)):
+            with self.subTest(a=(a_l, a_r)):
+                kontur = self.bauteile._stationen(
+                    a_l, a_r, 50.0, 50.0, "gewinde", "gross",
+                    art="Nabenschaltung", bauform="rohloff")
+                # Jede Seite für sich: die beiden Rippen sind in der Vorlage
+                # nicht auf denselben Zehntelmillimeter hoch.
+                def spitze(punkte):
+                    hoch = max(r for _x, r in punkte)
+                    oben = [x for x, r in punkte if r > hoch - 1e-9]
+                    return sum(oben) / len(oben)
+
+                links = [(x, r) for x, r in kontur if x < 0]
+                rechts = [(x, r) for x, r in kontur if x > 0]
+                self.assertTrue(links and rechts)
+                self.assertAlmostEqual(spitze(links), -a_l, delta=a_l * 0.06)
+                self.assertAlmostEqual(spitze(rechts), a_r, delta=a_r * 0.22)
 
     def test_ohne_rohloff_bleiben_die_absaetze(self):
         """Eine Nexus behält die eckigen Drehabsätze – nur zwei Radien."""
@@ -271,14 +289,13 @@ class TestRohloffForm(unittest.TestCase):
         aussen = {round(r, 6) for x, r in andere if -44.0 < x < -30.5}
         self.assertLessEqual(len(aussen), 2)
 
-    def test_beide_bleiben_zwischen_den_flanschen_gerade(self):
-        for bauform in ("rohloff", ""):
-            with self.subTest(bauform=bauform or "allgemein"):
-                uebergang = self.bauteile.GESTALT.uebergang
-                innen = [r for x, r in self._kontur(bauform)
-                         if -29.0 + uebergang <= x <= 29.0 - uebergang]
-                self.assertTrue(innen)
-                self.assertAlmostEqual(min(innen), max(innen), places=9)
+    def test_allgemeine_getriebenabe_bleibt_gerade(self):
+        """Ohne Sonderform ist die Schale zwischen den Flanschen eine Gerade."""
+        uebergang = self.bauteile.GESTALT.uebergang
+        innen = [r for x, r in self._kontur("")
+                 if -29.0 + uebergang <= x <= 29.0 - uebergang]
+        self.assertTrue(innen)
+        self.assertAlmostEqual(min(innen), max(innen), places=9)
 
 
 class TestDynamoKugel(unittest.TestCase):

@@ -20,7 +20,7 @@ export const GESTALT = {
   achse: 5.0, kappe: 8.5, sitz: 12.0, bund: 13.5, rohr: 11.0, taille: 9.5,
   freilauf: 17.0, flanschdicke: 1.4, flanschrand: 2.5,
   stummel: 30.0, kappeAb: 22.0, sitzAb: 15.0, bundAb: 7.0, uebergang: 5.0,
-  freilaufAb: 3.0, freilaufBis: 30.0, kehleAb: 12.0,
+  freilaufAb: 3.0, freilaufBis: 30.0,
   kappeRechts: 36.0, stummelRechts: 44.0,
 };
 
@@ -136,23 +136,58 @@ export function nabenBauform(name = "") {
   return ROHLOFF_KENNUNG.some((k) => text.includes(k)) ? "rohloff" : "";
 }
 
-/** Ausgerundeter Übergang zwischen Flanschfuß und Lagersitz – siehe _kehle. */
-function kehle(xFlansch, rFlansch, xAussen, rAussen, schritte = 10) {
+/** Viertelellipse zwischen zwei Punkten – siehe _viertelbogen in bauteile.py. */
+function viertelbogen(x1, r1, x2, r2, schritte = 12, hohl = true) {
   const punkte = [];
-  for (let n = 0; n <= schritte; n += 1) {
-    const anteil = n / schritte;
-    const x = xFlansch + (xAussen - xFlansch) * anteil;
-    const bogen = Math.sqrt(Math.max(0, 1 - anteil * anteil));
-    punkte.push([x, rAussen + (rFlansch - rAussen) * bogen]);
+  for (let n = 1; n <= schritte; n += 1) {
+    const winkel = ((n / schritte) * Math.PI) / 2;
+    if (hohl) {
+      punkte.push([x1 + (x2 - x1) * Math.sin(winkel),
+                   r1 + (r2 - r1) * (1 - Math.cos(winkel))]);
+    } else {
+      punkte.push([x1 + (x2 - x1) * (1 - Math.cos(winkel)),
+                   r1 + (r2 - r1) * Math.sin(winkel)]);
+    }
   }
-  if (xAussen < xFlansch) punkte.reverse();
   return punkte;
+}
+
+// Die Rohloff SPEEDHUB, abgegriffen an einer Umrisszeichnung – keine Formel,
+// sondern Punkte. Pixel der Vorlage (Achsmitte y = 560, Flanschspitzen bei
+// x = 447 und 1007, Flanschspitze r = 516), normiert auf Flanschabstand und
+// Flanschaußenradius. Siehe ROHLOFF_KONTUR in bauteile.py.
+const ROHLOFF_MITTE_X = 727;
+const ROHLOFF_MITTE_Y = 560;
+const ROHLOFF_HALB = 280;
+const ROHLOFF_R = 516;
+
+const ROHLOFF_PIXEL = [
+  [40, 513], [95, 513], [95, 470], [122, 388], [180, 380], [208, 380],
+  [208, 237], [228, 237], [228, 320], [240, 320],
+  ...viertelbogen(240, 320, 432, 155, 12, true),
+  [432, 45], [462, 45], [462, 152], [840, 152], [872, 140], [950, 138],
+  [950, 42], [1065, 42],
+  ...viertelbogen(1065, 42, 1195, 305, 12, false),
+  [1210, 305], [1210, 392], [1310, 392], [1310, 505], [1385, 505],
+];
+
+export const ROHLOFF_KONTUR = ROHLOFF_PIXEL.map(([x, y]) => [
+  (x - ROHLOFF_MITTE_X) / ROHLOFF_HALB,
+  (ROHLOFF_MITTE_Y - y) / ROHLOFF_R,
+]);
+
+/** Die Umrisszeichnung, auf die eingegebenen Maße gestreckt. */
+export function rohloffStationen(aLinks, aRechts, rLinks, rRechts) {
+  const bezug = (rLinks + rRechts) / 2 + GESTALT.flanschrand;
+  return ROHLOFF_KONTUR.map(([x, r]) => [x * (x < 0 ? aLinks : aRechts), r * bezug]);
 }
 
 /** Die Nabe als `[x, Radius]` in mm, ab der Nabenmitte. */
 export function stationen(aLinks, aRechts, rLinks, rRechts,
                           antriebsart = "kassette", schalenArt = "normal", art = "",
                           form = "") {
+  // Die SPEEDHUB ist nachgezeichnet, nicht gerechnet: siehe ROHLOFF_KONTUR.
+  if (form === "rohloff") return rohloffStationen(aLinks, aRechts, rLinks, rRechts);
   // Ein Nabendynamo hat eine eigene Gestalt, siehe DYNAMO.
   if (art === "Dynamo") return dynamoStationen(aLinks, aRechts, rLinks, rRechts);
   const g = GESTALT;
@@ -169,15 +204,8 @@ export function stationen(aLinks, aRechts, rLinks, rRechts,
     [-aLinks - g.kappeAb, kappe], [-aLinks - g.sitzAb, kappe],
     [-aLinks - g.sitzAb, sitz],
   ];
-  if (form === "rohloff") {
-    // Nur die Rohloff: ihre Schale fällt neben dem Flansch in einer
-    // ausgerundeten Kehle zum Lagersitz ab, nicht in eckigen Absätzen. Eine
-    // Shimano Nexus hat diese Form nicht und behält die Absätze.
-    liste.push(...kehle(-aLinks - dicke, bund, -aLinks - g.sitzAb, sitz));
-  } else {
-    liste.push([-aLinks - g.bundAb, sitz], [-aLinks - g.bundAb, bund],
-               [-aLinks - dicke, bund]);
-  }
+  liste.push([-aLinks - g.bundAb, sitz], [-aLinks - g.bundAb, bund],
+             [-aLinks - dicke, bund]);
   liste.push(
     [-aLinks - dicke, rFl], [-aLinks + dicke, rFl],
     [-aLinks + dicke, bund], [-aLinks + g.uebergang, rohr],
@@ -204,32 +232,22 @@ export function stationen(aLinks, aRechts, rLinks, rRechts,
     }
   }
 
-  // Wo die Antriebsseite anfängt und mit welchem Radius – die Kehle der
-  // Getriebenabe muss genau dort ankommen, sonst klafft eine Stufe.
-  const antriebRadius = antriebsart === "kassette" ? g.freilauf
-    : antriebsart === "gewinde" ? GEWINDE_RADIUS : sitz;
-  const antriebAb = form === "rohloff" ? g.kehleAb : g.freilaufAb;
-
   liste.push(
     [aRechts - g.uebergang, rohr], [aRechts - dicke, bund],
     [aRechts - dicke, rFr], [aRechts + dicke, rFr],
   );
-  if (form === "rohloff") {
-    liste.push(...kehle(aRechts + dicke, bund, aRechts + antriebAb, antriebRadius));
-  } else {
-    liste.push([aRechts + dicke, bund], [aRechts + antriebAb, bund]);
-  }
+  liste.push([aRechts + dicke, bund], [aRechts + g.freilaufAb, bund]);
 
   if (antriebsart === "kassette") {
     liste.push(
-      [aRechts + antriebAb, g.freilauf], [aRechts + g.freilaufBis, g.freilauf],
+      [aRechts + g.freilaufAb, g.freilauf], [aRechts + g.freilaufBis, g.freilauf],
       [aRechts + g.freilaufBis, kappe], [aRechts + g.kappeRechts, kappe],
       [aRechts + g.kappeRechts, achse], [aRechts + g.stummelRechts, achse],
     );
   } else if (antriebsart === "gewinde") {
-    const ende = aRechts + antriebAb + GEWINDE_LAENGE;
+    const ende = aRechts + g.freilaufAb + GEWINDE_LAENGE;
     liste.push(
-      [aRechts + antriebAb, GEWINDE_RADIUS], [ende, GEWINDE_RADIUS],
+      [aRechts + g.freilaufAb, GEWINDE_RADIUS], [ende, GEWINDE_RADIUS],
       [ende, kappe], [ende + 7, kappe],
       [ende + 7, achse], [ende + 15, achse],
     );
@@ -343,9 +361,13 @@ export function nabeSvg(nabe, breite = 340, hoehe = 190) {
   const xFr = X(nabe.flanschabstand_rechts);
   const achse = Math.min(GESTALT.achse, spanneR * 0.2) * skala;
 
-  // Antriebsseite: Nuten des Freilaufkörpers oder Gewindestriche
+  // Antriebsseite: Nuten des Freilaufkörpers oder Gewindestriche. Bei der
+  // Rohloff steckt der Ritzelträger schon in der nachgezeichneten Kontur.
+  const istRohloff = nabenBauform(nabe.name) === "rohloff";
   let antriebsdetail = "";
-  if (antriebsart === "kassette") {
+  if (istRohloff) {
+    antriebsdetail = "";
+  } else if (antriebsart === "kassette") {
     const x1 = xFr + GESTALT.freilaufAb * skala;
     const x2 = xFr + GESTALT.freilaufBis * skala;
     const halb = GESTALT.freilauf * skala * 0.96;
@@ -375,7 +397,9 @@ export function nabeSvg(nabe, breite = 340, hoehe = 190) {
   const istDynamo = nabe.art === "Dynamo";
   const sitzHalb = Math.min(GESTALT.sitz, bund * 0.92) * skala * 0.94;
   let riffel = "";
-  if (istDynamo) {
+  if (istRohloff) {
+    riffel = "";          // ihr Umriss trägt seine Absätze selbst
+  } else if (istDynamo) {
     const xk = xFr + GESTALT.bundAb * skala;
     const breite = Math.max(2 * skala, 3);
     for (const versatz of [-0.45, 0.45]) {
