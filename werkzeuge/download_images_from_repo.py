@@ -24,6 +24,11 @@ Das Skript versucht, typische Spaltennamen zu finden:
   Hersteller, Herstellername, Manufacturer, Marke
   Modell, Model, Name
 Wenn solche Spalten nicht gefunden werden, werden alle Text-Spalten einer Zeile kombiniert.
+
+Fehlerbehebung:
+Wenn pandas.read_excel mehrere Sheets zurückgibt, wählt das Skript das erste Sheet
+sofern --sheet nicht angegeben wurde. Wenn du ein bestimmtes Sheet verwenden willst,
+übergib --sheet "Sheetname".
 """
 
 from __future__ import annotations
@@ -56,7 +61,7 @@ def sanitize(name: str) -> str:
 
 
 def build_query_from_row(row: pd.Series, vendor_col: str|None, model_col: str|None) -> str:
-    parts = []
+    parts: List[str] = []
     if vendor_col and pd.notna(row.get(vendor_col, None)):
         parts.append(str(row[vendor_col]).strip())
     if model_col and pd.notna(row.get(model_col, None)):
@@ -64,7 +69,7 @@ def build_query_from_row(row: pd.Series, vendor_col: str|None, model_col: str|No
     if parts:
         return " ".join(parts)
     # fallback: combine all non-numeric text columns
-    text_parts = []
+    text_parts: List[str] = []
     for col, val in row.items():
         if pd.isna(val):
             continue
@@ -92,9 +97,30 @@ def main():
         sys.exit(1)
 
     try:
-        df = pd.read_excel(args.excel, sheet_name=args.sheet)
+        # Wenn kein sheet angegeben wird, kann pandas.read_excel ein dict (mehrere Sheets)
+        raw = pd.read_excel(args.excel, sheet_name=args.sheet)
+        if isinstance(raw, dict):
+            # mehrere sheets zurückgegeben
+            if args.sheet:
+                # user wollte ein bestimmtes Sheet, aber pandas gab dict zurück -> prüfen
+                if args.sheet in raw:
+                    df = raw[args.sheet]
+                else:
+                    print(f"Sheet '{args.sheet}' nicht gefunden. Verfügbare Sheets: {list(raw.keys())}", file=sys.stderr)
+                    sys.exit(1)
+            else:
+                # kein sheet angegeben: nimm das erste
+                first = next(iter(raw))
+                print(f"Mehrere Sheets in Excel gefunden, verwende '{first}'")
+                df = raw[first]
+        else:
+            df = raw
     except Exception as e:
         print(f"Fehler beim Lesen der Excel-Datei: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    if not isinstance(df, pd.DataFrame):
+        print("Konnte kein DataFrame aus der Excel-Datei erzeugen.", file=sys.stderr)
         sys.exit(1)
 
     vendor_col = find_column(df, VENDOR_COLS)
