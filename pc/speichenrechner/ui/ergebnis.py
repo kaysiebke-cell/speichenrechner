@@ -71,27 +71,46 @@ class ErgebnisBereich(Gtk.Box):
     def __init__(self) -> None:
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=widgets.ABSTAND)
 
-        karten = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=widgets.ABSTAND)
-        karten.set_homogeneous(True)
         self.karte_links = SeitenKarte("links")
         self.karte_rechts = SeitenKarte("rechts")
-        karten.pack_start(self.karte_links, True, True, 0)
-        karten.pack_start(self.karte_rechts, True, True, 0)
-        self.pack_start(karten, False, False, 0)
 
+        # Die große Speichenlängen-Anzeige wird jetzt vom Hauptfenster
+        # oberhalb der Tab-Leiste dargestellt.
         self.bestellung = Gtk.Label(xalign=0.5)
         self.bestellung.set_line_wrap(True)
         self.bestellung.set_width_chars(20)
-        self.pack_start(self.bestellung, False, False, 0)
 
         # Die Zusatzansichten (Messen, Vergleich, Spannung, Bewertung) werden
         # vom Hauptfenster als normale Reiter neben „Laufrad“ und „Speichen“
         # eingesetzt. Rechts bleiben nur die eigentlichen Ergebnisse sichtbar.
         self.messen, self.tabelle, self.spannung_ansicht, self.bewertung_ansicht = self._baue_ansichten()
 
-        # Warnungen bleiben immer sichtbar, sie sind der sicherheitsrelevante Teil.
-        self.hinweis_kasten = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        self.pack_start(self.hinweis_kasten, False, False, 0)
+        # Der Hinweisbereich wird vom Hauptfenster links unter den Tabs
+        # eingehängt und deshalb hier nicht selbst gepackt.
+        self.hinweis_kasten = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=4,
+        )
+
+    def kurzanzeige(self) -> Gtk.Widget:
+        """Speichenlängen-Anzeige für oberhalb der Tab-Leiste."""
+        kasten = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=widgets.ABSTAND,
+        )
+
+        karten = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=widgets.ABSTAND,
+        )
+        karten.set_homogeneous(True)
+        karten.pack_start(self.karte_links, True, True, 0)
+        karten.pack_start(self.karte_rechts, True, True, 0)
+
+        kasten.pack_start(karten, False, False, 0)
+        kasten.pack_start(self.bestellung, False, False, 0)
+
+        return kasten
 
     def _baue_spannung(self) -> Gtk.Frame:
         rahmen, raster = widgets.abschnitt("Spannungsverhältnis")

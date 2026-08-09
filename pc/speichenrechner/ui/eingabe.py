@@ -61,7 +61,7 @@ class EingabeBereich(Gtk.Box):
         # Zwei Reiter statt einer langen Spalte: so bleibt das Fenster auch
         # unmaximiert bedienbar. Das Nötigste steht im ersten Reiter.
         self.mappe = Gtk.Notebook()
-        self.mappe.set_scrollable(True)
+        self.mappe.set_scrollable(False)
         # Alle sechs Ansichten werden wie die bestehenden Reiter „Laufrad“
         # und „Speichen“ direkt in diesem Notebook geöffnet.
         self.mappe.set_show_tabs(True)

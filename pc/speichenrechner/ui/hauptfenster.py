@@ -24,13 +24,14 @@ class Hauptfenster(Gtk.ApplicationWindow):
         # Maße so, dass beim Start beide Spalten vollständig zu sehen sind:
         # links der Reiter „Laufrad“ bis zur Rundung, rechts die Ergebnisse
         # ohne abgeschnittene Zahlen. Die Kopfleiste kommt oben dazu.
-        self.set_default_size(1008, 752)
+        self.set_default_size(0, 752)
         self.set_icon_von_datei()
 
         self._baue_kopfleiste()
 
         self.eingabe = EingabeBereich()
         self.ergebnis = ErgebnisBereich()
+
 
         # Die vier Zusatzansichten werden genauso wie „Laufrad“ und
         # „Speichen“ als Seiten des linken Notebooks geöffnet. Dadurch gibt
@@ -105,21 +106,40 @@ class Hauptfenster(Gtk.ApplicationWindow):
         self.eingabe.zuruecksetzen()
 
     def _baue_koerper(self) -> Gtk.Widget:
-        """Linkes Notebook mit allen sechs Tabs, rechts nur die Ergebnisse."""
+        """Gesamter sichtbarer Inhalt ohne leere rechte Ergebnisspalte."""
         self.eingabe.set_border_width(6)
         self.ergebnis.set_border_width(6)
 
-        rechts = Gtk.ScrolledWindow()
-        rechts.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        rechts.set_propagate_natural_width(False)
-        rechts.set_min_content_width(260)
-        rechts.add(self.ergebnis)
+        inhalt = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=widgets.ABSTAND,
+        )
 
-        inhalt = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
-        inhalt.pack1(self.eingabe, True, True)
-        inhalt.pack2(rechts, True, True)
-        self._teiler_gesetzt = False
-        inhalt.connect("size-allocate", self._teiler_setzen)
+        # Speichenlängen ganz oben.
+        inhalt.pack_start(
+            self.ergebnis.kurzanzeige(),
+            False,
+            False,
+            0,
+        )
+
+        # Eingabe-Notebook nimmt den Hauptbereich ein.
+        inhalt.pack_start(
+            self.eingabe,
+            True,
+            True,
+            0,
+        )
+
+        # Hinweise ganz unten.
+        inhalt.pack_start(
+            self.ergebnis.hinweis_kasten,
+            False,
+            False,
+            0,
+        )
+        self.ergebnis.hinweis_kasten.show_all()
+
         return inhalt
 
     def _teiler_setzen(self, widget, zuteilung) -> None:
