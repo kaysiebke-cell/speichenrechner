@@ -1,8 +1,8 @@
 """Rechte Spalte: Ergebnisanzeige.
 
 Oben die Speichenlängen und was zu bestellen ist, darunter das
-Spannungsverhältnis, die Skizzen (Speichenbild, Querschnitt, Vergleich),
-die fachliche Einschätzung und zuletzt die Warnungen zur Eingabe.
+Spannungsverhältnis, textuelle Messwerte und der Vergleich, die fachliche
+Einschätzung und zuletzt die Warnungen zur Eingabe.
 """
 
 from __future__ import annotations
@@ -17,10 +17,7 @@ from ..modelle import Einspeichung, Ergebnis, Felge, Nabe, SeitenErgebnis, Speic
 from ..speiche import note
 from . import widgets
 from .messen import MessAnsicht
-from .querschnitt import Querschnitt
-from .schema import Speichenbild
 from .vergleich import Kreuzungsvergleich
-from .zeichnung import ZeichenFlaeche
 
 
 class SeitenKarte(Gtk.Frame):
@@ -69,7 +66,7 @@ class SeitenKarte(Gtk.Frame):
 
 
 class ErgebnisBereich(Gtk.Box):
-    """Ergebniskarten, Spannungsverhältnis, Skizzen, Einschätzung, Hinweise."""
+    """Ergebniskarten, Spannungsverhältnis, Text-Messwerte, Einschätzung, Hinweise."""
 
     def __init__(self) -> None:
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=widgets.ABSTAND)
@@ -87,7 +84,10 @@ class ErgebnisBereich(Gtk.Box):
         self.bestellung.set_width_chars(20)
         self.pack_start(self.bestellung, False, False, 0)
 
-        self.pack_start(self._baue_mappe(), True, True, 0)
+        # Die Zusatzansichten (Messen, Vergleich, Spannung, Bewertung) werden
+        # vom Hauptfenster als normale Reiter neben „Laufrad“ und „Speichen“
+        # eingesetzt. Rechts bleiben nur die eigentlichen Ergebnisse sichtbar.
+        self.messen, self.tabelle, self.spannung_ansicht, self.bewertung_ansicht = self._baue_ansichten()
 
         # Warnungen bleiben immer sichtbar, sie sind der sicherheitsrelevante Teil.
         self.hinweis_kasten = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
@@ -147,39 +147,13 @@ class ErgebnisBereich(Gtk.Box):
 
         return rahmen
 
-    def _baue_mappe(self) -> Gtk.Widget:
-        """Alle Ansichten als Reiter – so bleibt die Höhe beherrschbar."""
-        self.mappe = Gtk.Notebook()
-        self.mappe.set_scrollable(True)
-
-        self.bild = Speichenbild()
-        self.querschnitt = Querschnitt()
-        self.tabelle = Kreuzungsvergleich()
-        self.messen = MessAnsicht()
-
-        for widget, titel in (
-            (self.bild, "Speichenbild"),
-            (self.querschnitt, "Querschnitt"),
-            (self.messen, "Messen"),
-            (self.tabelle, "Vergleich"),
-        ):
-            if isinstance(widget, ZeichenFlaeche):
-                huelle = Gtk.Box()
-                huelle.set_border_width(widgets.RAND)
-                huelle.pack_start(widget, True, True, 0)
-                self.mappe.append_page(huelle, Gtk.Label(label=titel))
-            else:
-                self.mappe.append_page(widget, Gtk.Label(label=titel))
-
-        self.mappe.append_page(
-            self._rollbar(self._baue_spannung(), self._baue_speichenwerte()),
-            Gtk.Label(label="Spannung"),
-        )
-        self.mappe.append_page(
-            self._rollbar(self._baue_einschaetzung()),
-            Gtk.Label(label="Bewertung"),
-        )
-        return self.mappe
+    def _baue_ansichten(self) -> tuple[Gtk.Widget, Gtk.Widget, Gtk.Widget, Gtk.Widget]:
+        """Erzeugt die vier Zusatzseiten für die gemeinsame Tab-Leiste."""
+        messen = MessAnsicht()
+        tabelle = Kreuzungsvergleich()
+        spannung = self._rollbar(self._baue_spannung(), self._baue_speichenwerte())
+        bewertung = self._rollbar(self._baue_einschaetzung())
+        return messen, tabelle, spannung, bewertung
 
     @staticmethod
     def _rollbar(*abschnitte: Gtk.Widget) -> Gtk.Widget:
@@ -204,28 +178,6 @@ class ErgebnisBereich(Gtk.Box):
         return self.einschaetzung_text
 
     # ---------------------------------------------------------- Aktualisieren
-
-    def aktuelle_skizze(self) -> ZeichenFlaeche | None:
-        """Die gerade sichtbare Zeichnung – für den Export."""
-        seite = self.mappe.get_nth_page(self.mappe.get_current_page())
-        if isinstance(seite, MessAnsicht):
-            return seite.aktuelles_bild()
-        if isinstance(seite, Gtk.Box):
-            for kind in seite.get_children():
-                if isinstance(kind, ZeichenFlaeche):
-                    return kind
-        return None
-
-    def zeige_messskizze(self, schluessel: str) -> None:
-        """Schaltet die Messansicht auf das gerade bearbeitete Maß."""
-        self.messen.zeige(schluessel)
-
-    def zeige_messen(self) -> None:
-        """Holt den Reiter „Messen“ nach vorn."""
-        for nummer in range(self.mappe.get_n_pages()):
-            if self.mappe.get_nth_page(nummer) is self.messen:
-                self.mappe.set_current_page(nummer)
-                return
 
     def zeige(
         self,
@@ -259,8 +211,6 @@ class ErgebnisBereich(Gtk.Box):
             else:
                 self.speichen_zeilen[seite].set_text("–")
 
-        self.bild.setze_daten(nabe, felge, einspeichung)
-        self.querschnitt.setze_daten(nabe, felge, einspeichung)
         self.messen.setze_daten(nabe, felge)
         self.tabelle.zeige(nabe, felge, einspeichung, schritt, speichen)
 

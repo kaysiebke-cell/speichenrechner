@@ -31,9 +31,17 @@ class Hauptfenster(Gtk.ApplicationWindow):
 
         self.eingabe = EingabeBereich()
         self.ergebnis = ErgebnisBereich()
+
+        # Die vier Zusatzansichten werden genauso wie „Laufrad“ und
+        # „Speichen“ als Seiten des linken Notebooks geöffnet. Dadurch gibt
+        # es nur noch eine Tab-Leiste oben links und keine versteckte
+        # Tab-Leiste mehr in der rechten Ergebnisspalte.
+        self.eingabe.mappe.append_page(self.ergebnis.messen, Gtk.Label(label="Messen"))
+        self.eingabe.mappe.append_page(self.ergebnis.tabelle, Gtk.Label(label="Vergleich"))
+        self.eingabe.mappe.append_page(self.ergebnis.spannung_ansicht, Gtk.Label(label="Spannung"))
+        self.eingabe.mappe.append_page(self.ergebnis.bewertung_ansicht, Gtk.Label(label="Bewertung"))
+
         self.eingabe.connect("geaendert", lambda _w: self.neu_berechnen())
-        self.eingabe.connect("messfeld", lambda _w, name: self.ergebnis.zeige_messskizze(name))
-        self.eingabe.connect("messen-zeigen", lambda _w, name: self.zeige_messen(name))
         self.eingabe.connect("katalog-gewaehlt", lambda _w, name: self.katalog_uebernommen(name))
 
         self.add(self._baue_koerper())
@@ -77,7 +85,6 @@ class Hauptfenster(Gtk.ApplicationWindow):
 
         eintraege = (
             ("Nabentabelle bearbeiten …", self.zeige_nabentabelle),
-            ("Skizze exportieren …", self.skizze_exportieren),
             (None, None),
             ("Eingaben zurücksetzen", self.eingabe_zuruecksetzen),
             (None, None),
@@ -98,7 +105,7 @@ class Hauptfenster(Gtk.ApplicationWindow):
         self.eingabe.zuruecksetzen()
 
     def _baue_koerper(self) -> Gtk.Widget:
-        """Beide Spalten dürfen schrumpfen und rollen, statt abgeschnitten zu werden."""
+        """Linkes Notebook mit allen sechs Tabs, rechts nur die Ergebnisse."""
         self.eingabe.set_border_width(6)
         self.ergebnis.set_border_width(6)
 
@@ -108,13 +115,12 @@ class Hauptfenster(Gtk.ApplicationWindow):
         rechts.set_min_content_width(260)
         rechts.add(self.ergebnis)
 
-        self.geteilt = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
-        self.geteilt.pack1(self.eingabe, True, True)
-        self.geteilt.pack2(rechts, True, True)
-        # Die Trennung sitzt anteilig, damit sie auch im kleinen Fenster passt.
+        inhalt = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
+        inhalt.pack1(self.eingabe, True, True)
+        inhalt.pack2(rechts, True, True)
         self._teiler_gesetzt = False
-        self.geteilt.connect("size-allocate", self._teiler_setzen)
-        return self.geteilt
+        inhalt.connect("size-allocate", self._teiler_setzen)
+        return inhalt
 
     def _teiler_setzen(self, widget, zuteilung) -> None:
         """Legt die Trennlinie einmalig auf den Platzbedarf der Eingabespalte.
@@ -216,50 +222,6 @@ class Hauptfenster(Gtk.ApplicationWindow):
         if geaendert:
             # Die Nabenliste im Formular muss die Nachträge mitbekommen.
             self.eingabe.aktualisiere_vorlagen()
-
-    def zeige_messen(self, schluessel: str) -> None:
-        """Holt die passende Messskizze nach vorn – aus dem Abschnitt heraus."""
-        self.ergebnis.zeige_messskizze(schluessel)
-        self.ergebnis.zeige_messen()
-
-    def skizze_exportieren(self) -> None:
-        """Speichert die gerade sichtbare Zeichnung als PNG, PDF oder SVG."""
-        skizze = self.ergebnis.aktuelle_skizze()
-        if skizze is None:
-            self._meldung(
-                "Der Reiter „Vergleich“ ist eine Tabelle – bitte erst „Speichenbild“ "
-                "oder „Querschnitt“ auswählen.",
-                Gtk.MessageType.INFO,
-            )
-            return
-
-        dialog = Gtk.FileChooserDialog(
-            title="Skizze exportieren", transient_for=self, action=Gtk.FileChooserAction.SAVE
-        )
-        dialog.add_button("Abbrechen", Gtk.ResponseType.CANCEL)
-        knopf = dialog.add_button("Exportieren", Gtk.ResponseType.OK)
-        knopf.get_style_context().add_class("suggested-action")
-        dialog.set_current_name("speichenbild.png")
-        dialog.set_do_overwrite_confirmation(True)
-
-        for name, muster in (("Bild (*.png)", "*.png"), ("PDF (*.pdf)", "*.pdf"),
-                             ("SVG (*.svg)", "*.svg")):
-            filter_ = Gtk.FileFilter()
-            filter_.set_name(name)
-            filter_.add_pattern(muster)
-            dialog.add_filter(filter_)
-
-        if dialog.run() == Gtk.ResponseType.OK:
-            pfad = dialog.get_filename()
-            dialog.destroy()
-            try:
-                skizze.exportiere(pfad)
-            except Exception as fehler:  # Cairo meldet je nach Format anders
-                self._meldung(f"Export fehlgeschlagen: {fehler}", Gtk.MessageType.ERROR)
-            else:
-                self._meldung(f"Skizze gespeichert: {pfad}", Gtk.MessageType.INFO)
-        else:
-            dialog.destroy()
 
     def zeige_ueber(self) -> None:
         dialog = Gtk.AboutDialog(transient_for=self, modal=True)

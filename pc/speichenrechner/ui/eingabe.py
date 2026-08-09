@@ -43,10 +43,6 @@ class EingabeBereich(Gtk.Box):
 
     __gsignals__ = {
         "geaendert": (GObject.SignalFlags.RUN_FIRST, None, ()),
-        # Meldet, welches Maß gerade bearbeitet wird – die Messansicht folgt.
-        "messfeld": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
-        # Ausdrücklicher Wunsch, die Messskizze zu sehen – Reiter nach vorn.
-        "messen-zeigen": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
         # Eine Nabe wurde aus dem Katalog übernommen.
         "katalog-gewaehlt": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
@@ -66,6 +62,9 @@ class EingabeBereich(Gtk.Box):
         # unmaximiert bedienbar. Das Nötigste steht im ersten Reiter.
         self.mappe = Gtk.Notebook()
         self.mappe.set_scrollable(True)
+        # Alle sechs Ansichten werden wie die bestehenden Reiter „Laufrad“
+        # und „Speichen“ direkt in diesem Notebook geöffnet.
+        self.mappe.set_show_tabs(True)
         self.mappe.append_page(
             self._seite(self._baue_nabe(), self._baue_felge(), self._baue_einspeichung()),
             Gtk.Label(label="Laufrad"),
@@ -94,13 +93,7 @@ class EingabeBereich(Gtk.Box):
     # ------------------------------------------------------------------ Aufbau
 
     def _baue_nabe(self) -> Gtk.Frame:
-        messknopf = widgets.flachknopf(
-            "view-reveal-symbolic",
-            "Zeigt in der Skizze, wo Flansch-Ø und Flanschabstand gemessen werden",
-        )
-        messknopf.connect("clicked", lambda _k: self.emit("messen-zeigen", "abstand"))
-
-        rahmen, raster = widgets.abschnitt("Nabe", messknopf)
+        rahmen, raster = widgets.abschnitt("Nabe")
         reihe = 0
 
         self.nabe_vorlage = VorlagenLeiste(
@@ -195,20 +188,10 @@ class EingabeBereich(Gtk.Box):
         for feld in (self.flansch_d_links, self.flansch_d_rechts, self.flansch_a_links,
                      self.flansch_a_rechts, self.speichenloch, self.flanschdicke):
             feld.connect("value-changed", self._feld_geaendert, self.nabe_vorlage)
-        for feld in (self.flansch_d_links, self.flansch_d_rechts):
-            self._messfeld_verknuepfen(feld, "flansch")
-        for feld in (self.flansch_a_links, self.flansch_a_rechts):
-            self._messfeld_verknuepfen(feld, "abstand")
-
         return rahmen
 
     def _baue_felge(self) -> Gtk.Frame:
-        messknopf = widgets.flachknopf(
-            "view-reveal-symbolic",
-            "Zeigt in der Skizze, wo der ERD gemessen wird",
-        )
-        messknopf.connect("clicked", lambda _k: self.emit("messen-zeigen", "erd"))
-        rahmen, raster = widgets.abschnitt("Felge", messknopf)
+        rahmen, raster = widgets.abschnitt("Felge")
         reihe = 0
 
         self.felge_vorlage = VorlagenLeiste(
@@ -241,16 +224,14 @@ class EingabeBereich(Gtk.Box):
 
         for feld in (self.erd, self.versatz):
             feld.connect("value-changed", self._feld_geaendert, self.felge_vorlage)
-            self._messfeld_verknuepfen(feld, "erd")
 
         return rahmen
 
     def _baue_felgentyp(self, raster: Gtk.Grid, reihe: int) -> int:
         """Bauform der Felge – gleich unter ERD und Versatz, nicht im Menü.
 
-        Der Typ ändert die Speichenlänge nicht. Er bestimmt aber, welches
-        Profil die Messskizze zeichnet und was der Rechner zu Ösung, Werkstoff
-        und Spannung sagt – deshalb steht er hier und nicht abseits.
+        Der Typ ändert die Speichenlänge nicht. Er bestimmt die Hinweise zu
+        Ösung, Werkstoff und Spannung – deshalb steht er hier und nicht abseits.
 
         Der Abschnitt belegt **eine** Zeile: Filter und Auswahl stehen
         nebeneinander, die Beschreibung erscheint erst, wenn ein Typ gewählt
@@ -289,7 +270,7 @@ class EingabeBereich(Gtk.Box):
 
         beschriftung = Gtk.Label(label="Felgentyp", xalign=0.0)
         hilfe = ("Bauform der Felge. Sie ändert die Speichenlänge nicht, wohl aber "
-                 "die Hinweise und das Profil in der Messskizze."
+                 "die Hinweise zu Ösung, Werkstoff und Spannung."
                  + (f"\n\n{fussnote}" if fussnote else ""))
         beschriftung.set_tooltip_text(hilfe)
         self.felgentyp.set_tooltip_text(hilfe)
@@ -592,11 +573,6 @@ class EingabeBereich(Gtk.Box):
 
     # ------------------------------------------------------------- Reaktionen
 
-    def _messfeld_verknuepfen(self, feld: Gtk.Widget, schluessel: str) -> None:
-        """Beim Hineinklicken zeigt die Messansicht das passende Maß."""
-        feld.connect("focus-in-event",
-                     lambda _w, _e, name=schluessel: self.emit("messfeld", name) or False)
-
     def _melde(self) -> None:
         if not self._stumm:
             self.emit("geaendert")
@@ -648,7 +624,6 @@ class EingabeBereich(Gtk.Box):
     def _vorlage_uebernehmen(self, nabe: Nabe) -> None:
         self._katalogname = None
         self._einbaubreite = None
-        # Bauart und Aufnahme bestimmen, was die Skizze zeichnet.
         self._nabenart = nabe.art
         self._nabenaufnahme = nabe.aufnahme
         self._stumm = True

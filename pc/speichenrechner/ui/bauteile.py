@@ -68,6 +68,7 @@ class Gestalt:
     uebergang: float = 5.0      # bis der Bund ins Rohr übergeht
     freilauf_ab: float = 3.0
     freilauf_bis: float = 30.0
+    kehle_ab: float = 12.0      # Länge der Kehle neben dem Flansch, nur Rohloff
 
     kappe_rechts: float = 36.0
     stummel_rechts: float = 44.0
@@ -198,66 +199,26 @@ def _dynamo_stationen(a_l: float, a_r: float, r_l: float, r_r: float,
     return links + kugel() + seite(a_r, r_r, +1)
 
 
-def _viertelbogen(x1: float, r1: float, x2: float, r2: float,
-                  schritte: int = 12, hohl: bool = True) -> list[tuple[float, float]]:
-    """Viertelellipse zwischen zwei Punkten, in Richtung ``x1 → x2``.
+def _kehle(x_flansch: float, r_flansch: float, x_aussen: float, r_aussen: float,
+           schritte: int = 10) -> list[tuple[float, float]]:
+    """Ausgerundeter Übergang zwischen Flanschfuß und Lagersitz.
 
-    ``hohl=True`` steht am ersten Punkt senkrecht und läuft am zweiten
-    waagerecht aus, ``hohl=False`` umgekehrt. Damit lassen sich beide
-    Schultern einer Nabe beschreiben, ohne einen Mittelpunkt zu suchen.
+    Nach der Umrisszeichnung der Rohloff SPEEDHUB: vom Flansch nach außen
+    fällt die Schale erst langsam und dann steil ab – ein Viertelbogen, keine
+    eckige Stufe und auch kein gerader Kegel.
+
+    Die Punkte kommen so heraus, wie die Kontur sie braucht: nach steigendem
+    ``x`` sortiert, gleich ob die Kehle links oder rechts sitzt.
     """
     punkte = []
-    for nummer in range(1, schritte + 1):
-        winkel = (nummer / schritte) * math.pi / 2.0
-        if hohl:
-            x = x1 + (x2 - x1) * math.sin(winkel)
-            r = r1 + (r2 - r1) * (1.0 - math.cos(winkel))
-        else:
-            x = x1 + (x2 - x1) * (1.0 - math.cos(winkel))
-            r = r1 + (r2 - r1) * math.sin(winkel)
-        punkte.append((x, r))
+    for nummer in range(schritte + 1):
+        anteil = nummer / schritte          # 0 am Flansch, 1 außen
+        x = x_flansch + (x_aussen - x_flansch) * anteil
+        bogen = math.sqrt(max(0.0, 1.0 - anteil * anteil))
+        punkte.append((x, r_aussen + (r_flansch - r_aussen) * bogen))
+    if x_aussen < x_flansch:
+        punkte.reverse()
     return punkte
-
-
-#: Die Rohloff SPEEDHUB, abgegriffen an einer Umrisszeichnung.
-#:
-#: Keine Formel, sondern Punkte: Pixel der Vorlage (Achsmitte y = 560, die
-#: Flanschspitzen bei x = 447 und x = 1007, also Mitte 727 und halber
-#: Flanschabstand 280; Flanschspitze r = 516). Daraus wird normiert – ``x`` in
-#: Vielfachen des Flanschabstands, ``r`` in Vielfachen des Flanschaußenradius.
-#: So sitzt die Form auf jeder Rohloff-Angabe, auch auf der unsymmetrischen A12.
-#:
-#: Nur diese Nabe hat diese Gestalt. Eine Shimano Nexus sieht anders aus und
-#: bekommt sie nicht.
-_ROHLOFF_MITTE_X, _ROHLOFF_HALB, _ROHLOFF_R = 727.0, 280.0, 516.0
-_ROHLOFF_MITTE_Y = 560.0
-
-_ROHLOFF_PIXEL = (
-    [(40, 513), (95, 513), (95, 470), (122, 388), (180, 380), (208, 380),
-     (208, 237), (228, 237), (228, 320), (240, 320)]
-    + _viertelbogen(240, 320, 432, 155, hohl=True)
-    + [(432, 45), (462, 45), (462, 152), (840, 152), (872, 140), (950, 138),
-       (950, 42), (1065, 42)]
-    + _viertelbogen(1065, 42, 1195, 305, hohl=False)
-    + [(1210, 305), (1210, 392), (1310, 392), (1310, 505), (1385, 505)]
-)
-
-ROHLOFF_KONTUR = tuple(
-    ((x - _ROHLOFF_MITTE_X) / _ROHLOFF_HALB, (_ROHLOFF_MITTE_Y - y) / _ROHLOFF_R)
-    for x, y in _ROHLOFF_PIXEL
-)
-
-
-def _rohloff_stationen(a_l: float, a_r: float,
-                       r_l: float, r_r: float) -> list[tuple[float, float]]:
-    """Die Umrisszeichnung, auf die eingegebenen Maße gestreckt.
-
-    Jede Seite wird mit ihrem eigenen Flanschabstand gestreckt – bei der A12
-    mit 32/26 mm steht der linke Flansch dann links und der rechte rechts,
-    ohne dass die Form dazwischen verzogen wird.
-    """
-    r_bezug = (r_l + r_r) / 2.0 + GESTALT.flanschrand
-    return [(x * (a_l if x < 0 else a_r), r * r_bezug) for x, r in ROHLOFF_KONTUR]
 
 
 def _stationen(
@@ -281,11 +242,6 @@ def _stationen(
     (``keiner``, also eine Vorderradnabe). ``schale`` macht den Nabenkörper
     bei Dynamo und Nabenschaltung dick.
     """
-    if bauform == "rohloff":
-        # Die SPEEDHUB ist nachgezeichnet, nicht gerechnet: siehe ROHLOFF_KONTUR.
-        return _rohloff_stationen(abstand_links, abstand_rechts,
-                                  radius_links, radius_rechts)
-
     if art == "Dynamo":
         # Ein Nabendynamo hat eine eigene Gestalt, siehe DYNAMO.
         return _dynamo_stationen(abstand_links, abstand_rechts,
@@ -306,8 +262,15 @@ def _stationen(
         (-a_l - g.kappe_ab, kappe), (-a_l - g.sitz_ab, kappe),
         (-a_l - g.sitz_ab, sitz),
     ]
-    stationen += [(-a_l - g.bund_ab, sitz), (-a_l - g.bund_ab, bund),
-                  (-a_l - dicke, bund)]
+    if bauform == "rohloff":
+        # Nur die Rohloff: ihre Schale fällt neben dem Flansch in einer
+        # ausgerundeten Kehle zum Lagersitz ab, nicht in eckigen Absätzen.
+        # Nachgezeichnet an der Umrisszeichnung der SPEEDHUB. Eine Shimano
+        # Nexus hat diese Form nicht und behält die Absätze.
+        stationen += _kehle(-a_l - dicke, bund, -a_l - g.sitz_ab, sitz)
+    else:
+        stationen += [(-a_l - g.bund_ab, sitz), (-a_l - g.bund_ab, bund),
+                      (-a_l - dicke, bund)]
     stationen += [
         (-a_l - dicke, r_fl), (-a_l + dicke, r_fl),
         (-a_l + dicke, bund), (-a_l + g.uebergang, rohr),
@@ -337,22 +300,35 @@ def _stationen(
                 hub = (math.cos(anteil * 2 * math.pi - math.pi) + 1) / 2
                 stationen.append((x, taille + (rohr - taille) * hub))
 
+    # Wo die Antriebsseite anfängt und mit welchem Radius – die Kehle der
+    # Getriebenabe muss genau dort ankommen, sonst klafft eine Stufe.
+    if antrieb == "kassette":
+        antrieb_radius = g.freilauf
+    elif antrieb == "gewinde":
+        antrieb_radius = GEWINDE_RADIUS
+    else:
+        antrieb_radius = sitz
+    antrieb_ab = g.kehle_ab if bauform == "rohloff" else g.freilauf_ab
+
     stationen += [
         (a_r - g.uebergang, rohr), (a_r - dicke, bund),
         (a_r - dicke, r_fr), (a_r + dicke, r_fr),
-        (a_r + dicke, bund), (a_r + g.freilauf_ab, bund),
     ]
+    if bauform == "rohloff":
+        stationen += _kehle(a_r + dicke, bund, a_r + antrieb_ab, antrieb_radius)
+    else:
+        stationen += [(a_r + dicke, bund), (a_r + antrieb_ab, bund)]
 
     if antrieb == "kassette":
         stationen += [
-            (a_r + g.freilauf_ab, g.freilauf), (a_r + g.freilauf_bis, g.freilauf),
+            (a_r + antrieb_ab, g.freilauf), (a_r + g.freilauf_bis, g.freilauf),
             (a_r + g.freilauf_bis, kappe), (a_r + g.kappe_rechts, kappe),
             (a_r + g.kappe_rechts, achse), (a_r + g.stummel_rechts, achse),
         ]
     elif antrieb == "gewinde":
-        ende = a_r + g.freilauf_ab + GEWINDE_LAENGE
+        ende = a_r + antrieb_ab + GEWINDE_LAENGE
         stationen += [
-            (a_r + g.freilauf_ab, GEWINDE_RADIUS), (ende, GEWINDE_RADIUS),
+            (a_r + antrieb_ab, GEWINDE_RADIUS), (ende, GEWINDE_RADIUS),
             (ende, kappe), (ende + 7, kappe),
             (ende + 7, achse), (ende + 15, achse),
         ]
@@ -545,19 +521,14 @@ def nabe_seitenansicht(
     zg.setze(ctx, farben.linie, 1.5)
     ctx.stroke()
 
-    # Bei der Rohloff steckt der Ritzelträger schon in der nachgezeichneten
-    # Kontur. Ein aufgesetzter Freilaufkörper säße daneben.
-    if bauform != "rohloff":
-        _antriebsseite(ctx, farben, stationen, mitte_x, mitte_y, skala,
-                       x_flansch_rechts, hoch, antrieb)
+    _antriebsseite(ctx, farben, stationen, mitte_x, mitte_y, skala,
+                   x_flansch_rechts, hoch, antrieb)
 
     # Rändelung am linken Lagersitz – das ist der Verschlussring einer
     # Scheibenbremsnabe. Ein Nabendynamo hat dort eine glatte Endkappe; die
     # Werkszeichnung der SON 28 zeigt keinen solchen Ring.
     bund, _, _ = _schale(g, schale, r_l, r_r)
-    if bauform == "rohloff":
-        pass          # ihr Umriss trägt seine Absätze selbst
-    elif art != "Dynamo":
+    if art != "Dynamo":
         _riffelung(ctx, farben,
                    x_flansch_links - g.sitz_ab * skala, x_flansch_links - g.bund_ab * skala,
                    mitte_y, min(g.sitz, bund * 0.92) * skala * 0.94, max(2.0, 0.9 * skala))
