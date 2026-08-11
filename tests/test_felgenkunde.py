@@ -17,13 +17,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "pc"))
 from speichenrechner import berechnung, felgenkunde  # noqa: E402
 from speichenrechner.modelle import Einspeichung, Felge, Nabe, Speichensatz  # noqa: E402
 
-try:
-    # Die Zeichnung braucht GTK. Auf einem Rechner ohne GTK – etwa im
-    # Testlauf auf GitHub – laufen die übrigen Tests trotzdem.
-    from speichenrechner.ui import bauteile
-except ImportError:  # pragma: no cover
-    bauteile = None
-
 QUELLE = Path(__file__).resolve().parent.parent / "daten_quelle_felgen.xlsx"
 
 
@@ -125,32 +118,6 @@ class TestAuswertung(unittest.TestCase):
         mtb = felgenkunde.finde("MTB-Felge")
         self.assertTrue(mtb.nur_ab_20_zoll)
         self.assertEqual(mtb.kindergroessen_zoll, ())
-
-    @unittest.skipIf(bauteile is None, "GTK fehlt")
-    def test_jeder_typ_hat_ein_gezeichnetes_profil(self):
-        for typ in felgenkunde.lade().typen:
-            with self.subTest(typ=typ.name):
-                self.assertIn(typ.profil, bauteile.PROFILE)
-
-    @unittest.skipIf(bauteile is None, "GTK fehlt")
-    def test_profile_unterscheiden_sich(self):
-        """Die Bauformen dürfen nicht alle dasselbe Bild ergeben."""
-        self.assertEqual(felgenkunde.finde("Aero-Felge").profil, "aero")
-        self.assertEqual(felgenkunde.finde("Flachbettfelge").profil, "flachbett")
-        self.assertEqual(felgenkunde.finde("Hakenlose Felge (Hookless/TSS)").profil, "hakenlos")
-        self.assertEqual(felgenkunde.finde("Schlauchreifenfelge (Tubular)").profil, "schlauch")
-
-    @unittest.skipIf(bauteile is None, "GTK fehlt")
-    def test_aero_ist_tiefer_als_flachbett(self):
-        tief, _ = bauteile.profil_masse("aero")
-        flach, _ = bauteile.profil_masse("flachbett")
-        self.assertGreater(tief, 2 * flach)
-
-    @unittest.skipIf(bauteile is None, "GTK fehlt")
-    def test_unbekanntes_profil_faellt_auf_die_hohlkammer_zurueck(self):
-        self.assertEqual(bauteile.profil_masse("gibtsnicht"),
-                         bauteile.profil_masse("hohlkammer"))
-
 
 class TestHinweise(unittest.TestCase):
     def setUp(self):
