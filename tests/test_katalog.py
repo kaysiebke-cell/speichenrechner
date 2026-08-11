@@ -696,3 +696,68 @@ class TestZusatznaben(unittest.TestCase):
                 with self.subTest(modell=eintrag.modell):
                     self.assertFalse(eintrag.hat_flanschmasse)
                     self.assertEqual(eintrag.aufnahme, "Schraubkranz")
+
+
+class TestModellreihen(unittest.TestCase):
+    """Die Auswahlliste fasst Ausführungen derselben Reihe zusammen.
+
+    Anlass: 230 Naben in einer Klappliste, von denen viele nur Achsvarianten
+    derselben Reihe sind – allein die Hope Pro 2 Evo fünfmal. Die Zuordnung
+    steht in ``data/naben_modellreihen.json`` und wird aus der
+    Zuordnungstabelle erzeugt.
+    """
+
+    def setUp(self):
+        katalog.neu_laden()
+
+    def test_liste_wird_kuerzer(self):
+        einzeln = katalog.als_listeneintraege()
+        reihen = katalog.als_modellreihen()
+        self.assertLess(len(reihen), len(einzeln))
+        self.assertEqual(sum(len(e) for _t, e in reihen), len(einzeln),
+                         "Beim Zusammenfassen ist eine Nabe verloren gegangen")
+
+    def test_keine_nabe_faellt_heraus(self):
+        """Auch ohne Eintrag in der Zuordnung muss die Nabe wählbar bleiben."""
+        aus_reihen = {e.schluessel for _t, eintraege in katalog.als_modellreihen()
+                      for e in eintraege}
+        einzeln = {e.schluessel for _t, e in katalog.als_listeneintraege()}
+        self.assertEqual(aus_reihen, einzeln)
+
+    def test_ohne_zuordnung_steht_die_nabe_fuer_sich(self):
+        eintrag = katalog.Katalogeintrag(hersteller="Prüfhaus", art="Vorderrad",
+                                         modell="Einzelstück")
+        self.assertEqual(eintrag.modellreihe, "")
+
+    def test_jede_reihe_hat_mindestens_eine_ausfuehrung(self):
+        for text, eintraege in katalog.als_modellreihen():
+            with self.subTest(reihe=text[:40]):
+                self.assertTrue(eintraege)
+
+    def test_ausfuehrungen_gehoeren_zu_einem_hersteller(self):
+        for text, eintraege in katalog.als_modellreihen():
+            with self.subTest(reihe=text[:40]):
+                self.assertEqual(len({e.hersteller for e in eintraege}), 1)
+
+    def test_mit_flanschmassen_steht_vorn(self):
+        """Innerhalb der Reihe zuerst, was sich ohne Nachmessen rechnen lässt."""
+        for text, eintraege in katalog.als_modellreihen():
+            if len(eintraege) < 2:
+                continue
+            with self.subTest(reihe=text[:40]):
+                masse = [e.hat_flanschmasse for e in eintraege]
+                self.assertEqual(masse, sorted(masse, reverse=True))
+
+    def test_filter_wirken_auch_auf_reihen(self):
+        alle = katalog.als_modellreihen()
+        hope = katalog.als_modellreihen(hersteller="Hope")
+        self.assertLess(len(hope), len(alle))
+        for _text, eintraege in hope:
+            self.assertEqual(eintraege[0].hersteller, "Hope")
+
+    def test_zuordnung_deckt_den_katalog_weitgehend(self):
+        """Bleibt die Zuordnungsdatei zurück, fällt es hier auf."""
+        naben = [e for e in katalog.lade().naben if e.einspeichbar]
+        zugeordnet = [e for e in naben if e.schluessel in katalog.lade_modellreihen()]
+        self.assertGreater(len(zugeordnet), len(naben) * 0.9,
+                           "Mehr als jede zehnte Nabe hat keine Modellreihe")

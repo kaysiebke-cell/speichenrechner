@@ -57,6 +57,8 @@ class EingabeBereich(Gtk.Box):
         self._nabenaufnahme = ""               # Ritzelaufnahme der gewählten Nabe
         self._einbaubreite: float | None = None  # zuletzt bekannte Einbaubreite
         self._felgenkategorie = ""             # Filter über die Felgenkategorie
+        self._reihe: tuple = ()                # Ausführungen der gewählten Reihe
+        self._stumm_ausfuehrung = False        # unterdrückt das Ausführungssignal
 
         # Zwei Reiter statt einer langen Spalte: so bleibt das Fenster auch
         # unmaximiert bedienbar. Das Nötigste steht im ersten Reiter.
@@ -125,7 +127,7 @@ class EingabeBereich(Gtk.Box):
             loeschen=vorlagen_speicher.loesche_nabe,
             ist_eigene=vorlagen_speicher.ist_eigene_nabe,
             aktuelle_werte=lambda: self.werte()[0],
-            zusatz=lambda: nabenkatalog.als_listeneintraege(
+            zusatz=lambda: nabenkatalog.als_modellreihen(
                 self._katalogart, self._kataloghersteller
             ),
         )
@@ -167,6 +169,24 @@ class EingabeBereich(Gtk.Box):
         reihe += 1
 
         raster.attach(self.nabe_vorlage, 0, reihe, 3, 1)
+        reihe += 1
+
+        # Hat eine Modellreihe mehrere Ausführungen – die Hope Pro 2 Evo etwa
+        # fünf Achsvarianten –, erscheint hier die Wahl dazwischen. Bei einer
+        # einzigen Ausführung bleibt die Zeile weg und belegt keinen Platz.
+        self.ausfuehrung_beschriftung = Gtk.Label(label="Ausführung", xalign=0.0)
+        self.nabenausfuehrung = Gtk.ComboBoxText()
+        self.nabenausfuehrung.set_tooltip_text(
+            "Welche Ausführung der Modellreihe – meist unterscheiden sie sich "
+            "in Einbaubreite, Achse oder Bremsaufnahme."
+        )
+        self._kurz_halten(self.nabenausfuehrung, 26)
+        self.nabenausfuehrung.connect("changed", self._ausfuehrung_geaendert)
+        for teil in (self.ausfuehrung_beschriftung, self.nabenausfuehrung):
+            teil.set_no_show_all(True)
+            teil.hide()
+        raster.attach(self.ausfuehrung_beschriftung, 0, reihe, 1, 1)
+        raster.attach(self.nabenausfuehrung, 1, reihe, 2, 1)
         reihe += 1
 
         reihe = widgets.spaltenkoepfe(raster, reihe)
@@ -644,9 +664,45 @@ class EingabeBereich(Gtk.Box):
             self._einbaubreite = None
             return
         if isinstance(auswahl, Nabe):
+            self._ausfuehrungen_verbergen()
             self._vorlage_uebernehmen(auswahl)
+        elif isinstance(auswahl, tuple):
+            self._modellreihe_uebernehmen(auswahl)
         else:
+            self._ausfuehrungen_verbergen()
             self._katalognabe_uebernehmen(auswahl)
+
+    def _modellreihe_uebernehmen(self, eintraege: tuple) -> None:
+        """Eine Modellreihe: erste Ausführung übernehmen, Rest zur Wahl stellen."""
+        self._reihe = eintraege
+        if len(eintraege) < 2:
+            self._ausfuehrungen_verbergen()
+            if eintraege:
+                self._katalognabe_uebernehmen(eintraege[0])
+            return
+
+        self._stumm_ausfuehrung = True
+        self.nabenausfuehrung.remove_all()
+        for nummer, eintrag in enumerate(eintraege):
+            self.nabenausfuehrung.append(str(nummer), eintrag.listentext)
+        self.nabenausfuehrung.set_active(0)
+        self._stumm_ausfuehrung = False
+
+        self.ausfuehrung_beschriftung.show()
+        self.nabenausfuehrung.show()
+        self._katalognabe_uebernehmen(eintraege[0])
+
+    def _ausfuehrungen_verbergen(self) -> None:
+        self._reihe = ()
+        self.ausfuehrung_beschriftung.hide()
+        self.nabenausfuehrung.hide()
+
+    def _ausfuehrung_geaendert(self, combo) -> None:
+        if self._stumm_ausfuehrung:
+            return
+        nummer = combo.get_active()
+        if 0 <= nummer < len(self._reihe):
+            self._katalognabe_uebernehmen(self._reihe[nummer])
 
     def _vorlage_uebernehmen(self, nabe: Nabe) -> None:
         self._katalogname = None

@@ -29,6 +29,11 @@ ERGAENZUNGEN_DATEI = "naben_ergaenzungen.json"
 #: Tabelle die Tabelle bleibt und ``katalog_erzeugen.py`` sie nicht überschreibt.
 ZUSATZ_DATEI = "naben_zusatz.json"
 
+#: Zuordnung Hersteller|Modell → Modellreihe, aus der Zuordnungstabelle
+#: erzeugt (werkzeuge/modellreihen_erzeugen.py). Sie fasst die Auswahlliste
+#: zusammen: 230 Naben stecken in 186 Reihen.
+MODELLREIHEN_DATEI = "naben_modellreihen.json"
+
 #: Herkunftsangabe für Modelle ohne belegte Maße.
 UNGEPRUEFT = "ungeprüft"
 
@@ -82,6 +87,7 @@ class Katalogeintrag:
     flanschdurchmesser: str = ""
     freilauf: str = ""
     aufnahme_blatt: str = ""   # aus Querlisten wie „Nabe mit Kassette“
+    modellreihe: str = ""      # aus data/naben_modellreihen.json
     ergaenzt: bool = False
     selbst_angelegt: bool = False
     quelle: str = ""           # gesetzt bei Naben aus data/naben_zusatz.json
@@ -325,6 +331,24 @@ def _zusatzdatei():
     return projekt_verzeichnis() / "data" / ZUSATZ_DATEI
 
 
+def _modellreihendatei():
+    return projekt_verzeichnis() / "data" / MODELLREIHEN_DATEI
+
+
+def lade_modellreihen() -> dict[str, str]:
+    """``{"Hersteller|Modell": "Modellreihe"}`` – leer, wenn die Datei fehlt."""
+    pfad = _modellreihendatei()
+    if not pfad.exists():
+        return {}
+    try:
+        daten = json.loads(pfad.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(daten, dict):
+        return {}
+    return {str(k): str(w) for k, w in daten.items() if k and w}
+
+
 def lade_zusatz() -> list[dict]:
     """Nachgetragene Naben, die nicht aus der Herstellertabelle stammen."""
     pfad = _zusatzdatei()
@@ -389,6 +413,7 @@ def lade() -> Katalog:
             daten = {}
 
     ergaenzungen = lade_ergaenzungen()
+    modellreihen = lade_modellreihen()
     felder = set(Katalogeintrag.__dataclass_fields__) - {"ergaenzt", "selbst_angelegt"}
 
     eintraege = []
@@ -403,6 +428,11 @@ def lade() -> Katalog:
         if eintrag.schluessel in bekannt:
             continue
         bekannt.add(eintrag.schluessel)
+
+        # Nabe ohne Zuordnung – etwa eine von Hand nachgetragene – bildet
+        # ihre eigene Reihe. Sonst verschwände sie aus der Auswahlliste.
+        eintrag = eintrag.mit(
+            modellreihe=modellreihen.get(eintrag.schluessel) or eintrag.modell)
 
         nachtrag = ergaenzungen.get(eintrag.schluessel)
         if nachtrag:
@@ -426,6 +456,53 @@ def lade() -> Katalog:
 
     _zwischenspeicher = Katalog(quelle=daten.get("quelle", ""), naben=tuple(eintraege))
     return _zwischenspeicher
+
+
+def als_modellreihen(
+    art: str = "", hersteller: str = ""
+) -> list[tuple[str, tuple[Katalogeintrag, ...]]]:
+    """Je Modellreihe **ein** Eintrag: ``(Anzeigetext, Ausführungen)``.
+
+    Die Auswahlliste wurde zu lang: 230 Naben, von denen viele nur
+    Achsvarianten derselben Reihe sind – allein die Hope Pro 2 Evo fünfmal.
+    Zusammengefasst bleiben 197 Reihen. Wer eine Reihe wählt, bekommt die
+    Ausführungen darunter; wo es nur eine gibt, merkt man nichts davon.
+
+    Sortiert wie die Einzelliste: was Flanschmaße hat, steht vorn – damit
+    lässt sich ohne Nachmessen rechnen.
+    """
+    naben = [e for e in lade().suche(art=art, hersteller=hersteller) if e.einspeichbar]
+
+    reihen: dict[tuple[str, str], list[Katalogeintrag]] = {}
+    for eintrag in naben:
+        reihen.setdefault((eintrag.hersteller, eintrag.modellreihe or eintrag.modell),
+                          []).append(eintrag)
+
+    ergebnis = []
+    for (hersteller_name, reihe), eintraege in reihen.items():
+        # Innerhalb der Reihe zuerst, was gerechnet werden kann.
+        eintraege.sort(key=lambda e: (not e.hat_flanschmasse, e.modell.lower()))
+        ergebnis.append(((hersteller_name, reihe), tuple(eintraege)))
+
+    ergebnis.sort(key=lambda paar: (not paar[1][0].hat_flanschmasse,
+                                    paar[0][0].lower(), paar[0][1].lower()))
+    return [(_reihentext(name, eintraege), eintraege) for name, eintraege in ergebnis]
+
+
+def _reihentext(name: tuple[str, str], eintraege: tuple[Katalogeintrag, ...]) -> str:
+    """Zeile für die Auswahlliste – bei einer Ausführung wie bisher."""
+    if len(eintraege) == 1:
+        return eintraege[0].listentext
+
+    hersteller, reihe = name
+    beschriftung = reihe if reihe.lower().startswith(hersteller.lower()) \
+        else f"{hersteller} {reihe}"
+    teile = [beschriftung, f"{len(eintraege)} Ausführungen"]
+    if any(e.hat_flanschmasse for e in eintraege):
+        anzahl = sum(1 for e in eintraege if e.hat_flanschmasse)
+        teile.append("✓ mit Flanschmaßen" if anzahl == len(eintraege)
+                     else f"✓ {anzahl} mit Flanschmaßen")
+    return "  ·  ".join(teile)
 
 
 def als_listeneintraege(art: str = "", hersteller: str = "") -> list[tuple[str, Katalogeintrag]]:

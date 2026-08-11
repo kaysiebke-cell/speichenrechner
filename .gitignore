@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 # Bildschirmfotos aus Testläufen, nicht die dokumentierten in data/
 /*.png
+
+# Sperrdateien von LibreOffice, wenn eine Tabelle offen ist
+.~*
+~$*

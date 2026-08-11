@@ -258,3 +258,81 @@ class TestReiterInhalt(unittest.TestCase):
                 continue
             with self.subTest(reiter=m.get_tab_label_text(seite)):
                 self.assertFalse(seite.get_overlay_scrolling())
+
+
+@unittest.skipUnless(GTK_DA, "GTK oder Anzeige fehlt")
+class TestModellreihenZeile(unittest.TestCase):
+    """Die Auswahlliste zeigt Modellreihen, die Ausführung steht darunter.
+
+    Gebaut wird nur der Eingabebereich in einem OffscreenWindow – wie bei
+    TestEingabebreite. Ein volles Hauptfenster mit ``show_all`` braucht dafür
+    eine halbe Minute und bleibt beim Warten auf Ereignisse hängen.
+    """
+
+    def setUp(self):
+        from gi.repository import Gtk
+
+        from speichenrechner import katalog
+        from speichenrechner.ui.eingabe import EingabeBereich
+
+        self.katalog = katalog
+        katalog.neu_laden()
+        self.eingabe = EingabeBereich()
+        fenster = Gtk.OffscreenWindow()
+        kasten = Gtk.Box()
+        kasten.pack_start(self.eingabe, True, True, 0)
+        fenster.add(kasten)
+        fenster.show_all()
+        self._fenster = fenster
+
+    def tearDown(self):
+        self._fenster.destroy()
+
+    def _reihe(self, mindestens: int, hoechstens: int | None = None):
+        for _text, eintraege in self.katalog.als_modellreihen():
+            if len(eintraege) >= mindestens and (hoechstens is None
+                                                 or len(eintraege) <= hoechstens):
+                return eintraege
+        self.skipTest(f"keine Reihe mit {mindestens} Ausführungen im Katalog")
+
+    def test_zeile_bleibt_weg_solange_nichts_gewaehlt_ist(self):
+        self.assertFalse(self.eingabe.nabenausfuehrung.get_visible())
+
+    def test_zeile_erscheint_nur_bei_mehreren_ausfuehrungen(self):
+        self.eingabe._nabe_uebernehmen(None, self._reihe(2))
+        self.assertTrue(self.eingabe.nabenausfuehrung.get_visible())
+
+        self.eingabe._nabe_uebernehmen(None, self._reihe(1, 1))
+        self.assertFalse(self.eingabe.nabenausfuehrung.get_visible())
+
+    def test_jede_ausfuehrung_traegt_ihre_masse_ein(self):
+        reihe = None
+        for _text, eintraege in self.katalog.als_modellreihen():
+            if len(eintraege) > 2 and all(e.hat_flanschmasse for e in eintraege):
+                reihe = eintraege
+                break
+        if reihe is None:
+            self.skipTest("keine Reihe mit mehreren vermaßten Ausführungen")
+
+        self.eingabe._nabe_uebernehmen(None, reihe)
+        gesehen = set()
+        for nummer in range(len(reihe)):
+            self.eingabe.nabenausfuehrung.set_active(nummer)
+            gesehen.add((self.eingabe.flansch_a_links.get_value(),
+                         self.eingabe.flansch_a_rechts.get_value()))
+        self.assertGreater(len(gesehen), 1,
+                           "Alle Ausführungen tragen dieselben Maße ein")
+
+    def test_zeile_macht_die_spalte_nicht_breiter(self):
+        """Sonst wandert die Spalte nach rechts – der Fehler von letztem Mal."""
+        schmal = self.eingabe.get_preferred_width().natural_width
+        self.eingabe._nabe_uebernehmen(None, self._reihe(4))
+        self.assertLessEqual(self.eingabe.get_preferred_width().natural_width, schmal)
+
+    def test_eine_vorlage_blendet_die_zeile_wieder_aus(self):
+        from speichenrechner.modelle import Nabe
+
+        self.eingabe._nabe_uebernehmen(None, self._reihe(2))
+        self.assertTrue(self.eingabe.nabenausfuehrung.get_visible())
+        self.eingabe._nabe_uebernehmen(None, Nabe(name="Prüfvorlage"))
+        self.assertFalse(self.eingabe.nabenausfuehrung.get_visible())
