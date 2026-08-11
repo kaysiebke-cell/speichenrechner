@@ -147,3 +147,114 @@ class TestEingabebreite(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+@unittest.skipUnless(GTK_DA, "GTK oder Anzeige fehlt")
+class TestReiterInhalt(unittest.TestCase):
+    """Jeder Reiter muss auch enthalten, was hineingehört.
+
+    Anlass: die Spannungsanzeige wurde in die Speichen-Seite eingehängt, kam
+    dort aber nie an. Die Seite ist ein ``Gtk.ScrolledWindow``, und GTK legt
+    zwischen ihn und den Kasten selbsttätig ein ``Gtk.Viewport``. Die
+    Einhängung suchte nur eine Ebene tief, fand keine ``Gtk.Box`` – und tat
+    stillschweigend nichts. Der Reiter blieb halb leer, ohne Fehlermeldung.
+    """
+
+    def setUp(self):
+        from speichenrechner.ui.hauptfenster import Hauptfenster
+        self.Hauptfenster = Hauptfenster
+
+    @staticmethod
+    def _alle_kinder(widget):
+        from gi.repository import Gtk
+
+        yield widget
+        if isinstance(widget, Gtk.Container):
+            for kind in widget.get_children():
+                yield from TestReiterInhalt._alle_kinder(kind)
+
+    def _fenster(self):
+        from gi.repository import Gio, Gtk
+
+        # Das Fenster gehört zu einer Anwendung; ohne sie fehlt ihm der
+        # Bezugsrahmen. NON_UNIQUE, damit sich mehrere Tests nicht an
+        # derselben Kennung stoßen. Angezeigt wird hier nichts.
+        anwendung = Gtk.Application(application_id=None,
+                                    flags=Gio.ApplicationFlags.NON_UNIQUE)
+        # Weder ``register`` noch ``startup``: zwei anonyme Anwendungen
+        # streiten sich um denselben Pfad auf dem Bus, und ``startup`` ohne
+        # Registrierung stürzt ab. GTK schreibt dafür eine Warnung ins
+        # Protokoll – die stört nur den Testlauf, nicht die Anwendung.
+        fenster = self.Hauptfenster(anwendung)
+        self.addCleanup(fenster.destroy)
+        return fenster
+
+    def test_spannungsanzeige_haengt_im_reiter(self):
+        fenster = self._fenster()
+        seiten = list(self._alle_kinder(fenster.eingabe.mappe))
+        self.assertIn(fenster.ergebnis.spannung_ansicht, seiten,
+                      "Die Spannungsanzeige steckt in keinem Reiter")
+
+    def test_messen_und_vergleich_teilen_sich_eine_seite(self):
+        fenster = self._fenster()
+        mappe = fenster.eingabe.mappe
+        beschriftungen = [mappe.get_tab_label_text(mappe.get_nth_page(n))
+                          for n in range(mappe.get_n_pages())]
+        self.assertNotIn("Messen", beschriftungen)
+        self.assertNotIn("Vergleich", beschriftungen)
+        self.assertIn("Messen / Vergleich", beschriftungen)
+
+    def test_jede_zusatzansicht_ist_erreichbar(self):
+        """Keine der vier Ansichten darf beim Umbau verloren gehen."""
+        fenster = self._fenster()
+        sichtbar = list(self._alle_kinder(fenster.eingabe.mappe))
+        for name in ("messen", "tabelle", "spannung_ansicht", "bewertung_ansicht"):
+            with self.subTest(ansicht=name):
+                self.assertIn(getattr(fenster.ergebnis, name), sichtbar,
+                              f"{name} ist in keinem Reiter zu finden")
+
+    def test_kein_reiter_ist_breiter_als_das_fenster(self):
+        """Was in einem Reiter steht, muss in die Startbreite passen.
+
+        Anlass: das Fenster öffnete auf seiner Mindestbreite, während die
+        Speichen-Seite 605 px verlangte. Rechts fehlte ein Viertel – die
+        Klappliste der Bauart und die Zeile „Speiche unter Spannung“ standen
+        außerhalb. Beides stammt aus der früher breiten Ergebnisspalte.
+        """
+        from gi.repository import Gtk
+
+        fenster = self._fenster()
+        fenster.show_all()
+        while Gtk.events_pending():
+            Gtk.main_iteration()
+
+        platz = fenster.get_preferred_width().natural_width
+        m = fenster.eingabe.mappe
+        for n in range(m.get_n_pages()):
+            seite = m.get_nth_page(n)
+            inhalt = seite
+            while isinstance(inhalt, Gtk.Bin) and not isinstance(inhalt, Gtk.Box):
+                inhalt = inhalt.get_child()
+            with self.subTest(reiter=m.get_tab_label_text(seite)):
+                self.assertLessEqual(
+                    inhalt.get_preferred_width().natural_width, platz,
+                    "Der Inhalt verlangt mehr Breite, als das Fenster beim "
+                    "Öffnen hergibt – rechts wird abgeschnitten",
+                )
+
+    def test_die_seiten_zeigen_ihren_rollbalken(self):
+        """Längere Seiten müssen einen sichtbaren Balken haben.
+
+        Mit den eingeblendeten Streifen sieht abgeschnitten aus, was in
+        Wahrheit nur weiter unten steht.
+        """
+        from gi.repository import Gtk
+
+        fenster = self._fenster()
+        m = fenster.eingabe.mappe
+        for n in range(m.get_n_pages()):
+            seite = m.get_nth_page(n)
+            if not isinstance(seite, Gtk.ScrolledWindow):
+                continue
+            with self.subTest(reiter=m.get_tab_label_text(seite)):
+                self.assertFalse(seite.get_overlay_scrolling())

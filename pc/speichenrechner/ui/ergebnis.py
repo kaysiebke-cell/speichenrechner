@@ -80,9 +80,9 @@ class ErgebnisBereich(Gtk.Box):
         self.bestellung.set_line_wrap(True)
         self.bestellung.set_width_chars(20)
 
-        # Die Zusatzansichten (Messen, Vergleich, Spannung, Bewertung) werden
-        # vom Hauptfenster als normale Reiter neben „Laufrad“ und „Speichen“
-        # eingesetzt. Rechts bleiben nur die eigentlichen Ergebnisse sichtbar.
+        # Die Zusatzansichten werden vom Hauptfenster in die gemeinsame
+        # Tab-Leiste eingesetzt. Die Spannungsanzeige wird dabei unter
+        # „Speichen“ eingehängt; rechts bleiben nur die eigentlichen Ergebnisse.
         self.messen, self.tabelle, self.spannung_ansicht, self.bewertung_ansicht = self._baue_ansichten()
 
         # Der Hinweisbereich wird vom Hauptfenster links unter den Tabs
@@ -147,6 +147,12 @@ class ErgebnisBereich(Gtk.Box):
             raster.attach(Gtk.Label(label=seite, xalign=0.0), 0, reihe, 1, 1)
             wert = Gtk.Label(xalign=0.0)
             wert.set_hexpand(True)
+            # Die Zeile trägt Kraft, Dehnung und Ton hintereinander. Ohne
+            # Umbruch verlangte sie 557 px und schnitt damit den ganzen Reiter
+            # rechts ab – der Abschnitt stammt aus der breiten Ergebnisspalte.
+            wert.set_line_wrap(True)
+            wert.set_width_chars(20)
+            wert.set_max_width_chars(30)
             raster.attach(wert, 1, reihe, 1, 1)
             self.speichen_zeilen[seite] = wert
 
@@ -166,11 +172,35 @@ class ErgebnisBereich(Gtk.Box):
 
         return rahmen
 
+    def baue_messen_vergleich(self) -> Gtk.Widget:
+        """„Messen“ und „Vergleich“ auf einer Seite – ein Reiter weniger.
+
+        Seit die Skizzen weg sind, ist „Messen“ nur noch ein halbes Dutzend
+        Zeilen Text. Ein eigener Reiter dafür kostet mehr Platz in der Leiste,
+        als er an Übersicht bringt. Beide Ansichten behalten ihre Überschrift,
+        damit man weiß, was man vor sich hat.
+        """
+        # Der Rand sitzt jetzt am gemeinsamen Kasten, nicht mehr an beiden
+        # Ansichten einzeln – sonst stünde alles doppelt eingerückt.
+        self.messen.set_border_width(widgets.ABSTAND)
+        self.tabelle.set_border_width(widgets.ABSTAND)
+
+        oben = widgets.rahmen("Messen")
+        oben.add(self.messen)
+        unten = widgets.rahmen("Kreuzungen im Vergleich")
+        unten.add(self.tabelle)
+        return self._rollbar(oben, unten)
+
     def _baue_ansichten(self) -> tuple[Gtk.Widget, Gtk.Widget, Gtk.Widget, Gtk.Widget]:
         """Erzeugt die vier Zusatzseiten für die gemeinsame Tab-Leiste."""
         messen = MessAnsicht()
         tabelle = Kreuzungsvergleich()
-        spannung = self._rollbar(self._baue_spannung(), self._baue_speichenwerte())
+        spannung = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=widgets.ABSTAND)
+        # Kein eigener Rand: die Anzeige hängt in der Speichen-Seite, und die
+        # hat schon einen. Zweimal eingerückt bliebe weniger Platz für die
+        # Werte selbst.
+        spannung.pack_start(self._baue_spannung(), False, False, 0)
+        spannung.pack_start(self._baue_speichenwerte(), False, False, 0)
         bewertung = self._rollbar(self._baue_einschaetzung())
         return messen, tabelle, spannung, bewertung
 
@@ -183,7 +213,10 @@ class ErgebnisBereich(Gtk.Box):
 
         rollbar = Gtk.ScrolledWindow()
         rollbar.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        rollbar.set_propagate_natural_width(False)
+        # Die natürliche Breite durchreichen: sonst verlangt die Seite nur 240
+        # px, und Tabelle wie Einschätzung stehen halb außerhalb.
+        rollbar.set_propagate_natural_width(True)
+        rollbar.set_overlay_scrolling(False)
         rollbar.set_min_content_width(240)
         rollbar.add(kasten)
         return rollbar

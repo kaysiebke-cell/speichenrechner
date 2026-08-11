@@ -24,6 +24,8 @@ class Hauptfenster(Gtk.ApplicationWindow):
         # Maße so, dass beim Start beide Spalten vollständig zu sehen sind:
         # links der Reiter „Laufrad“ bis zur Rundung, rechts die Ergebnisse
         # ohne abgeschnittene Zahlen. Die Kopfleiste kommt oben dazu.
+        # Die Höhe steht fest, die Breite misst sich beim Anzeigen selbst –
+        # siehe _startbreite_setzen.
         self.set_default_size(0, 752)
         self.set_icon_von_datei()
 
@@ -37,9 +39,12 @@ class Hauptfenster(Gtk.ApplicationWindow):
         # „Speichen“ als Seiten des linken Notebooks geöffnet. Dadurch gibt
         # es nur noch eine Tab-Leiste oben links und keine versteckte
         # Tab-Leiste mehr in der rechten Ergebnisspalte.
-        self.eingabe.mappe.append_page(self.ergebnis.messen, Gtk.Label(label="Messen"))
-        self.eingabe.mappe.append_page(self.ergebnis.tabelle, Gtk.Label(label="Vergleich"))
-        self.eingabe.mappe.append_page(self.ergebnis.spannung_ansicht, Gtk.Label(label="Spannung"))
+        # „Messen“ und „Vergleich“ teilen sich eine Seite: zwei kurze
+        # Ansichten, die zusammen bequem auf eine passen und in der Leiste
+        # sonst zweimal Platz kosten.
+        self.eingabe.mappe.append_page(self.ergebnis.baue_messen_vergleich(),
+                                       Gtk.Label(label="Messen / Vergleich"))
+        self.eingabe.fuege_spannung_ein(self.ergebnis.spannung_ansicht)
         self.eingabe.mappe.append_page(self.ergebnis.bewertung_ansicht, Gtk.Label(label="Bewertung"))
 
         self.eingabe.connect("geaendert", lambda _w: self.neu_berechnen())
@@ -49,7 +54,27 @@ class Hauptfenster(Gtk.ApplicationWindow):
 
         self.eingabe.setze_werte(*einstellungen.lade())
 
+        # Erst wenn das Fenster auf dem Schirm ist, kennen die Widgets ihren
+        # Platzbedarf; vorher meldet ein unsichtbares Kind schlicht 0.
+        self._breite_gesetzt = False
+        self.connect("map", self._startbreite_setzen)
+
         self.connect("delete-event", self._beim_schliessen)
+
+    def _startbreite_setzen(self, *_egal) -> None:
+        """Zieht das Fenster einmalig auf die Breite des breitesten Reiters.
+
+        Ohne das öffnet GTK auf der **Mindest**breite, und der Inhalt der
+        Reiter steht rechts außerhalb. Gemessen wird erst beim Anzeigen: vorher
+        sind die Kinder unsichtbar und melden 0.
+        """
+        if self._breite_gesetzt:
+            return
+        self._breite_gesetzt = True
+        breite = self.get_preferred_width().natural_width
+        hoehe = self.get_allocation().height or 752
+        if breite > self.get_allocation().width:
+            self.resize(breite, hoehe)
 
     # ------------------------------------------------------------------ Aufbau
 

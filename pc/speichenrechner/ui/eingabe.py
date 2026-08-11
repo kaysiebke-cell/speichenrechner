@@ -69,9 +69,10 @@ class EingabeBereich(Gtk.Box):
             self._seite(self._baue_nabe(), self._baue_felge(), self._baue_einspeichung()),
             Gtk.Label(label="Laufrad"),
         )
+        self._speichen_seite = self._seite(self._baue_speichen(), self._baue_nippel())
         self.mappe.append_page(
-            self._seite(self._baue_speichen(), self._baue_nippel()),
-            Gtk.Label(label="Speichen"),
+            self._speichen_seite,
+            Gtk.Label(label="Speichen / Spannung"),
         )
         self.pack_start(self.mappe, True, True, 0)
 
@@ -87,8 +88,29 @@ class EingabeBereich(Gtk.Box):
         rollbar.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         rollbar.set_propagate_natural_width(True)
         rollbar.set_min_content_width(220)
+        # Ein sichtbarer Balken statt der eingeblendeten Streifen: die Seiten
+        # sind länger als das Fenster, und ohne Balken sieht abgeschnitten aus,
+        # was in Wahrheit nur weiter unten steht.
+        rollbar.set_overlay_scrolling(False)
         rollbar.add(kasten)
         return rollbar
+
+    def fuege_spannung_ein(self, widget: Gtk.Widget) -> None:
+        """Hängt die Spannungsanzeige unter die Speichen-Eingaben.
+
+        Die Seite ist ein ``Gtk.ScrolledWindow``, und GTK schiebt zwischen ihn
+        und den Kasten selbsttätig ein ``Gtk.Viewport``. Wer nur eine Ebene
+        tief nachsieht, findet dort keine ``Gtk.Box`` – die Anzeige fiele dann
+        wortlos unter den Tisch, und der Reiter bliebe halb leer.
+        """
+        kasten = self._speichen_seite
+        while kasten is not None and not isinstance(kasten, Gtk.Box):
+            kasten = kasten.get_child() if isinstance(kasten, Gtk.Bin) else None
+        if kasten is None:
+            raise RuntimeError("Die Speichen-Seite hat keinen Kasten für die "
+                               "Spannungsanzeige")
+        kasten.pack_start(widget, False, False, 0)
+        kasten.show_all()
 
     # ------------------------------------------------------------------ Aufbau
 
@@ -428,6 +450,10 @@ class EingabeBereich(Gtk.Box):
         self.bauart.append(EIGENE_BAUART, EIGENE_BAUART)
         self.bauart.set_active_id(BAUARTEN[1].name)
         self.bauart.set_hexpand(True)
+        # „2,0/1,8/2,0 doppelt konifiziert“ ist der längste Eintrag und
+        # verlangte allein so viel Platz, dass die halbe Seite rechts
+        # abgeschnitten war. In der aufgeklappten Liste steht er vollständig.
+        self._kurz_halten(self.bauart, 22)
         self.bauart.connect("changed", self._bauart_geaendert)
 
         masse_knopf = widgets.knopf("", "document-edit-symbolic",
@@ -452,6 +478,7 @@ class EingabeBereich(Gtk.Box):
         for schluessel, beschriftung in KOPFLAGEN.items():
             self.kopf.append(schluessel, beschriftung)
         self.kopf.set_active_id("gemischt")
+        self._kurz_halten(self.kopf, 20)
         self.kopf.connect("changed", self._einfach_geaendert)
         reihe = widgets.zeile(
             raster, reihe, "Kopflage", self.kopf, einheit=None,
