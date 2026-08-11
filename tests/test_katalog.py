@@ -773,6 +773,24 @@ class TestModellreihen(unittest.TestCase):
         for _text, eintraege in hope:
             self.assertEqual(eintraege[0].hersteller, "Hope")
 
+    def test_reihenzeile_nennt_keine_anzahl(self):
+        """„5 Ausführungen“ sagte nicht, wonach man wählt – nur, dass man muss."""
+        for text, eintraege in katalog.als_modellreihen():
+            if len(eintraege) < 2:
+                continue
+            with self.subTest(reihe=text[:40]):
+                self.assertNotIn("Ausführungen", text)
+                self.assertNotIn("mm", text)
+                self.assertNotIn("Loch", text)
+
+    def test_reihenzeile_bleibt_kurz(self):
+        """Name, höchstens ein Häkchen dahinter."""
+        for text, eintraege in katalog.als_modellreihen():
+            if len(eintraege) < 2:
+                continue
+            with self.subTest(reihe=text[:40]):
+                self.assertLessEqual(text.count("·"), 1)
+
     def test_zuordnung_deckt_den_katalog_weitgehend(self):
         """Bleibt die Zuordnungsdatei zurück, fällt es hier auf."""
         naben = [e for e in katalog.lade().naben if e.einspeichbar]

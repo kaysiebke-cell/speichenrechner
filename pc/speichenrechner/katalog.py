@@ -509,17 +509,22 @@ def als_modellreihen(
 
 
 def _reihentext(name: tuple[str, str], eintraege: tuple[Katalogeintrag, ...]) -> str:
-    """Zeile für die Auswahlliste – bei einer Ausführung wie bisher."""
+    """Zeile für die Auswahlliste: Name und Häkchen, sonst nichts.
+
+    Hier stand einmal „5 Ausführungen“. Das sagte, **dass** noch eine Wahl
+    folgt, aber nicht **wonach** – eine halbe Auskunft, die nur Platz kostete.
+    Dass eine Reihe mehrere Ausführungen hat, merkt man daran, dass nach der
+    Wahl die Zeile „Ausführung“ erscheint.
+    """
     if len(eintraege) == 1:
         return eintraege[0].listentext
 
     hersteller, reihe = name
     beschriftung = reihe if reihe.lower().startswith(hersteller.lower()) \
         else f"{hersteller} {reihe}"
-    teile = [beschriftung, f"{len(eintraege)} Ausführungen"]
     if any(e.hat_flanschmasse for e in eintraege):
-        teile.append("✓")
-    return "  ·  ".join(teile)
+        return f"{beschriftung}  ·  ✓"
+    return beschriftung
 
 
 def als_listeneintraege(art: str = "", hersteller: str = "") -> list[tuple[str, Katalogeintrag]]:
