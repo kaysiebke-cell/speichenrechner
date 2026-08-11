@@ -185,23 +185,42 @@ class Katalogeintrag:
 
     @property
     def listentext(self) -> str:
-        """Zeile für die Auswahlliste – Name plus die wichtigsten Kennwerte."""
+        """Zeile für die Auswahlliste – **nur der Name**, dazu ein Häkchen.
+
+        Hier standen einmal Einbaubreite, Lochzahl, Bremsaufnahme und
+        Freilauftyp mit in der Zeile. Bei zweihundert Naben untereinander wird
+        daraus eine Wand aus Angaben, in der man den Namen nicht mehr findet –
+        und beim Suchen hilft keine davon. Die Kennwerte stehen jetzt in
+        :attr:`kennwerte` und werden als Hinweis eingeblendet, wenn eine Nabe
+        gewählt ist.
+
+        Das Häkchen bleibt: es sagt, dass sich diese Nabe ohne Nachmessen
+        rechnen lässt, und danach sucht man tatsächlich.
+        """
         teile = [self.bezeichnung]
         if self.hat_flanschmasse:
-            # Diese Nabe lässt sich sofort durchrechnen – das gehört nach vorn.
-            teile.append("✓ mit Flanschmaßen")
+            teile.append("✓")
+        if self.quelle:
+            teile.append("ungeprüft" if self.quelle == UNGEPRUEFT else "nachgetragen")
+        return "  ·  ".join(teile)
+
+    @property
+    def kennwerte(self) -> str:
+        """Einbaubreite, Lochzahl, Bremse und Freilauf – für den Hinweis.
+
+        Das, was früher die Auswahlliste zugestellt hat.
+        """
+        teile = []
         if not tabelle.ist_leer(self.einbaubreite):
             teile.append(f"{self.einbaubreite} mm")
         if not tabelle.ist_leer(self.lochzahl):
             teile.append(f"{self.lochzahl} Loch")
+        if not tabelle.ist_leer(self.achstyp):
+            teile.append(self.achstyp)
         if not tabelle.ist_leer(self.bremse):
             teile.append(self.bremse)
         if self.freilauf_kurz:
             teile.append(self.freilauf_kurz)
-        # Nachgetragene Naben nennen ihre Herkunft – man soll sehen, was aus der
-        # eigenen Tabelle kommt und was nicht belegt ist.
-        if self.quelle:
-            teile.append("ungeprüft" if self.quelle == UNGEPRUEFT else "nachgetragen")
         return "  ·  ".join(teile)
 
     @property
@@ -499,9 +518,7 @@ def _reihentext(name: tuple[str, str], eintraege: tuple[Katalogeintrag, ...]) ->
         else f"{hersteller} {reihe}"
     teile = [beschriftung, f"{len(eintraege)} Ausführungen"]
     if any(e.hat_flanschmasse for e in eintraege):
-        anzahl = sum(1 for e in eintraege if e.hat_flanschmasse)
-        teile.append("✓ mit Flanschmaßen" if anzahl == len(eintraege)
-                     else f"✓ {anzahl} mit Flanschmaßen")
+        teile.append("✓")
     return "  ·  ".join(teile)
 
 

@@ -213,8 +213,26 @@ class TestFlanschmasse(unittest.TestCase):
         self.assertLess(max(fertig), min(offen))
 
     def test_listentext_kennzeichnet_vollstaendige(self):
+        """Ein Häkchen genügt – der Satz stand zweihundertmal untereinander."""
         rohloff = self._nabe("SPEEDHUB 500/14 CC")
-        self.assertIn("mit Flanschmaßen", rohloff.listentext)
+        self.assertIn("✓", rohloff.listentext)
+
+    def test_listentext_bleibt_kurz(self):
+        """Nur Name und Häkchen: Kennwerte gehören nicht in die Auswahlliste.
+
+        Vorher trug jede Zeile Einbaubreite, Lochzahl, Bremsaufnahme und
+        Freilauftyp mit sich. Bei zweihundert Naben untereinander findet man
+        darin den Namen nicht mehr.
+        """
+        rohloff = self._nabe("SPEEDHUB 500/14 CC")
+        self.assertNotIn("mm", rohloff.listentext)
+        self.assertNotIn("Loch", rohloff.listentext)
+        self.assertLessEqual(len(rohloff.listentext), len(rohloff.bezeichnung) + 8)
+
+    def test_kennwerte_tragen_das_weggelassene(self):
+        rohloff = self._nabe("SPEEDHUB 500/14 CC")
+        self.assertIn("mm", rohloff.kennwerte)
+        self.assertIn("Loch", rohloff.kennwerte)
 
 
 class TestHerstellerfilter(unittest.TestCase):

@@ -697,6 +697,17 @@ class EingabeBereich(Gtk.Box):
         self.ausfuehrung_beschriftung.hide()
         self.nabenausfuehrung.hide()
 
+    def _kennwerte_zeigen(self, eintrag) -> None:
+        """Einbaubreite, Lochzahl, Achse, Bremse und Freilauf als Hinweis.
+
+        Nicht in der Auswahlliste: dort standen sie früher hinter jedem Namen
+        und machten aus zweihundert Zeilen eine Wand aus Angaben. Als Hinweis
+        an der Klappliste sind sie da, wenn man sie braucht, und sonst nicht.
+        """
+        text = getattr(eintrag, "kennwerte", "")
+        for teil in (self.nabe_vorlage.liste, self.nabenausfuehrung):
+            teil.set_tooltip_text(text or None)
+
     def _ausfuehrung_geaendert(self, combo) -> None:
         if self._stumm_ausfuehrung:
             return
@@ -816,6 +827,7 @@ class EingabeBereich(Gtk.Box):
                 self.speichenzahl.set_value(max(eintrag.lochzahlen))
         self._einbaubreite = eintrag.einbaubreiten[0] if eintrag.einbaubreiten else None
         self._katalogname = eintrag.bezeichnung
+        self._kennwerte_zeigen(eintrag)
         self._nabenart = eintrag.art
         self._nabenaufnahme = eintrag.aufnahme
         self._vollstaendig = eintrag.hat_flanschmasse
