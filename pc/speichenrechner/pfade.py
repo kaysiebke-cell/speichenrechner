@@ -16,14 +16,19 @@ def konfig_verzeichnis() -> Path:
 
 
 def projekt_verzeichnis() -> Path:
-    """Wurzel des Projekts – für Icon, Katalogdaten und mitgelieferte Dateien.
+    """Wurzel des Projekts – darin liegen ``pc/``, ``app/`` und ``data/``.
 
-    Die Anwendung liegt in ``pc/speichenrechner/``, die gemeinsamen Daten aber
-    in ``data/`` neben ``pc/`` und ``app/``: sie versorgen beide Fassungen.
-    Deshalb zwei Ebenen nach oben statt einer.
+    ``data/`` enthält, was **beide** Fassungen brauchen: die Kataloge und die
+    Prüfwerte. Es liegt deshalb nicht in einer der beiden, sondern daneben.
     """
     return Path(__file__).resolve().parents[2]
 
 
+def pc_verzeichnis() -> Path:
+    """Ordner der PC-Fassung – darin liegt, was nur sie betrifft."""
+    return Path(__file__).resolve().parents[1]
+
+
 def icon_pfad() -> Path:
-    return projekt_verzeichnis() / "data" / "speichenrechner.svg"
+    """Anwendungs-Icon – gehört zur PC-Fassung, nicht zu den geteilten Daten."""
+    return pc_verzeichnis() / "data" / "speichenrechner.svg"

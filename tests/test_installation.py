@@ -34,12 +34,12 @@ class TestInstallationsskript(unittest.TestCase):
         """Ein Ordner mit Leerzeichen muss zu einem aufrufbaren Eintrag führen."""
         with tempfile.TemporaryDirectory() as ordner:
             projekt = Path(ordner) / "Mein Ordner" / "Speichenrechner"
-            (projekt / "pc").mkdir(parents=True)
-            (projekt / "data").mkdir()
+            (projekt / "pc" / "data").mkdir(parents=True)
             (projekt / "pc" / "speichenrechner.py").write_text("#\n", encoding="utf-8")
-            (projekt / "data" / "speichenrechner.svg").write_text("<svg/>", encoding="utf-8")
-            vorlage = WURZEL / "data" / "de.speichenrechner.Speichenrechner.desktop.in"
-            (projekt / "data" / vorlage.name).write_text(
+            (projekt / "pc" / "data" / "speichenrechner.svg").write_text(
+                "<svg/>", encoding="utf-8")
+            vorlage = WURZEL / "pc" / "data" / "de.speichenrechner.Speichenrechner.desktop.in"
+            (projekt / "pc" / "data" / vorlage.name).write_text(
                 vorlage.read_text(encoding="utf-8"), encoding="utf-8")
             (projekt / "pc" / "install.sh").write_text(self.inhalt, encoding="utf-8")
 
@@ -58,3 +58,52 @@ class TestInstallationsskript(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestOrdnertrennung(unittest.TestCase):
+    """Jede Fassung hat ihren Ordner; geteilt wird nur, was beide brauchen.
+
+    ``pc/`` und ``app/`` sollen für sich stehen. ``data/`` liegt bewusst
+    daneben statt in einer der beiden: dort stehen die Kataloge und die
+    Prüfwerte, mit denen sich beide Fassungen gegeneinander absichern. Zwei
+    Kopien davon würden genau das Auseinanderlaufen erzeugen, das die
+    Prüfwerte verhindern sollen.
+    """
+
+    def test_der_pc_ordner_traegt_sein_eigenes_zubehoer(self):
+        for name in ("data/speichenrechner.svg",
+                     "data/de.speichenrechner.Speichenrechner.desktop.in",
+                     "speichenrechner.py", "install.sh"):
+            with self.subTest(datei=name):
+                self.assertTrue((WURZEL / "pc" / name).exists(),
+                                f"pc/{name} fehlt")
+
+    def test_geteilte_daten_enthalten_nur_daten(self):
+        """Kein Icon, keine Bildschirmfotos, keine Startdateien in data/."""
+        fremd = [p.name for p in (WURZEL / "data").iterdir()
+                 if p.suffix.lower() not in (".json",)]
+        self.assertEqual(fremd, [], f"gehört nicht in data/: {fremd}")
+
+    def test_die_handyfassung_braucht_data_nicht_zur_laufzeit(self):
+        """Sie bekommt ihre Daten erzeugt – sonst liefe sie offline nicht."""
+        for datei in (WURZEL / "app" / "public").rglob("*"):
+            if datei.suffix not in (".js", ".html", ".json"):
+                continue
+            text = datei.read_text(encoding="utf-8", errors="ignore")
+            for zeile in text.splitlines():
+                nackt = zeile.strip()
+                if nackt.startswith(("//", "*", "/*", "#")):
+                    continue          # Kommentare dürfen data/ erwähnen
+                with self.subTest(datei=datei.name):
+                    self.assertNotIn("../data/", nackt)
+
+    def test_bilder_liegen_im_eigenen_ordner(self):
+        bilder = list((WURZEL / "bilder").glob("*.png"))
+        self.assertTrue(bilder, "bilder/ ist leer")
+
+    def test_readme_zeigt_auf_die_bilder(self):
+        text = (WURZEL / "README.md").read_text(encoding="utf-8")
+        self.assertNotIn("(data/", text, "README verweist noch auf data/*.png")
+        for bild in re.findall(r"\((bilder/[^)]+)\)", text):
+            with self.subTest(bild=bild):
+                self.assertTrue((WURZEL / bild).exists(), f"{bild} fehlt")

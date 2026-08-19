@@ -60,14 +60,14 @@ installieren() {
     chmod +x "$PROJEKT/speichenrechner.py"
 
     mkdir -p "$ANWENDUNGEN" "$ICONS"
-    install -m 644 "$WURZEL/data/speichenrechner.svg" "$ICON_DATEI"
+    install -m 644 "$PROJEKT/data/speichenrechner.svg" "$ICON_DATEI"
 
     # Der Pfad steht in Anführungszeichen: liegt das Projekt in einem
     # Ordner mit Leerzeichen, zerlegt der Starter die Zeile sonst dort
     # und sucht eine Datei, die es nicht gibt.
     sed -e "s|@EXEC@|python3 \"$PROJEKT/speichenrechner.py\"|" \
         -e "s|@ICON@|$APP_ID|" \
-        "$WURZEL/data/$APP_ID.desktop.in" > "$DESKTOP_DATEI"
+        "$PROJEKT/data/$APP_ID.desktop.in" > "$DESKTOP_DATEI"
     chmod 644 "$DESKTOP_DATEI"
 
     aktualisieren

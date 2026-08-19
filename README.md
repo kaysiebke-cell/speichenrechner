@@ -69,7 +69,7 @@ Dann `http://<PC-IP>:8765/` am Handy öffnen. Dieselben Dateien liegen unter
 <https://kaysiebke-cell.github.io/speichenrechner/> und stecken in der APK –
 `app/public/` ist die eine Quelle für alle drei.
 
-![Speichenrechner am Handy, hell und dunkel](data/screenshot-handy.png)
+![Speichenrechner am Handy, hell und dunkel](bilder/screenshot-handy.png)
 
 So sieht die Handy-Fassung aus: Papierton statt Weiß, Petrol als einzige
 Akzentfarbe, Serifen für die Überschriften und die beiden Längen, flache Kästen
@@ -79,7 +79,7 @@ oder dunkel, entscheidet das Gerät.
 Am PC sieht es anders aus, und das mit Absicht – dort folgt die Anwendung dem
 eingestellten Mint-Theme:
 
-![Speichenrechner im dunklen Mint-Theme](data/screenshot.png)
+![Speichenrechner im dunklen Mint-Theme](bilder/screenshot.png)
 
 ## Installation
 
@@ -248,7 +248,7 @@ sichtbar, der Rest steckt in Reitern:
 Beide Spalten lassen sich rollen und schrumpfen, die Trennlinie richtet sich
 nach dem Platzbedarf der Eingabefelder.
 
-![Querschnitt](data/querschnitt.png)
+![Querschnitt](bilder/querschnitt.png)
 
 ### Nabenkatalog
 
@@ -713,9 +713,12 @@ Die Funktionen liegen in getrennten, kurzen Modulen:
 
 ```
 speichenrechner.py           reicht an pc/ durch – der gewohnte Aufruf
-pc/                          PC-Anwendung
+pc/                          PC-Anwendung – alles, was nur sie betrifft
   speichenrechner.py         Startskript
   install.sh                 Menüeintrag und Icon anlegen
+  data/
+    speichenrechner.svg      Anwendungs-Icon
+    …desktop.in              Vorlage für den Menüeintrag
   speichenrechner/
     modelle.py               Datenklassen: Nabe, Felge, Einspeichung, Speichen …
     berechnung.py            Geometrie, ohne GUI-Abhängigkeit
@@ -729,7 +732,7 @@ pc/                          PC-Anwendung
     formatierung.py          Zahlen in deutscher Schreibweise
     pfade.py                 Ablageorte nach XDG-Standard
     ui/                      GTK-Oberfläche und alle Zeichnungen
-app/                         Handy-Fassung
+app/                         Online- und Handy-Fassung – für sich lauffähig
   public/                    Web-App – ohne Bauschritt, ohne Fremdcode
     index.html               eine Seite, Ergebnis oben
     css/stil.css             Aktenlage-Gestaltung, hell/dunkel nach Gerät
@@ -740,17 +743,19 @@ app/                         Handy-Fassung
     js/app.js                Oberfläche verdrahten
     sw.js                    Service Worker: läuft ohne Netz
   android/                   dünne Hülle um public/ (WebView, keine Rechte)
-data/                        gemeinsame Daten für beide Fassungen
+data/                        gemeinsame Daten – bewusst in keiner der beiden
   naben_katalog.json         218 Naben aus der Herstellertabelle
   naben_zusatz.json          12 nachgetragene Naben mit Quellenangabe
+  naben_modellreihen.json    Zuordnung Nabe → Modellreihe
   felgen_katalog.json        17 Felgentypen in drei Kategorien
   pruefwerte.json            Prüfwerte – Band zwischen PC und Handy
-  speichenrechner.svg        Anwendungs-Icon
+bilder/                      Bildschirmfotos fürs README
 werkzeuge/
   katalog_erzeugen.py        erzeugt den Nabenkatalog aus der Tabelle
   katalog_pruefen.py         vergleicht Katalog und Tabelle Zelle für Zelle
   felgen_erzeugen.py         erzeugt die Felgentypen aus der Tabelle
   webdaten_erzeugen.py       erzeugt app/public/js/daten.js aus data/
+  modellreihen_erzeugen.py   erzeugt die Modellreihen aus der Zuordnungstabelle
   pruefwerte_erzeugen.py     rechnet die Prüffälle in Python vor
   pruefwerte_js.mjs          hält die JavaScript-Fassung darauf fest
 tests/                       Tests beider Fassungen
