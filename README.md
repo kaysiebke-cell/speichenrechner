@@ -14,7 +14,7 @@ weil die APK mit dem Debug-Schlüssel signiert und nicht über den Play Store
 verteilt ist.
 
 Drin ist alles: Rechnung, 230 Naben, 17 Felgentypen, Skizzen.
-Anleitung samt Stolpersteinen: **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
+Anleitung samt Stolpersteinen: **[APK-HERUNTERLADEN.md](doku/APK-HERUNTERLADEN.md)**
 
 **PC:**
 
@@ -69,7 +69,7 @@ Dann `http://<PC-IP>:8765/` am Handy öffnen. Dieselben Dateien liegen unter
 <https://kaysiebke-cell.github.io/speichenrechner/> und stecken in der APK –
 `app/public/` ist die eine Quelle für alle drei.
 
-![Speichenrechner am Handy, hell und dunkel](bilder/screenshot-handy.png)
+![Speichenrechner am Handy, hell und dunkel](doku/bilder/screenshot-handy.png)
 
 So sieht die Handy-Fassung aus: Papierton statt Weiß, Petrol als einzige
 Akzentfarbe, Serifen für die Überschriften und die beiden Längen, flache Kästen
@@ -79,7 +79,7 @@ oder dunkel, entscheidet das Gerät.
 Am PC sieht es anders aus, und das mit Absicht – dort folgt die Anwendung dem
 eingestellten Mint-Theme:
 
-![Speichenrechner im dunklen Mint-Theme](bilder/screenshot.png)
+![Speichenrechner im dunklen Mint-Theme](doku/bilder/screenshot.png)
 
 ## Installation
 
@@ -248,7 +248,7 @@ sichtbar, der Rest steckt in Reitern:
 Beide Spalten lassen sich rollen und schrumpfen, die Trennlinie richtet sich
 nach dem Platzbedarf der Eingabefelder.
 
-![Querschnitt](bilder/querschnitt.png)
+![Querschnitt](doku/bilder/querschnitt.png)
 
 ### Nabenkatalog
 
@@ -350,16 +350,16 @@ Die Schreibweisen sind dieselben wie in der Tabelle – Editor und Konverter
 benutzen dieselbe Auswertung aus `speichenrechner/tabelle.py`, sie können also
 nicht auseinanderlaufen.
 
-Der Katalog wird aus `daten_quelle_naben.xlsx` erzeugt:
+Der Katalog wird aus `quellen/naben_modelle.xlsx` erzeugt:
 
 ```bash
-python3 werkzeuge/katalog_erzeugen.py daten_quelle_naben.xlsx
+python3 werkzeuge/katalog_erzeugen.py quellen/naben_modelle.xlsx
 ```
 
 Danach prüfen, ob alles richtig ankam:
 
 ```bash
-python3 werkzeuge/katalog_pruefen.py daten_quelle_naben.xlsx
+python3 werkzeuge/katalog_pruefen.py quellen/naben_modelle.xlsx
 ```
 
 Die Prüfung vergleicht jede Zelle der Tabelle mit dem Katalog und meldet
@@ -395,7 +395,7 @@ und wird halbiert; beim Durchmesser gilt sie für beide Seiten.
 ### Felgentypen
 
 Im Abschnitt **Felge** steht unter ERD und Versatz der **Felgentyp** – 17
-Bauformen aus `daten_quelle_felgen.xlsx`, aufgeteilt in *Bauform*, *Material*
+Bauformen aus `quellen/felgen.xlsx`, aufgeteilt in *Bauform*, *Material*
 und *Einsatzbereich*. Die Klappliste darüber schränkt auf eine Kategorie ein,
 wie beim Nabenkatalog.
 
@@ -428,7 +428,7 @@ Liegt die eingestellte Zielspannung außerhalb, erscheint das als Warnung.
 Erzeugt wird die Liste wie der Nabenkatalog aus der Tabelle:
 
 ```bash
-python3 werkzeuge/felgen_erzeugen.py daten_quelle_felgen.xlsx
+python3 werkzeuge/felgen_erzeugen.py quellen/felgen.xlsx
 ```
 
 Die Hinweiszeile am Ende der Tabelle ist kein Felgentyp; sie wird als Fußnote
@@ -531,7 +531,7 @@ Zum Ansehen genügt ein Ordner-Server:
 python3 -m http.server 8765 --directory app/public
 ```
 
-Zwei Wege aufs Handy, beide in **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
+Zwei Wege aufs Handy, beide in **[APK-HERUNTERLADEN.md](doku/APK-HERUNTERLADEN.md)**
 beschrieben: über den Browser mit „Zum Startbildschirm hinzufügen", oder als
 APK, die GitHub bei jedem Push baut (`.github/workflows/android.yml`). Die APK
 verlangt keine einzige Berechtigung – kein Netz, keine Dateien.
@@ -749,7 +749,6 @@ data/                        gemeinsame Daten – bewusst in keiner der beiden
   naben_modellreihen.json    Zuordnung Nabe → Modellreihe
   felgen_katalog.json        17 Felgentypen in drei Kategorien
   pruefwerte.json            Prüfwerte – Band zwischen PC und Handy
-bilder/                      Bildschirmfotos fürs README
 werkzeuge/
   katalog_erzeugen.py        erzeugt den Nabenkatalog aus der Tabelle
   katalog_pruefen.py         vergleicht Katalog und Tabelle Zelle für Zelle
@@ -759,8 +758,8 @@ werkzeuge/
   pruefwerte_erzeugen.py     rechnet die Prüffälle in Python vor
   pruefwerte_js.mjs          hält die JavaScript-Fassung darauf fest
 tests/                       Tests beider Fassungen
-daten_quelle_naben.xlsx      Herstellertabelle – Quelle des Nabenkatalogs
-daten_quelle_felgen.xlsx     Felgentabelle – Quelle der Felgentypen
+quellen/naben.xlsx      Herstellertabelle – Quelle des Nabenkatalogs
+quellen/felgen.xlsx     Felgentabelle – Quelle der Felgentypen
 ```
 
 Eigene Vorlagen und die zuletzt benutzten Werte liegen in

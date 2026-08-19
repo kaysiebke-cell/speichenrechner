@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "pc"))
 from speichenrechner import berechnung, felgenkunde  # noqa: E402
 from speichenrechner.modelle import Einspeichung, Felge, Nabe, Speichensatz  # noqa: E402
 
-QUELLE = Path(__file__).resolve().parent.parent / "daten_quelle_felgen.xlsx"
+QUELLE = Path(__file__).resolve().parent.parent / "quellen" / "felgen.xlsx"
 
 
 class TestKatalog(unittest.TestCase):

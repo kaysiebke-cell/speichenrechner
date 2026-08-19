@@ -3,7 +3,7 @@
 
 Aufruf::
 
-    python3 werkzeuge/katalog_pruefen.py daten_quelle_naben.xlsx
+    python3 werkzeuge/katalog_pruefen.py quellen/naben_modelle.xlsx
 
 Meldet, was beim Einlesen verlorenging oder falsch ankam:
 

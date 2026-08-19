@@ -27,7 +27,7 @@ jobs:
         run: python3 -m unittest discover -s tests -v
 
       - name: Nabenkatalog gegen die Tabelle prüfen
-        run: python3 werkzeuge/katalog_pruefen.py daten_quelle_naben.xlsx
+        run: python3 werkzeuge/katalog_pruefen.py quellen/naben_modelle.xlsx
 
       - name: Node einrichten
         uses: actions/setup-node@v4

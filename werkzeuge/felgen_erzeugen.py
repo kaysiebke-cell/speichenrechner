@@ -3,7 +3,7 @@
 
 Aufruf::
 
-    python3 werkzeuge/felgen_erzeugen.py daten_quelle_felgen.xlsx
+    python3 werkzeuge/felgen_erzeugen.py quellen/felgen.xlsx
 
 Die Tabelle hat ein Blatt mit einer Zeile je Felgentyp. Anders als bei den
 Naben stehen dort keine Maße, sondern Eigenschaften: Bauform, Material,

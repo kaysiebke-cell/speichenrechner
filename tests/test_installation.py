@@ -78,6 +78,14 @@ class TestOrdnertrennung(unittest.TestCase):
                 self.assertTrue((WURZEL / "pc" / name).exists(),
                                 f"pc/{name} fehlt")
 
+    def test_die_wurzel_bleibt_aufgeraeumt(self):
+        """Oben liegt nur, was den Einstieg zeigt – alles andere hat einen Ordner."""
+        erlaubt = {"README.md", "speichenrechner.py", ".gitignore"}
+        lose = {p.name for p in WURZEL.iterdir()
+                if p.is_file() and not p.name.startswith(".~")}
+        self.assertEqual(lose - erlaubt, set(),
+                         f"gehört in einen Ordner: {sorted(lose - erlaubt)}")
+
     def test_geteilte_daten_enthalten_nur_daten(self):
         """Kein Icon, keine Bildschirmfotos, keine Startdateien in data/."""
         fremd = [p.name for p in (WURZEL / "data").iterdir()
@@ -98,12 +106,12 @@ class TestOrdnertrennung(unittest.TestCase):
                     self.assertNotIn("../data/", nackt)
 
     def test_bilder_liegen_im_eigenen_ordner(self):
-        bilder = list((WURZEL / "bilder").glob("*.png"))
-        self.assertTrue(bilder, "bilder/ ist leer")
+        bilder = list((WURZEL / "doku" / "bilder").glob("*.png"))
+        self.assertTrue(bilder, "doku/bilder/ ist leer")
 
     def test_readme_zeigt_auf_die_bilder(self):
         text = (WURZEL / "README.md").read_text(encoding="utf-8")
         self.assertNotIn("(data/", text, "README verweist noch auf data/*.png")
-        for bild in re.findall(r"\((bilder/[^)]+)\)", text):
+        for bild in re.findall(r"\((doku/bilder/[^)]+)\)", text):
             with self.subTest(bild=bild):
                 self.assertTrue((WURZEL / bild).exists(), f"{bild} fehlt")

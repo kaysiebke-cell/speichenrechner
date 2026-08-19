@@ -3,7 +3,7 @@
 
 Aufruf::
 
-    python3 werkzeuge/katalog_erzeugen.py daten_quelle_naben.xlsx
+    python3 werkzeuge/katalog_erzeugen.py quellen/naben_modelle.xlsx
 
 Die Tabelle hat ein Blatt je Nabenart (Nabendynamo, Nabenschaltung,
 Vorderradnabe, Hinterradnabe …). Die Spalten werden **über ihre Überschriften**
