@@ -720,6 +720,7 @@ werkzeuge/
   einzeldatei_erzeugen.py    packt public/ in die eine HTML-Datei
 tests/                       Tests beider Fassungen
 daten_quelle_naben.xlsx      Herstellertabelle – Quelle des Nabenkatalogs
+daten_quelle_modellreihen.xlsx  Zuordnung der Naben zu Modellreihen
 daten_quelle_felgen.xlsx     Felgentabelle – Quelle der Felgentypen
 ```
 
