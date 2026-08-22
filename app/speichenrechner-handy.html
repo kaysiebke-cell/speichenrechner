@@ -328,20 +328,46 @@ legend {
 .zeile.kopf span { text-align: center; }
 .zeile.kopf span:first-child { text-align: left; }
 
-input[type="number"], input[type="search"] {
+/* Der Wert steht rechts in seiner Zeile, ohne Kasten – wie die Auswahlliste
+   daneben. Ein Kasten ist der Vorlage nach dem Textfeld vorbehalten, und
+   zwanzig kleine graue Kästchen untereinander sind eine Wand. Angefasst
+   wird die ganze Zeile: beim Überfahren und beim Tippen legt sich eine
+   getönte Fläche darunter, damit man sieht, dass hier etwas einzugeben ist. */
+input[type="number"] {
   width: 100%;
   min-width: 0;
-  padding: 0.55rem 0.6rem;
+  padding: 0.35rem 0.4rem;
   font-family: var(--sans);
   font-size: 0.9375rem;
   font-variant-numeric: tabular-nums;
   text-align: right;
   color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: var(--r-klein);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type="number"]:hover { background: var(--tonflaeche); }
+input[type="number"]:focus { background: var(--tonflaeche); }
+/* Die Pfeilchen von Chrome nehmen Platz und stören den rechten Rand. */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* Die Suche bleibt ein Kasten: sie ist ein Textfeld über die volle Breite,
+   und genau die trägt in der Vorlage einen. */
+input[type="search"] {
+  width: 100%;
+  min-width: 0;
+  padding: 0.55rem 0.6rem;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  text-align: left;
+  color: var(--text);
   background: var(--grund);
   border: 1px solid var(--linie);
   border-radius: var(--r-klein);
 }
-input[type="search"] { text-align: left; }
 /* Der Platzhalter darf leise bleiben – er ist keine Angabe, sondern eine Lücke. */
 input::placeholder { color: var(--zart); }
 input:disabled { color: var(--zart); }
@@ -372,13 +398,12 @@ input:disabled { color: var(--zart); }
   grid-column: auto;
   justify-self: stretch;
   width: 100%;
-  padding: 0.55rem 0.6rem;
+  padding: 0.4rem 0.3rem;
   text-align: left;
   color: var(--text);
-  background: var(--grund);
-  border: 1px solid var(--linie);
   border-radius: var(--r-klein);
 }
+.zeile > select:hover { background: var(--tonflaeche); }
 
 input:focus-visible, select:focus-visible, button:focus-visible {
   outline: 2px solid var(--akzent);
@@ -865,7 +890,7 @@ footer { margin-top: var(--s5); }
 // es beim nächsten Lauf des Werkzeugs; die Tabelle und naben_zusatz.json
 // sind die Quelle der Wahrheit.
 
-const FASSUNG = "1.8.0";
+const FASSUNG = "1.8.1";
 
 const NABEN = [
 {
