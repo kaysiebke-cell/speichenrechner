@@ -50,7 +50,7 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 ```
 Paket            de.speichenrechner.app  1.7.0
 Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
-enthalten        assets/www/ – index.html, css, 5 Skripte, Icons
+enthalten        assets/www/ – index.html, css, 6 Skripte, Icons
 ```
 
 Gerechnet wird auf dem Gerät. Die einzige Berechtigung im Paket heißt
@@ -208,10 +208,24 @@ immer sichtbar. Dazwischen liegt die Arbeit in vier Reitern:
 
 ### Nabenkatalog
 
-Die Auswahlliste im Abschnitt **Nabe** enthält neben den Vorlagen auch 218
-Modelle von 14 Herstellern (Hope, SON, Shimano, Rohloff, SRAM,
-Sturmey-Archer, Enviolo, Pinion, Shutter Precision, Supernova, Kindernay,
-Classified, Effigear, Fichtel & Sachs) – kein zweites Fenster, kein Menü.
+Die Auswahlliste im Abschnitt **Nabe** enthält neben den Vorlagen den ganzen
+Nabenkatalog – kein zweites Fenster, kein Menü. Von den 230 Naben sind 215
+einspeichbar; die übrigen 15 sind Tretlager-Getriebe, siehe unten. Sie kommen
+von 17 Herstellern: Classified, Enviolo, Fichtel & Sachs, Formula, Hope,
+Joytech, Kindernay, KT, Phil Wood, Quando, Rohloff, Shimano, Shutter
+Precision, SON, SRAM, Sturmey-Archer und Supernova.
+
+**Je Modellreihe steht ein Eintrag**, sonst wird die Liste zur Wand: aus 215
+Naben werden so 182 Zeilen. Hinter 24 davon steckt mehr als eine Ausführung –
+die Hope Pro 4 etwa fünf, die sich nur in der Achse unterscheiden. Dann
+erscheint nach der Wahl darunter die Zeile *Ausführung*; bei den übrigen 158
+Reihen merkt man von der Zusammenfassung nichts.
+
+Die Zeile nennt **nur den Namen**, dazu ein Häkchen, wenn sich die Nabe ohne
+Nachmessen rechnen lässt. Einbaubreite, Lochzahl, Achstyp, Bremsaufnahme und
+Freilauftyp standen einmal mit darin – bei zweihundert Zeilen untereinander
+findet man den Namen dann nicht mehr. Sie stehen jetzt als Hinweis unter der
+Liste, sobald eine Nabe gewählt ist.
 
 Darüber stehen zwei Filter – **Nabenart** und **Hersteller** –, die die Liste
 kurz halten. Sie gelten für **alles** in der Liste, auch für die mitgelieferten
@@ -231,12 +245,12 @@ SON-Dynamo unter *Dynamo* wie unter *Vorderrad*.
 | Vorderrad | 90 | Hope, SON, Shimano, Shutter Precision, SRAM, Sturmey-Archer, Supernova |
 | Nabenschaltung | 73 | Classified, Enviolo, Fichtel & Sachs, Kindernay, Rohloff, Shimano, SRAM, Sturmey-Archer |
 | Dynamo | 69 | SON, Shimano, Shutter Precision, SRAM, Sturmey-Archer, Supernova |
-| Hinterrad | 40 | Hope, Shimano |
-| Kassette | 34 | Classified, Hope, Kindernay, Shimano, SRAM |
+| Hinterrad | 52 | Formula, Hope, Joytech, KT, Phil Wood, Quando, Shimano |
+| Kassette | 35 | Classified, Hope, Kindernay, Shimano, SRAM |
 | Schraubritzel | 26 | Rohloff |
+| Schraubkranz | 17 | Formula, Hope, Joytech, KT, Phil Wood, Quando, Sturmey-Archer |
 | Steckritzel | 17 | Shimano, Sturmey-Archer |
 | Steckzahnkranz | 9 | Enviolo |
-| Schraubkranz | 6 | Hope, Sturmey-Archer |
 | Singlespeed | 5 | Hope |
 
 Die Bauart kommt aus dem Tabellenblatt, die Ritzelaufnahme aus der Spalte
@@ -249,30 +263,24 @@ Effigear-Systeme dahinter haben kein Speichenloch. Im Katalog bleiben sie
 erhalten und sind im Fenster *Nabentabelle* zu sehen – nur eben nicht dort, wo
 man eine Nabe zum Einspeichen wählt.
 
-> Was die Tabelle nicht führt, kann kein Filter zeigen. Von Shimano, SRAM und
-> Sturmey-Archer stehen dort nur Dynamo- und Nabenschaltungsblätter – deren
-> gewöhnliche Naben mit Schraubkranz fehlen also. Über *Menü → Nabentabelle
-> bearbeiten … → Nabe hinzufügen* lassen sie sich ergänzen, ohne die
-> Excel-Datei anzufassen.
+> Was die Tabelle nicht führt, kann kein Filter zeigen. Über *Menü →
+> Nabentabelle bearbeiten … → Nabe hinzufügen* lässt sich Fehlendes ergänzen,
+> ohne die Excel-Datei anzufassen – die acht OEM-Schraubkranznaben von
+> Joytech, Quando, Formula und KT stehen genau deshalb in
+> `data/naben_zusatz.json`.
 
-Der Freilauftyp steht auch in der Auswahlliste, gekürzt auf die Standards –
+Der Freilauftyp steht im Hinweis unter der Liste, gekürzt auf die Standards –
 aus „Shimano HG (9–11-fach), Shimano Micro Spline (12-fach) und SRAM XD“ wird
-`HG · Micro Spline · XD`. Gesucht wird über den vollen Text, `micro spline`
-findet also alle passenden Naben.
-
-> Dass unter *Kassette* und *Vorderrad* nur Hope steht, liegt an der Tabelle:
-> sie führt von Shimano, SRAM und Sturmey-Archer ausschließlich Dynamo- und
-> Nabenschaltungsblätter, keine gewöhnlichen Naben. Kommt ein Blatt mit
-> Shimano-Kassettennaben dazu, tauchen sie ohne weiteres Zutun unter
-> *Kassette* auf.
+`HG · Micro Spline · XD`. Gesucht wird trotzdem über den vollen Text,
+`micro spline` findet also alle passenden Naben.
 
 Die Liste ist **eintippbar**: „son disc“ oder „boost“ filtert sofort, egal an
-welcher Stelle im Namen der Begriff steht. Jede Zeile zeigt Modell,
-Einbaubreite, Lochzahl und Bremsaufnahme.
+welcher Stelle im Namen der Begriff steht.
 
-**72 Naben sind rechenfertig** – sie führen auch Flanschabstand und Flansch-Ø
-und stehen deshalb oben in der Liste, gekennzeichnet mit „✓ mit Flanschmaßen“.
-Ein Klick genügt, die Länge steht sofort da.
+**73 Naben sind rechenfertig** – sie führen auch Flanschabstand und Flansch-Ø
+und stehen deshalb oben in der Liste, am Häkchen erkennbar. Sie verteilen sich
+auf 54 Modellreihen; innerhalb einer Reihe steht ebenfalls vorn, was sich
+rechnen lässt. Ein Klick genügt, die Länge steht sofort da.
 
 Bei den übrigen setzt der Rechner Speichenloch-Ø und Lochzahl, merkt sich die
 Einbaubreite für die Umrechnung „Flanschabstand aus Einbaubreite …“ und trägt
@@ -472,7 +480,7 @@ Antriebsseite immer **innen** liegen. Die drei Beispiele stehen als Tests in
 
 ## Handy-Version
 
-In `app/public/` liegt eine Web-Fassung: eine Seite, ein Stylesheet, zwei
+In `app/public/` liegt eine Web-Fassung: eine Seite, ein Stylesheet, sechs
 JavaScript-Dateien. **Kein Bauschritt, keine Abhängigkeiten, nichts von einem
 fremden Server** – dieselbe Regel wie bei der PC-Anwendung. Ein Service Worker
 legt die ganze Anwendung in den Cache, damit sie ohne Empfang rechnet; in der
@@ -692,10 +700,12 @@ app/                         Handy-Fassung
     js/app.js                Oberfläche verdrahten
     js/reiter.js             Reiterleiste unten – nur am schmalen Schirm
     sw.js                    Service Worker: läuft ohne Netz
+  speichenrechner-handy.html alles in einer Datei – der Weg ohne Server
   android/                   dünne Hülle um public/ (WebView, keine Rechte)
 data/                        gemeinsame Daten für beide Fassungen
   naben_katalog.json         218 Naben aus der Herstellertabelle
   naben_zusatz.json          12 nachgetragene Naben mit Quellenangabe
+  naben_modellreihen.json    fasst Achsvarianten zu Modellreihen zusammen
   felgen_katalog.json        17 Felgentypen in drei Kategorien
   pruefwerte.json            Prüfwerte – Band zwischen PC und Handy
   speichenrechner.svg        Anwendungs-Icon
@@ -706,6 +716,8 @@ werkzeuge/
   webdaten_erzeugen.py       erzeugt app/public/js/daten.js aus data/
   pruefwerte_erzeugen.py     rechnet die Prüffälle in Python vor
   pruefwerte_js.mjs          hält die JavaScript-Fassung darauf fest
+  modellreihen_erzeugen.py   leitet die Modellreihen aus der Tabelle ab
+  einzeldatei_erzeugen.py    packt public/ in die eine HTML-Datei
 tests/                       Tests beider Fassungen
 daten_quelle_naben.xlsx      Herstellertabelle – Quelle des Nabenkatalogs
 daten_quelle_felgen.xlsx     Felgentabelle – Quelle der Felgentypen
