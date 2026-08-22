@@ -7,7 +7,7 @@ Die Oberfläche ist in kleine, eigenständige Bausteine zerlegt:
 * :mod:`~speichenrechner.ui.eingabe`     – linke Spalte mit allen Eingaben
 * :mod:`~speichenrechner.ui.ergebnis`    – rechte Spalte mit den Ergebnissen
 * :mod:`~speichenrechner.ui.vergleich`   – Tabelle über die Kreuzungszahlen
-* :mod:`~speichenrechner.ui.messen`      – bemaßte Skizzen mit den echten Werten
+* :mod:`~speichenrechner.ui.messen`      – die eingegebenen Maße als Klartext
 * :mod:`~speichenrechner.ui.bauart_dialog` – Speichenmaße und E-Modul
 * :mod:`~speichenrechner.ui.tabellen_fenster` – Nabentabelle zum Nachtragen
 * :mod:`~speichenrechner.ui.vorlagen_leiste` – Vorlagen wählen, speichern, löschen

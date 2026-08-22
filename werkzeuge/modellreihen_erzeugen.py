@@ -3,7 +3,7 @@
 
 Aufruf::
 
-    python3 werkzeuge/modellreihen_erzeugen.py daten_quelle_naben.xlsx
+    python3 werkzeuge/modellreihen_erzeugen.py daten_quelle_modellreihen.xlsx
 
 Die Tabelle ordnet die einzelnen Naben zu Modellreihen zusammen: aus 260
 Katalogzeilen werden 186 Reihen. Sie enthält **keine Maße** – Flanschabstand

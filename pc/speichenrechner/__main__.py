@@ -36,15 +36,6 @@ def pruefen() -> int:
         print(HINWEIS_GTK)
         fehler += 1
 
-    try:
-        import cairo
-
-        print(f"pycairo          {cairo.version} – vorhanden")
-    except ImportError:
-        print("pycairo          FEHLT – nötig für die Skizzen")
-        print("  sudo apt install python3-cairo")
-        fehler += 1
-
     from .berechnung import berechne
     from .modelle import Einspeichung, Felge, Nabe
 
