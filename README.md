@@ -13,7 +13,7 @@ Standort**. Android fragt beim ersten Mal nach „Aus dieser Quelle installieren
 weil die APK mit dem Debug-Schlüssel signiert und nicht über den Play Store
 verteilt ist.
 
-Drin ist alles: Rechnung, 230 Naben, 17 Felgentypen, Skizzen.
+Drin ist alles: Rechnung, 230 Naben, 17 Felgentypen.
 Anleitung samt Stolpersteinen: **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
 
 **PC:**
@@ -184,72 +184,27 @@ und Speichenton. Plausibilitätsprobleme (unmögliche Kreuzungszahl, ungewöhnli
 ERD, große Seitendifferenz) werden als Hinweis eingeblendet, dazu kommt eine
 fachliche Einschätzung zu Speichenwinkel und Spannungsverhältnis.
 
-Wer nicht weiß, was genau zu messen ist, klickt das Augen-Symbol neben der
-Überschrift **Nabe** oder **Felge** – oder direkt auf den Reiter **Messen**. Die
-**Übersicht** zeigt alle drei Maße in einem Bild – die klassische Skizze mit
-`a` (Flanschabstand ab Nabenmitte), `d` (Flansch-Lochkreis) und `D` (ERD).
-Daneben liegt für jedes Maß eine eigene Skizze mit erkennbaren Bauteilen: Nabe
-von der Seite für Flansch-Ø und Flanschabstand, zwei Felgenprofile im Schnitt
-für den ERD. Die
-Maßlinien tragen die **tatsächlich eingegebenen Werte**, und die gezeichnete
-Nabe übernimmt die Verhältnisse: ein Hinterrad zeigt seinen kurzen rechten
-Abstand auch als kurzen Abstand. Klickt man in ein Eingabefeld, schaltet die
-Ansicht von selbst auf das passende Maß.
-
-Die Nabe entsteht als **Drehteil-Kontur** – eine Linie über Achsstummel,
-Endkappe, Lagersitz, Flansch, Taille und Freilaufkörper und zurück. Deshalb
-sind die Flansche angeformt und nicht angeklebt. Die Felge ist entsprechend
-Blech: Kontur in Wandstärke gezeichnet, mit Öse am Nippelsitz. Die Farben
-kommen aus dem Theme – der Nabenkörper trägt den Akzent, Freilauf und Achse
-bleiben neutral, ein senkrechter Verlauf macht daraus ein rundes Bauteil. Feste
-Farbwerte gibt es nicht, damit jedes Theme passt.
-
-**Gezeichnet wird, was gewählt ist.** Bauart und Ritzelaufnahme kommen aus der
-Vorlage oder dem Nabenkatalog und bestimmen die Form:
-
-| Bauart / Aufnahme | Antriebsseite | Nabenschale |
-|---|---|---|
-| Vorderrad | nichts, rechts wie links abgesetzt | schlank |
-| Dynamo | nichts | dick – darin sitzt der Generator |
-| Hinterrad + Kassette / Steckritzel / Steckzahnkranz | Freilaufkörper mit Längsverzahnung | schlank |
-| Hinterrad + Schraubkranz / Schraubritzel / Singlespeed | Gewindestummel | schlank |
-| Nabenschaltung | Gewindestummel – **nie** ein Kassettenkörper | dick – darin sitzt das Getriebe |
-
-Bei einer Getriebenabe sitzt das Ritzel auf einem kurzen Stummel, auch wenn die
-Tabelle „Steckritzel“ nennt; ein Kassettenkörper wäre dort falsch. Die
-Nabenschale ist gedeckelt: bei kleinem Lochkreis wird der Körper nie dicker als
-der Flansch, sonst verschwände der Flansch darin.
-
-Auf die Speichenlänge hat das **keinen** Einfluss – die hängt allein an der
-Geometrie. Ein Test hält das fest.
+Wer nicht weiß, was genau zu messen ist, öffnet den Reiter **Messen /
+Vergleich**: dort stehen die eingegebenen Maße als Klartext beieinander –
+Flanschabstand und Flansch-Ø je Seite, ERD und Versatz. Die Buchstaben, die in
+der Fachliteratur dafür stehen: `a` der Flanschabstand ab Nabenmitte, `d` der
+Flansch-Lochkreis, `D` der ERD.
 
 Über die Kopfleiste lässt sich das Ergebnis in die Zwischenablage kopieren oder
-als Textdatei sichern, über das Menü die aktuelle Skizze als PNG, PDF oder SVG
-exportieren. Häufig gebrauchte Naben und Felgen lassen sich als eigene Vorlage
+als Textdatei sichern. Häufig gebrauchte Naben und Felgen lassen sich als eigene Vorlage
 speichern; die zuletzt eingegebenen Werte stehen beim nächsten Start wieder da.
 
 ### Aufteilung des Fensters
 
-Links stehen die Eingaben in zwei Reitern – **Laufrad** (Nabe, Felge,
-Einspeichung) und **Speichen** (Bauart, Nippel, Korrektur). So bleibt das
-Nötigste auf einem Blick, ohne dass das Fenster in die Höhe wächst.
-
-Rechts liegen die Ergebnisse; Länge, Bestellmenge und Warnungen sind immer
-sichtbar, der Rest steckt in Reitern:
+Ganz oben stehen die beiden Längen, ganz unten die Hinweise – beides bleibt
+immer sichtbar. Dazwischen liegt die Arbeit in vier Reitern:
 
 | Reiter | Was er zeigt |
 |---|---|
-| **Speichenbild** | Aufsicht aufs Rad: Kreuzungsmuster beider Seiten, eine Speiche hervorgehoben, dazu der Sehnenwinkel an der Nabe |
-| **Querschnitt** | Maßstäblicher Ausschnitt am Nabenbereich: Flanschabstände, Nabenkörper und die Speichen mit ihrem echten Winkel |
-| **Messen** | Übersicht mit `a`, `d`, `D` plus je eine Skizze pro Maß, alle mit den eingegebenen Werten – folgt dem Eingabefeld, in dem man gerade steht |
-| **Vergleich** | Tabelle über 0- bis 4-fach gekreuzt – was eine andere Kreuzungszahl an Länge und Winkel ausmacht |
-| **Spannung** | Spannungsverhältnis der Seiten, Dehnung, Speichenton und Gewicht |
+| **Laufrad** | Nabe, Felge und Einspeichung – alles, was die Länge bestimmt |
+| **Speichen / Spannung** | Speichenbauart, Nippel und Korrektur, dazu Spannungsverhältnis, Dehnung, Speichenton und Gewicht |
+| **Messen / Vergleich** | die eingegebenen Maße als Klartext, darunter die Tabelle über 0- bis 4-fach gekreuzt |
 | **Bewertung** | fachliche Einschätzung zu Winkel, Spannung und Kreuzungszahl |
-
-Beide Spalten lassen sich rollen und schrumpfen, die Trennlinie richtet sich
-nach dem Platzbedarf der Eingabefelder.
-
-![Querschnitt](data/querschnitt.png)
 
 ### Nabenkatalog
 
@@ -400,13 +355,10 @@ Bauformen aus `daten_quelle_felgen.xlsx`, aufgeteilt in *Bauform*, *Material*
 und *Einsatzbereich*. Die Klappliste darüber schränkt auf eine Kategorie ein,
 wie beim Nabenkatalog.
 
-Der Typ ändert die Speichenlänge **nicht**. Er ändert drei andere Dinge:
+Der Typ ändert die Speichenlänge **nicht**. Er ändert zwei andere Dinge:
 
 * Unter der Auswahl steht, was die Tabelle über ihn sagt – Beschreibung,
   Werkstoff, Ösung, Einsatzbereich, verfügbare Kindergrößen.
-* Die Messskizze **D – ERD** zeichnet das Profil dieser Bauform: eine
-  Aero-Felge ist hoch, eine Flachbettfelge flach und einwandig, eine hakenlose
-  Felge endet ohne Wulsthaken, eine geöste Felge zeigt ihre Öse am Nippelsitz.
 * Der Rechner sagt etwas dazu: eine einwandige Felge ohne Ösen bekommt den
   Hinweis auf Unterlegscheiben, Carbon den Verweis auf die Herstellerangabe,
   Stahl die Warnung vor zu hoher Spannung.
@@ -601,17 +553,10 @@ anfasst.
 
 Drin: Eingaben, Längen und Kennwerte, die dringendsten Hinweise, der
 **Nabenkatalog mit 230 Naben** samt Filtern und Suche, die **Felgentypen** mit
-Beschreibung und Spannungswarnung, die Vorlagen – und die **Skizzen**.
+Beschreibung und Spannungswarnung, die Vorlagen – und die Speichenphysik
+(Dehnung, Speichenton, Gewicht), die unter „Einzelheiten“ steht.
 
-Die Skizzen sind dieselben Formen wie am PC, nur als SVG statt Cairo: die Nabe
-als Drehteil-Kontur, die Felge als Blech in Wandstärke. Bauart und
-Ritzelaufnahme bestimmen auch hier, was rechts sitzt – Freilaufkörper,
-Gewindestummel oder nichts – und Dynamo wie Nabenschaltung bekommen die dicke
-Schale. `app/public/js/zeichnung.js` trägt dieselben Zahlen wie
-`pc/speichenrechner/ui/bauteile.py`.
-
-Es fehlen: der Tabellen-Editor, der Kreuzungsvergleich und die Speichenphysik
-(Dehnung, Ton, Gewicht).
+Es fehlen: der Tabellen-Editor und der Kreuzungsvergleich.
 
 ### Der Cache-Stolperstein
 
@@ -735,7 +680,7 @@ pc/                          PC-Anwendung
     bericht.py               Ergebnis als Text
     formatierung.py          Zahlen in deutscher Schreibweise
     pfade.py                 Ablageorte nach XDG-Standard
-    ui/                      GTK-Oberfläche und alle Zeichnungen
+    ui/                      GTK-Oberfläche
 app/                         Handy-Fassung
   public/                    Web-App – ohne Bauschritt, ohne Fremdcode
     index.html               vier Blätter, Ergebnis fest im Kopf
