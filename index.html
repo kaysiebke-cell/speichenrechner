@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Speichenrechner</title>
+<meta name="description" content="Speichenlängen für Fahrradlaufräder – rechnet ohne Netz.">
+<meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121316" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/stil.css">
+</head>
+<body>
+
+<!-- Am Telefon steht der Kopf fest, die Reiterleiste unten steht fest, und
+     nur das Blatt dazwischen rollt. Ab 44 rem fällt das Gerüst weg: dann
+     stehen alle Blätter zugleich zweispaltig, wie vorher.
+
+     Jede Gruppe ist eine Karte: Zeilen darin trennt eine Haarlinie, die
+     Überschrift steht darüber auf dem Grund, die Erklärungen darunter. -->
+
+<header>
+  <div class="kopfinhalt">
+    <div class="kopfzeile">
+      <h1><span class="wortmarke__a">Speichen</span><span class="wortmarke__b">rechner</span></h1>
+      <p class="unterzeile">Speichenlängen für Fahrradlaufräder</p>
+      <button type="button" id="zuruecksetzen" class="still">Zurücksetzen</button>
+    </div>
+
+    <!-- Das Ergebnis gehört in den Kopf: es ist das eine, was immer zu sehen
+         sein muss – auf jedem Blatt. Die Kennwerte sind am Telefon
+         zugeklappt, sonst füllt allein der Kopf den halben Schirm. -->
+    <section class="ergebnis" aria-live="polite">
+      <div class="seiten">
+        <div class="seite">
+          <span class="beschriftung">Links</span>
+          <strong id="laenge-links">–</strong><span class="einheit">mm</span>
+          <span class="klein" id="genau-links"></span>
+        </div>
+        <div class="seite">
+          <span class="beschriftung">Rechts</span>
+          <strong id="laenge-rechts">–</strong><span class="einheit">mm</span>
+          <span class="klein" id="genau-rechts"></span>
+        </div>
+      </div>
+      <p class="bestellen" id="bestellen"></p>
+      <button type="button" class="einzelheiten" id="einzelheiten"
+              aria-expanded="false" aria-controls="kennwerte">
+        <span>Einzelheiten</span>
+        <svg class="pfeil" width="12" height="12" viewBox="0 0 12 12" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+      </button>
+      <p class="klein" id="kennwerte"></p>
+      <p class="hinweis" id="hinweis" hidden></p>
+    </section>
+  </div>
+</header>
+
+<main>
+
+  <form id="formular" autocomplete="off">
+
+    <div class="blatt" id="blatt-nabe">
+      <fieldset>
+        <legend>Nabe</legend>
+        <div class="karte">
+          <!-- Katalog zuerst: meist wählt man eine Nabe, statt Maße zu tippen. -->
+          <div class="zeile zwei">
+            <select id="nabenart" aria-label="Bauart oder Ritzelaufnahme"></select>
+            <select id="nabenhersteller" aria-label="Hersteller"></select>
+          </div>
+          <div class="zeile voll">
+            <input type="search" id="nabensuche" placeholder="Nabe suchen …"
+                   aria-label="Nabe suchen">
+          </div>
+          <div class="zeile voll">
+            <select id="nabenliste" aria-label="Nabe aus dem Katalog"></select>
+          </div>
+          <div class="zeile kopf"><span></span><span>links</span><span>rechts</span></div>
+          <label class="zeile">
+            <span>Flansch-Ø</span>
+            <input type="number" id="flansch-d-links" inputmode="decimal" step="0.5" min="10" max="200" value="45">
+            <input type="number" id="flansch-d-rechts" inputmode="decimal" step="0.5" min="10" max="200" value="45">
+          </label>
+          <label class="zeile">
+            <span>Flanschabstand</span>
+            <input type="number" id="flansch-a-links" inputmode="decimal" step="0.5" min="0" max="120" value="35">
+            <input type="number" id="flansch-a-rechts" inputmode="decimal" step="0.5" min="0" max="120" value="20">
+          </label>
+          <label class="zeile">
+            <span>Speichenloch-Ø</span>
+            <input type="number" id="speichenloch" inputmode="decimal" step="0.1" min="1" max="5" value="2.6">
+            <span class="einheit-feld">mm</span>
+          </label>
+        </div>
+        <p class="klein" id="nabeninfo"></p>
+        <p class="klein">Flanschabstand ab Nabenmitte, nicht ab der Endkappe.
+          Flansch-Ø durch die Mitten der Speichenlöcher.</p>
+      </fieldset>
+    </div>
+
+    <div class="blatt" id="blatt-felge">
+      <fieldset>
+        <legend>Felge</legend>
+        <div class="karte">
+          <div class="zeile voll">
+            <select id="felgenvorlage" aria-label="Felgengröße als Vorlage"></select>
+          </div>
+          <label class="zeile">
+            <span>ERD</span>
+            <input type="number" id="erd" inputmode="decimal" step="0.5" min="100" max="800" value="600">
+            <span class="einheit-feld">mm</span>
+          </label>
+          <label class="zeile">
+            <span>Versatz</span>
+            <input type="number" id="versatz" inputmode="decimal" step="0.5" min="-15" max="15" value="0">
+            <span class="einheit-feld">mm</span>
+          </label>
+          <div class="zeile zwei">
+            <select id="felgenkategorie" aria-label="Kategorie des Felgentyps"></select>
+            <select id="felgentyp" aria-label="Felgentyp"></select>
+          </div>
+        </div>
+        <p class="klein" id="felgeninfo"></p>
+        <p class="klein">ERD von Nippelsitz zu Nippelsitz, nicht bis zum Reifensitz.
+          Versatz: minus = Speichenbett nach links.</p>
+      </fieldset>
+    </div>
+
+    <div class="blatt" id="blatt-einspeichung">
+      <fieldset>
+        <legend>Einspeichung</legend>
+        <div class="karte">
+          <label class="zeile">
+            <span>Speichenzahl</span>
+            <input type="number" id="speichenzahl" inputmode="numeric" step="2" min="8" max="64" value="32">
+            <span class="einheit-feld">Stück</span>
+          </label>
+          <label class="zeile">
+            <span>Verteilung</span>
+            <select id="verteilung">
+              <option value="1:1">gleich verteilt (1:1)</option>
+              <option value="2:1">2:1 – rechts doppelt so viele</option>
+            </select>
+          </label>
+          <div class="zeile kopf"><span></span><span>links</span><span>rechts</span></div>
+          <label class="zeile">
+            <span>Kreuzungen</span>
+            <input type="number" id="kreuzungen-links" inputmode="numeric" step="1" min="0" max="6" value="3">
+            <input type="number" id="kreuzungen-rechts" inputmode="numeric" step="1" min="0" max="6" value="3">
+          </label>
+          <label class="haken">
+            <span>Beide Seiten gleich kreuzen</span>
+            <input type="checkbox" id="gekoppelt" checked>
+          </label>
+          <label class="zeile">
+            <span>Rundung</span>
+            <select id="rundung">
+              <option value="1">auf 1 mm (üblich)</option>
+              <option value="0.5">auf 0,5 mm</option>
+              <option value="2">auf 2 mm</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- Speiche und Nippel stehen zusammen auf einem Blatt: beides beschreibt
+         dasselbe Bauteil, und fünf Reiter wären in der Leiste zu eng. -->
+    <div class="blatt" id="blatt-speichen">
+      <fieldset>
+        <legend>Speichen</legend>
+        <div class="karte">
+          <div class="zeile voll">
+            <select id="speichenbauart" aria-label="Speichenbauart"></select>
+          </div>
+          <label class="zeile">
+            <span>Zielspannung</span>
+            <input type="number" id="spannung" inputmode="numeric" step="50" min="0" max="2000" value="1000">
+            <span class="einheit-feld">N</span>
+          </label>
+          <label class="zeile">
+            <span>Kopflage</span>
+            <select id="kopf">
+              <option value="gemischt">gemischt (üblich)</option>
+              <option value="innen">alle Köpfe innen</option>
+              <option value="außen">alle Köpfe außen</option>
+            </select>
+          </label>
+          <label class="zeile">
+            <span>Flanschdicke</span>
+            <input type="number" id="flanschdicke" inputmode="decimal" step="0.1" min="0" max="12" value="3.2">
+            <span class="einheit-feld">mm</span>
+          </label>
+          <label class="haken">
+            <span>Straightpull – Speichen ohne Bogen</span>
+            <input type="checkbox" id="straightpull">
+          </label>
+        </div>
+        <p class="klein">Die Flanschdicke zählt nur bei einseitiger Kopflage: dann sitzt
+          der Ansatzpunkt um eine halbe Flanschdicke neben der Flanschmitte. Bei
+          Straightpull entfällt außerdem der Abzug fürs Speichenloch.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Nippel und Korrektur</legend>
+        <div class="karte">
+          <!-- Gefragt wird nach der Nippellänge – die steht auf der Packung. Der
+               Abzug daraus ist eine Rechnung, keine Angabe, die man kennen muss. -->
+          <label class="zeile">
+            <span>Nippellänge</span>
+            <select id="nippellaenge">
+              <option value="12">12 mm  (üblich)</option>
+              <option value="14">14 mm</option>
+              <option value="16">16 mm</option>
+              <option value="eigen">eigener Abzug …</option>
+            </select>
+          </label>
+          <label class="zeile">
+            <span>→ Abzug</span>
+            <input type="number" id="nippel-verkuerzung" inputmode="decimal" step="0.1" min="0" max="6" value="0" disabled>
+            <span class="einheit-feld">mm</span>
+          </label>
+          <label class="zeile">
+            <span>Unterlegscheiben</span>
+            <input type="number" id="unterlegscheibe" inputmode="decimal" step="0.1" min="0" max="4" value="0">
+            <span class="einheit-feld">mm</span>
+          </label>
+          <label class="zeile">
+            <span>Weitung</span>
+            <input type="number" id="weitung" inputmode="decimal" step="0.05" min="0" max="1" value="0.1">
+            <span class="einheit-feld">mm</span>
+          </label>
+          <label class="haken">
+            <span>Korrektur von der Bestelllänge abziehen</span>
+            <input type="checkbox" id="korrektur-anwenden">
+          </label>
+        </div>
+        <p class="klein">Der Haken zieht Dehnung, Weitung und Nippel-Verkürzung von der
+          Bestelllänge ab. Ohne ihn steht dort die Länge im gespannten Laufrad – das,
+          was klassische Rechner ausgeben.</p>
+        <p class="klein">Ein längerer Nippel greift tiefer, die Speiche darf
+          entsprechend kürzer sein: 14 mm ergeben 2 mm Abzug, 16 mm ergeben 4 mm.
+          Wer eine Herstellerangabe hat, wählt „eigener Abzug“ und tippt sie ein.
+          Unterlegscheiben unter dem Nippel heben den Sitz an und vergrößern den
+          wirksamen ERD um das Doppelte ihrer Dicke.</p>
+      </fieldset>
+    </div>
+
+  </form>
+
+  <footer>
+    <p class="klein">
+      Dieselbe Rechnung wie am PC, derselbe Katalog (230 Naben, 17 Felgentypen)
+      und dieselben Berechnungsdaten. Beide Fassungen werden gegen 2841 Werte aus der
+      Python-Fassung geprüft.
+    </p>
+    <!-- Die Fassung sichtbar: sonst lässt sich nicht erkennen, ob das Gerät
+         noch eine alte Seite aus dem Cache zeigt. -->
+    <p class="klein" id="fassung"></p>
+    <p class="klein">
+      Angaben ohne Gewähr – ERD und Nabenmaße vor dem Bestellen nachmessen.
+    </p>
+  </footer>
+</main>
+
+<nav class="reiter" id="reiter" aria-label="Abschnitte">
+  <button type="button" id="reiter-nabe" data-ziel="blatt-nabe">
+    <span class="zeichen">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"
+           stroke-linecap="round" aria-hidden="true">
+        <circle cx="10" cy="10" r="7.2"/><circle cx="10" cy="10" r="2.2"/>
+      </svg>
+    </span>
+    <span>Nabe</span>
+  </button>
+  <button type="button" id="reiter-felge" data-ziel="blatt-felge">
+    <span class="zeichen">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"
+           stroke-linecap="round" aria-hidden="true">
+        <circle cx="10" cy="10" r="7.6"/><circle cx="10" cy="10" r="5.2"/>
+      </svg>
+    </span>
+    <span>Felge</span>
+  </button>
+  <button type="button" id="reiter-einspeichung" data-ziel="blatt-einspeichung">
+    <span class="zeichen">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"
+           stroke-linecap="round" aria-hidden="true">
+        <circle cx="10" cy="10" r="7.6"/>
+        <path d="M10 2.4v15.2M3.4 6.2l13.2 7.6M16.6 6.2 3.4 13.8"/>
+      </svg>
+    </span>
+    <span>Einspeichung</span>
+  </button>
+  <button type="button" id="reiter-speichen" data-ziel="blatt-speichen">
+    <span class="zeichen">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"
+           stroke-linecap="round" aria-hidden="true">
+        <path d="M4 16 14.5 5.5"/><circle cx="15.6" cy="4.4" r="1.9"/>
+        <path d="M3 15v2M5 13v2"/>
+      </svg>
+    </span>
+    <span>Speichen</span>
+  </button>
+</nav>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
