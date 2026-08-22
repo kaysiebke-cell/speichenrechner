@@ -11,6 +11,7 @@ import {
   herstellerMitAnzahl, listentext, lochzahlen, speichenlochMm, suche,
 } from "./katalog.js";
 import { FASSUNG, FELGEN_VORLAGEN, NABEN_VORLAGEN } from "./daten.js";
+import { reiterAufbauen } from "./reiter.js";
 
 const SPEICHER = "speichenrechner.eingaben";
 
@@ -442,6 +443,9 @@ laden();
 nippelAbzugSetzen();
 $("kreuzungen-rechts").disabled = $("gekoppelt").checked;
 anzeigen();
+
+// Reiterleiste und Kennwerte-Knopf – nur am schmalen Schirm, siehe reiter.js.
+reiterAufbauen();
 
 // Ohne Netz nutzbar: der Service Worker legt die Seite in den Cache.
 if ("serviceWorker" in navigator) {

@@ -14,7 +14,7 @@ Warum überhaupt? Die normale Fassung besteht aus mehreren Dateien und benutzt
 ES-Module. Unter ``file://`` verweigert der Browser die: dort gilt jede Datei
 als eigener Ursprung, und ``import`` schlägt fehl. Deshalb werden hier die
 Module zusammengefügt und die ``import``- und ``export``-Zeilen entfernt – aus
-vier Modulen wird ein Skript, das auch von der Festplatte läuft.
+den Modulen wird ein Skript, das auch von der Festplatte läuft.
 
 Was dabei wegfällt: der Service Worker (braucht einen Server) und der Eintrag
 auf dem Startbildschirm über das Manifest. Gerechnet wird genauso.
@@ -32,7 +32,7 @@ ZIEL = WURZEL / "app" / "speichenrechner-handy.html"
 
 #: Reihenfolge zählt: wer benutzt wird, muss vorher stehen.
 MODULE = ("js/daten.js", "js/speiche.js", "js/rechnen.js", "js/katalog.js",
-          "js/app.js")
+          "js/reiter.js", "js/app.js")
 
 
 def _ohne_module(quelltext: str) -> str:

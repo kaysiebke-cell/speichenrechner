@@ -15,7 +15,7 @@
 //    überreden, eine neue Fassung zu holen. Ist kein Netz da, kommt sie aus
 //    dem Cache – der Werkstattfall bleibt also gedeckt.
 
-const FASSUNG = 15;
+const FASSUNG = 16;
 const CACHE = `speichenrechner-v${FASSUNG}`;
 
 const DATEIEN = [
@@ -23,6 +23,7 @@ const DATEIEN = [
   "index.html",
   "css/stil.css",
   "js/app.js",
+  "js/reiter.js",
   "js/speiche.js",
   "js/rechnen.js",
   "js/katalog.js",
