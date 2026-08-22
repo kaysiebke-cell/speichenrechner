@@ -15,7 +15,7 @@
 //    überreden, eine neue Fassung zu holen. Ist kein Netz da, kommt sie aus
 //    dem Cache – der Werkstattfall bleibt also gedeckt.
 
-const FASSUNG = 16;
+const FASSUNG = 17;
 const CACHE = `speichenrechner-v${FASSUNG}`;
 
 const DATEIEN = [

@@ -71,10 +71,11 @@ Dann `http://<PC-IP>:8765/` am Handy öffnen. Dieselben Dateien liegen unter
 
 ![Speichenrechner am Handy, hell und dunkel](data/screenshot-handy.png)
 
-So sieht die Handy-Fassung aus: Papierton statt Weiß, Petrol als einzige
-Akzentfarbe, Serifen für die Überschriften und die beiden Längen, flache Kästen
-mit feinem Rahmen – dieselbe Handschrift wie im Aktenlage-Assistenten. Ob hell
-oder dunkel, entscheidet das Gerät.
+So sieht die Handy-Fassung aus: ein Blatt je Bildschirm, gewechselt über die
+Reiterleiste unten, das Ergebnis fest darüber. Gestaltet wie die Schreibhilfe
+seit deren Umbau – systemnah statt Aktenlage: kühle Flächen, durchgehend
+Systemschrift, gebrochene Ecken, und Höhe statt Rahmen. Ob hell oder dunkel,
+entscheidet das Gerät.
 
 Am PC sieht es anders aus, und das mit Absicht – dort folgt die Anwendung dem
 eingestellten Mint-Theme:
@@ -545,11 +546,17 @@ Branch `gh-pages`, von dem Pages ausliefert. Auf dem Handy dann
 „Zum Startbildschirm hinzufügen“ – danach startet sie wie eine App, im
 Vollbild und ohne Adresszeile, und rechnet auch ohne Empfang weiter.
 
-Die Handy-Fassung ist gestaltet wie der Aktenlage-Assistent: Papierton statt
-Weiß, Petrol als einzige Akzentfarbe, Serifen für Überschriften und die großen
-Zahlen, flache Kästen mit feinem Rahmen. Ob hell oder dunkel, entscheidet
-weiterhin das Gerät über `prefers-color-scheme`; einen eigenen Umschalter gibt
-es nicht. Anders als am PC, wo die Anwendung dem Mint-Theme folgt.
+Am Telefon steht der Kopf mit dem Ergebnis fest, unten die Reiterleiste, und
+nur das Blatt dazwischen rollt: Nabe, Felge, Einspeichung, Speichen. Ab 44 rem
+fällt das Gerüst weg und alle vier stehen zugleich zweispaltig da, wie vor dem
+Umbau.
+
+Gestaltet ist sie wie die Schreibhilfe seit deren Umbau – systemnah statt
+Aktenlage: kühle Flächen, durchgehend Systemschrift, gebrochene Ecken (8–10 px),
+und Höhe statt Linien. Die App sieht damit aus wie das Gerät, auf dem sie läuft.
+Ob hell oder dunkel, entscheidet weiterhin das Gerät über
+`prefers-color-scheme`; einen eigenen Umschalter gibt es nicht. Anders als am
+PC, wo die Anwendung dem Mint-Theme folgt.
 
 ### Dieselbe Rechnung zweimal – und wie sie zusammenbleibt
 
@@ -731,13 +738,14 @@ pc/                          PC-Anwendung
     ui/                      GTK-Oberfläche und alle Zeichnungen
 app/                         Handy-Fassung
   public/                    Web-App – ohne Bauschritt, ohne Fremdcode
-    index.html               eine Seite, Ergebnis oben
-    css/stil.css             Aktenlage-Gestaltung, hell/dunkel nach Gerät
+    index.html               vier Blätter, Ergebnis fest im Kopf
+    css/stil.css             systemnahe Gestaltung, hell/dunkel nach Gerät
     js/rechnen.js            dieselben Formeln wie berechnung.py
     js/speiche.js            dieselben Formeln wie speiche.py
     js/katalog.js            dieselbe Auswertung wie tabelle.py und katalog.py
     js/daten.js              erzeugt aus data/ – nicht von Hand ändern
     js/app.js                Oberfläche verdrahten
+    js/reiter.js             Reiterleiste unten – nur am schmalen Schirm
     sw.js                    Service Worker: läuft ohne Netz
   android/                   dünne Hülle um public/ (WebView, keine Rechte)
 data/                        gemeinsame Daten für beide Fassungen
