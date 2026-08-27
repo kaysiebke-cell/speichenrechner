@@ -3,7 +3,15 @@ name: Android-App bauen (APK)
 # Baut aus der Web-Fassung (public/) eine installierbare Android-APK.
 #  - Bei jedem Push, der die App betrifft, liegt die APK unter
 #    „Actions" → Lauf → Artifacts zum Herunterladen.
-#  - Bei einem Tag wie v1.4.0 entsteht zusätzlich ein Release mit APK daran.
+#  - Bei jedem Push auf main wandert sie außerdem ins rollende Release
+#    „neueste“, das als „Latest“ markiert wird. Damit liefert
+#    releases/latest/download/speichenrechner.apk immer den Stand von main –
+#    ohne dass dafür ein Tag gesetzt werden muss. Genau daran hat es gehakt:
+#    eine Änderung lag auf main, der Download-Link zeigte weiter auf das
+#    letzte getaggte Release und damit auf einen Stand von vor fünf Tagen.
+#  - Ein Tag wie v1.4.0 legt zusätzlich ein festes Release an. Das bleibt der
+#    Weg für Stände, die man wiederfinden will; beim nächsten Push auf main
+#    zeigt der Download-Link wieder auf „neueste“.
 #
 # Die Web-Dateien liegen nur einmal im Repo: android/app/build.gradle kopiert
 # public/ vor dem Bauen in die App-Assets.
@@ -87,6 +95,30 @@ jobs:
           name: Speichenrechner-APK
           path: apk/Speichenrechner-*.apk
           if-no-files-found: error
+
+      # Das rollende Release: bei jedem Push auf main neu. Erst weg, dann neu
+      # angelegt – sonst bliebe der Tag „neueste“ auf dem Commit stehen, an dem
+      # er einmal entstanden ist, während die Dateien darunter weiterwandern.
+      # „--latest“ setzt den Zeiger, dem releases/latest/download folgt.
+      - name: Neueste APK ans rollende Release hängen
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          fassung=$(sed -n 's/.*versionName *"\([^"]*\)".*/\1/p' app/android/app/build.gradle)
+          kurz="${GITHUB_SHA:0:7}"
+          text="Gebaut aus main, Stand ${kurz}. Dieses Release wird bei jedem Push auf main erneuert – der Download-Link im README zeigt immer hierher.
+
+          Die APK ist mit dem Debug-Schlüssel signiert; zum Installieren muss „Aus dieser Quelle installieren“ erlaubt werden. Feste, wiederauffindbare Stände liegen unter den Releases mit Fassungsnummer."
+          gh release delete neueste --yes --cleanup-tag || true
+          gh release create neueste \
+            --target "${GITHUB_SHA}" \
+            --title "Neueste Fassung (${fassung})" \
+            --latest \
+            --notes "${text}" \
+            apk/speichenrechner.apk \
+            app/speichenrechner-handy.html
 
       # Ans Release kommt die APK unter festem Namen, dazu die Einzeldatei für
       # den Weg ohne Server. Ein Test hält app/speichenrechner-handy.html auf

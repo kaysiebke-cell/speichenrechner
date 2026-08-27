@@ -223,12 +223,18 @@ main {
 
 .klein { font-size: 0.8125rem; color: var(--schwach); margin: var(--s2) 0 0; line-height: 1.45; }
 
-/* Die Erklärtexte unter den Karten lassen sich abschalten: wer weiß, wo der
-   Flanschabstand gemessen wird, liest es nicht bei jedem Laufrad wieder. Der
-   Schalter dafür steht im Fuß, die Wahl bleibt gespeichert. Weg sind nur die
-   Erklärungen – was die App zur gewählten Nabe oder Felge meldet und was sie
-   an Hinweisen ausrechnet, bleibt stehen. */
-.ohne-erklaerungen .erklaerung { display: none; }
+/* Die kleinen Texte lassen sich abschalten – alle. Wer weiß, wo der
+   Flanschabstand gemessen wird, liest es nicht bei jedem Laufrad wieder, und
+   am Telefon kostet jede Zeile Platz. Weg sind die Erklärungen unter den
+   Karten, die Meldungen zur gewählten Nabe und Felge, die gerechneten
+   Hinweise und die Fußzeilen. Stehen bleiben die Werte – Längen, Bestellzeile,
+   Kennwerte – und der Schalter selbst, sonst käme man nicht zurück.
+
+   Die eine Ausnahme trägt „dringend“: schlägt die Rechnung fehl, steht statt
+   der Länge ein Strich, und der Grund dafür ist kein Hinweis, sondern das
+   Einzige, was die App dann noch zu sagen hat. */
+.ohne-hinweistexte .hinweistext { display: none; }
+.ohne-hinweistexte .hinweistext.dringend { display: block; }
 
 /* Der Schalter im Fuß ist eine Karte wie die Eingabegruppen, nur eine Zeile
    hoch. */
