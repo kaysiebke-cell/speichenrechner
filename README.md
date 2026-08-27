@@ -49,7 +49,7 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 **Nichts, was sie nicht braucht.** Geprüft an der gebauten APK:
 
 ```
-Paket            de.speichenrechner.app  1.8.4
+Paket            de.speichenrechner.app  1.8.5
 Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
 enthalten        assets/www/ – index.html, css, 6 Skripte, Icons
 ```

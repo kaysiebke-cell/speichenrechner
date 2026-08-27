@@ -16,6 +16,6 @@ Das Paket ist bewusst in kleine Module aufgeteilt:
 
 APP_ID = "de.speichenrechner.Speichenrechner"
 APP_NAME = "Speichenrechner"
-VERSION = "1.8.4"
+VERSION = "1.8.5"
 
 __all__ = ["APP_ID", "APP_NAME", "VERSION"]
