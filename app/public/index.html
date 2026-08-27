@@ -97,7 +97,7 @@
           </label>
         </div>
         <p class="klein" id="nabeninfo"></p>
-        <p class="klein">Flanschabstand ab Nabenmitte, nicht ab der Endkappe.
+        <p class="klein erklaerung">Flanschabstand ab Nabenmitte, nicht ab der Endkappe.
           Flansch-Ø durch die Mitten der Speichenlöcher.</p>
       </fieldset>
     </div>
@@ -125,7 +125,7 @@
           </div>
         </div>
         <p class="klein" id="felgeninfo"></p>
-        <p class="klein">ERD von Nippelsitz zu Nippelsitz, nicht bis zum Reifensitz.
+        <p class="klein erklaerung">ERD von Nippelsitz zu Nippelsitz, nicht bis zum Reifensitz.
           Versatz: minus = Speichenbett nach links.</p>
       </fieldset>
     </div>
@@ -200,7 +200,7 @@
             <input type="checkbox" id="straightpull">
           </label>
         </div>
-        <p class="klein">Die Flanschdicke zählt nur bei einseitiger Kopflage: dann sitzt
+        <p class="klein erklaerung">Die Flanschdicke zählt nur bei einseitiger Kopflage: dann sitzt
           der Ansatzpunkt um eine halbe Flanschdicke neben der Flanschmitte. Bei
           Straightpull entfällt außerdem der Abzug fürs Speichenloch.</p>
       </fieldset>
@@ -239,10 +239,10 @@
             <input type="checkbox" id="korrektur-anwenden">
           </label>
         </div>
-        <p class="klein">Der Haken zieht Dehnung, Weitung und Nippel-Verkürzung von der
+        <p class="klein erklaerung">Der Haken zieht Dehnung, Weitung und Nippel-Verkürzung von der
           Bestelllänge ab. Ohne ihn steht dort die Länge im gespannten Laufrad – das,
           was klassische Rechner ausgeben.</p>
-        <p class="klein">Ein längerer Nippel greift tiefer, die Speiche darf
+        <p class="klein erklaerung">Ein längerer Nippel greift tiefer, die Speiche darf
           entsprechend kürzer sein: 14 mm ergeben 2 mm Abzug, 16 mm ergeben 4 mm.
           Wer eine Herstellerangabe hat, wählt „eigener Abzug“ und tippt sie ein.
           Unterlegscheiben unter dem Nippel heben den Sitz an und vergrößern den
@@ -253,7 +253,16 @@
   </form>
 
   <footer>
-    <p class="klein">
+    <!-- Der Schalter steht bei dem, was er schaltet, und im Fuß ist er auf
+         jedem Blatt zu erreichen. Wer die Maße kennt, braucht die Erklärungen
+         nicht jedes Mal; die Wahl bleibt gespeichert. -->
+    <div class="karte einstellung">
+      <label class="haken">
+        <span>Erklärungen anzeigen</span>
+        <input type="checkbox" id="erklaerungen" checked>
+      </label>
+    </div>
+    <p class="klein erklaerung">
       Dieselbe Rechnung wie am PC, derselbe Katalog (230 Naben, 17 Felgentypen)
       und dieselben Berechnungsdaten. Beide Fassungen werden gegen 2841 Werte aus der
       Python-Fassung geprüft.
