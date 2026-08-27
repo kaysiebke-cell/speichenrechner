@@ -4,8 +4,9 @@
 
 **➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/latest/download/speichenrechner.apk)**
 
-Der Link führt immer auf die neueste veröffentlichte Fassung – er zeigte
-vorher auf ein festes Release und veraltete mit jeder Änderung.
+Der Link führt immer auf den Stand von `main`: jeder Push, der die App
+betrifft, baut die APK und hängt sie ans rollende Release „neueste". Ein Tag
+ist dafür nicht nötig.
 
 Antippen, installieren, fertig — danach liegt der Speichenrechner als App im
 Menü. 3,3 MB, läuft ohne Netz, **verlangt kein Internet, keine Dateien, keinen
@@ -496,6 +497,13 @@ Zwei Wege aufs Handy, beide in **[APK-HERUNTERLADEN.md](APK-HERUNTERLADEN.md)**
 beschrieben: über den Browser mit „Zum Startbildschirm hinzufügen", oder als
 APK, die GitHub bei jedem Push baut (`.github/workflows/android.yml`). Die APK
 verlangt keine einzige Berechtigung – kein Netz, keine Dateien.
+
+Jeder Push auf `main` hängt die frisch gebaute APK ans rollende Release
+**„neueste"** und markiert es als *Latest*; der Download-Link zeigt also immer
+auf den Stand von `main`. Vorher hing er am letzten Tag – eine fertige,
+gebaute Änderung lag auf `main`, und die heruntergeladene APK war trotzdem
+fünf Tage alt, ohne dass irgendetwas darauf hinwies. Tags gibt es weiterhin,
+aber nur noch für Stände, die man wiederfinden will.
 
 Im Browser läuft sie über GitHub Pages:
 
