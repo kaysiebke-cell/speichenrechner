@@ -444,10 +444,16 @@ $("gekoppelt").addEventListener("change", () => {
  * eine Regel im Stylesheet. Weg sind die Erklärungen unter den Karten, die
  * Meldungen zur gewählten Nabe und Felge, die gerechneten Hinweise und die
  * Fußzeilen. Stehen bleiben die Werte und der Schalter.
+ *
+ * Der Knopf sagt, was er tut, nicht was gerade gilt – „ausblenden“, solange
+ * sie dastehen, „einblenden“, wenn sie weg sind. Für die Sprachausgabe steht
+ * der Zustand zusätzlich in `aria-pressed`.
  */
 function hinweistexteZeigen(zeigen) {
   document.body.classList.toggle("ohne-hinweistexte", !zeigen);
-  $("hinweistexte").checked = zeigen;
+  const knopf = $("hinweistexte");
+  knopf.textContent = zeigen ? "Hinweistexte ausblenden" : "Hinweistexte einblenden";
+  knopf.setAttribute("aria-pressed", zeigen ? "true" : "false");
 }
 
 function hinweistexteGemerkt() {
@@ -458,8 +464,8 @@ function hinweistexteGemerkt() {
   }
 }
 
-$("hinweistexte").addEventListener("change", () => {
-  const zeigen = $("hinweistexte").checked;
+$("hinweistexte").addEventListener("click", () => {
+  const zeigen = $("hinweistexte").getAttribute("aria-pressed") !== "true";
   hinweistexteZeigen(zeigen);
   try {
     localStorage.setItem(HINWEISTEXTE_SPEICHER, zeigen ? "an" : "aus");

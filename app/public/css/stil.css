@@ -236,9 +236,30 @@ main {
 .ohne-hinweistexte .hinweistext { display: none; }
 .ohne-hinweistexte .hinweistext.dringend { display: block; }
 
-/* Der Schalter im Fuß ist eine Karte wie die Eingabegruppen, nur eine Zeile
-   hoch. */
-.einstellung { margin-bottom: var(--s4); }
+/* Der Schalter ist eine graue Zeile im Fuß, keine Karte und kein
+   Schiebeschalter: so klein wie die Texte, die er schaltet, an derselben
+   Stelle, und ohne eigene Fläche. Ein Kasten stünde auf jedem Blatt als
+   Möbelstück herum. Angefasst wird trotzdem bequem – die Zeile trägt oben und
+   unten Luft, damit ein Daumen sie trifft. */
+.schalter {
+  display: block;
+  margin-top: var(--s3);
+  padding: var(--s2) 0;
+  background: none;
+  border: 0;
+  color: var(--schwach);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.schalter:hover { color: var(--text); }
+
+/* Sind die Texte aus, ist der Fuß nur noch diese eine Zeile – dann fällt auch
+   sein Trennstrich weg, sonst schwebte er über einem leeren Fuß. */
+.ohne-hinweistexte footer { border-top: 0; padding-top: 0; }
 
 /* Errechnete Werte in Schreibmaschinenschrift – so stehen die Ziffern
    untereinander und heben sich von den Erklärtexten ab. Nur die Zahlenzeilen:

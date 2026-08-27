@@ -49,7 +49,7 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 **Nichts, was sie nicht braucht.** Geprüft an der gebauten APK:
 
 ```
-Paket            de.speichenrechner.app  1.8.3
+Paket            de.speichenrechner.app  1.8.4
 Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
 enthalten        assets/www/ – index.html, css, 6 Skripte, Icons
 ```
@@ -521,12 +521,18 @@ Umbau.
 
 Überall stehen kleine Texte – wo der Flanschabstand gemessen wird, was die
 gewählte Nabe mitbringt, was an der Einspeichung auffällt. Wer sie kennt,
-schaltet sie mit **„Hinweistexte anzeigen“** im Fuß ab. Dann sind sie **alle**
-weg: die Erklärungen unter den Karten, die Meldungen zu Nabe und Felge, die
-gerechneten Hinweise und die Fußzeilen samt Fassungsnummer. Stehen bleiben die
-Werte – Längen, Bestellzeile, Kennwerte – und der Schalter selbst, sonst käme
-man nicht zurück. Eine Ausnahme: schlägt die Rechnung fehl, steht der Grund
+schaltet sie mit **„Hinweistexte ausblenden“** im Fuß ab. Dann sind sie
+**alle** weg: die Erklärungen unter den Karten, die Meldungen zu Nabe und
+Felge, die gerechneten Hinweise und die Fußzeilen samt Fassungsnummer. Stehen
+bleiben die Werte – Längen, Bestellzeile, Kennwerte – und die eine graue Zeile,
+die zurückschaltet. Eine Ausnahme: schlägt die Rechnung fehl, steht der Grund
 auch dann da, denn statt einer Länge gäbe es sonst nur einen Strich.
+
+Der Schalter ist bewusst **keine Karte und kein Schiebeschalter**, sondern
+eine graue Zeile im Fuß – so klein wie die Texte, die sie schaltet, und an
+derselben Stelle. Als Karte stand er auf jedem Blatt als eigener Kasten herum:
+eine Änderung am Aufbau, die niemand bestellt hatte, und beim Ausblenden blieb
+er als einziges Möbelstück mitten auf dem Blatt zurück.
 
 Die Wahl bleibt im Gerät gespeichert, unter einem eigenen Schlüssel –
 „Zurücksetzen“ nimmt sie nicht mit, denn sie ist eine Einstellung der Ansicht
