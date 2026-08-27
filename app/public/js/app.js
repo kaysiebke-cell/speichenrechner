@@ -15,10 +15,10 @@ import { reiterAufbauen } from "./reiter.js";
 
 const SPEICHER = "speichenrechner.eingaben";
 
-/** Ob die Erklärtexte unter den Karten stehen. Keine Eingabe, sondern
-    eine Einstellung der Ansicht – deshalb ein eigener Schlüssel, den
-    „Zurücksetzen“ nicht mitnimmt. */
-const ERKLAERUNGEN_SPEICHER = "speichenrechner.erklaerungen";
+/** Ob die kleinen Texte stehen. Keine Eingabe, sondern eine Einstellung der
+    Ansicht – deshalb ein eigener Schlüssel, den „Zurücksetzen“ nicht
+    mitnimmt. */
+const HINWEISTEXTE_SPEICHER = "speichenrechner.hinweistexte";
 
 /** Länge eines gewöhnlichen Nippels in mm – dieselbe Regel wie in modelle.py. */
 const NIPPEL_STANDARD = 12.0;
@@ -153,6 +153,9 @@ function anzeigen() {
     anzeige.kennwerte.textContent = "";
     anzeige.hinweis.textContent = fehler.message;
     anzeige.hinweis.hidden = false;
+    // „dringend“ hebt das Ausblenden auf: ohne Länge ist diese Meldung das
+    // Einzige, was die App noch zu sagen hat.
+    anzeige.hinweis.classList.add("dringend");
     return;
   }
 
@@ -189,6 +192,7 @@ function anzeigen() {
 
 
   const meldungen = hinweise(eingabe, ergebnis);
+  anzeige.hinweis.classList.remove("dringend");
   anzeige.hinweis.textContent = meldungen.join("  ");
   anzeige.hinweis.hidden = meldungen.length === 0;
 
@@ -433,31 +437,32 @@ $("gekoppelt").addEventListener("change", () => {
 });
 
 /**
- * Schaltet die Erklärtexte an oder ab.
+ * Schaltet die kleinen Texte an oder ab – alle, die mit „hinweistext“
+ * ausgezeichnet sind.
  *
  * Der Schalter im Fuß setzt eine Marke am `body`; das Ausblenden selbst macht
- * eine Regel im Stylesheet. Betroffen sind nur die festen Erklärungen – die
- * Meldungen zur gewählten Nabe oder Felge und die gerechneten Hinweise
- * bleiben, die gehören zum Ergebnis.
+ * eine Regel im Stylesheet. Weg sind die Erklärungen unter den Karten, die
+ * Meldungen zur gewählten Nabe und Felge, die gerechneten Hinweise und die
+ * Fußzeilen. Stehen bleiben die Werte und der Schalter.
  */
-function erklaerungenZeigen(zeigen) {
-  document.body.classList.toggle("ohne-erklaerungen", !zeigen);
-  $("erklaerungen").checked = zeigen;
+function hinweistexteZeigen(zeigen) {
+  document.body.classList.toggle("ohne-hinweistexte", !zeigen);
+  $("hinweistexte").checked = zeigen;
 }
 
-function erklaerungenGemerkt() {
+function hinweistexteGemerkt() {
   try {
-    return localStorage.getItem(ERKLAERUNGEN_SPEICHER) !== "aus";
+    return localStorage.getItem(HINWEISTEXTE_SPEICHER) !== "aus";
   } catch (_fehler) {
     return true;   // Privater Modus o. Ä. – dann eben wie beim ersten Start.
   }
 }
 
-$("erklaerungen").addEventListener("change", () => {
-  const zeigen = $("erklaerungen").checked;
-  erklaerungenZeigen(zeigen);
+$("hinweistexte").addEventListener("change", () => {
+  const zeigen = $("hinweistexte").checked;
+  hinweistexteZeigen(zeigen);
   try {
-    localStorage.setItem(ERKLAERUNGEN_SPEICHER, zeigen ? "an" : "aus");
+    localStorage.setItem(HINWEISTEXTE_SPEICHER, zeigen ? "an" : "aus");
   } catch (_fehler) {
     // Ohne Gedächtnis stehen sie beim nächsten Start wieder da.
   }
@@ -476,7 +481,7 @@ $("fassung").textContent = `Fassung ${FASSUNG} · ${alleNaben().length} Naben, `
 
 katalogAufbauen();
 laden();
-erklaerungenZeigen(erklaerungenGemerkt());
+hinweistexteZeigen(hinweistexteGemerkt());
 nippelAbzugSetzen();
 $("kreuzungen-rechts").disabled = $("gekoppelt").checked;
 anzeigen();

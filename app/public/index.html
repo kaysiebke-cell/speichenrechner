@@ -54,7 +54,7 @@
              stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
       </button>
       <p class="klein" id="kennwerte"></p>
-      <p class="hinweis" id="hinweis" hidden></p>
+      <p class="hinweis hinweistext" id="hinweis" hidden></p>
     </section>
   </div>
 </header>
@@ -96,8 +96,8 @@
             <span class="einheit-feld">mm</span>
           </label>
         </div>
-        <p class="klein" id="nabeninfo"></p>
-        <p class="klein erklaerung">Flanschabstand ab Nabenmitte, nicht ab der Endkappe.
+        <p class="klein hinweistext" id="nabeninfo"></p>
+        <p class="klein hinweistext">Flanschabstand ab Nabenmitte, nicht ab der Endkappe.
           Flansch-Ø durch die Mitten der Speichenlöcher.</p>
       </fieldset>
     </div>
@@ -124,8 +124,8 @@
             <select id="felgentyp" aria-label="Felgentyp"></select>
           </div>
         </div>
-        <p class="klein" id="felgeninfo"></p>
-        <p class="klein erklaerung">ERD von Nippelsitz zu Nippelsitz, nicht bis zum Reifensitz.
+        <p class="klein hinweistext" id="felgeninfo"></p>
+        <p class="klein hinweistext">ERD von Nippelsitz zu Nippelsitz, nicht bis zum Reifensitz.
           Versatz: minus = Speichenbett nach links.</p>
       </fieldset>
     </div>
@@ -200,7 +200,7 @@
             <input type="checkbox" id="straightpull">
           </label>
         </div>
-        <p class="klein erklaerung">Die Flanschdicke zählt nur bei einseitiger Kopflage: dann sitzt
+        <p class="klein hinweistext">Die Flanschdicke zählt nur bei einseitiger Kopflage: dann sitzt
           der Ansatzpunkt um eine halbe Flanschdicke neben der Flanschmitte. Bei
           Straightpull entfällt außerdem der Abzug fürs Speichenloch.</p>
       </fieldset>
@@ -239,10 +239,10 @@
             <input type="checkbox" id="korrektur-anwenden">
           </label>
         </div>
-        <p class="klein erklaerung">Der Haken zieht Dehnung, Weitung und Nippel-Verkürzung von der
+        <p class="klein hinweistext">Der Haken zieht Dehnung, Weitung und Nippel-Verkürzung von der
           Bestelllänge ab. Ohne ihn steht dort die Länge im gespannten Laufrad – das,
           was klassische Rechner ausgeben.</p>
-        <p class="klein erklaerung">Ein längerer Nippel greift tiefer, die Speiche darf
+        <p class="klein hinweistext">Ein längerer Nippel greift tiefer, die Speiche darf
           entsprechend kürzer sein: 14 mm ergeben 2 mm Abzug, 16 mm ergeben 4 mm.
           Wer eine Herstellerangabe hat, wählt „eigener Abzug“ und tippt sie ein.
           Unterlegscheiben unter dem Nippel heben den Sitz an und vergrößern den
@@ -254,23 +254,25 @@
 
   <footer>
     <!-- Der Schalter steht bei dem, was er schaltet, und im Fuß ist er auf
-         jedem Blatt zu erreichen. Wer die Maße kennt, braucht die Erklärungen
-         nicht jedes Mal; die Wahl bleibt gespeichert. -->
+         jedem Blatt zu erreichen. Aus heißt aus: weg sind alle kleinen Texte –
+         Erklärungen, Katalogmeldungen, die gerechneten Hinweise, die
+         Fußzeilen. Stehen bleiben die Werte und dieser Schalter, sonst käme
+         man nicht zurück. Die Wahl bleibt gespeichert. -->
     <div class="karte einstellung">
       <label class="haken">
-        <span>Erklärungen anzeigen</span>
-        <input type="checkbox" id="erklaerungen" checked>
+        <span>Hinweistexte anzeigen</span>
+        <input type="checkbox" id="hinweistexte" checked>
       </label>
     </div>
-    <p class="klein erklaerung">
+    <p class="klein hinweistext">
       Dieselbe Rechnung wie am PC, derselbe Katalog (230 Naben, 17 Felgentypen)
       und dieselben Berechnungsdaten. Beide Fassungen werden gegen 2841 Werte aus der
       Python-Fassung geprüft.
     </p>
     <!-- Die Fassung sichtbar: sonst lässt sich nicht erkennen, ob das Gerät
          noch eine alte Seite aus dem Cache zeigt. -->
-    <p class="klein" id="fassung"></p>
-    <p class="klein">
+    <p class="klein hinweistext" id="fassung"></p>
+    <p class="klein hinweistext">
       Angaben ohne Gewähr – ERD und Nabenmaße vor dem Bestellen nachmessen.
     </p>
   </footer>

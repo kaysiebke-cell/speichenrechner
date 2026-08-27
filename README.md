@@ -48,7 +48,7 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 **Nichts, was sie nicht braucht.** Geprüft an der gebauten APK:
 
 ```
-Paket            de.speichenrechner.app  1.8.2
+Paket            de.speichenrechner.app  1.8.3
 Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
 enthalten        assets/www/ – index.html, css, 6 Skripte, Icons
 ```
@@ -511,12 +511,18 @@ nur das Blatt dazwischen rollt: Nabe, Felge, Einspeichung, Speichen. Ab 44 rem
 fällt das Gerüst weg und alle vier stehen zugleich zweispaltig da, wie vor dem
 Umbau.
 
-Unter den Karten stehen kleine Erklärtexte – wo der Flanschabstand gemessen
-wird, wofür der Haken bei der Korrektur gut ist. Wer sie kennt, schaltet sie
-mit **„Erklärungen anzeigen“** im Fuß ab; die Wahl bleibt im Gerät gespeichert
-und „Zurücksetzen“ nimmt sie nicht mit. Weg sind dabei nur die festen
-Erklärungen: was die App zur gewählten Nabe oder Felge meldet und was sie an
-Hinweisen ausrechnet, bleibt stehen.
+Überall stehen kleine Texte – wo der Flanschabstand gemessen wird, was die
+gewählte Nabe mitbringt, was an der Einspeichung auffällt. Wer sie kennt,
+schaltet sie mit **„Hinweistexte anzeigen“** im Fuß ab. Dann sind sie **alle**
+weg: die Erklärungen unter den Karten, die Meldungen zu Nabe und Felge, die
+gerechneten Hinweise und die Fußzeilen samt Fassungsnummer. Stehen bleiben die
+Werte – Längen, Bestellzeile, Kennwerte – und der Schalter selbst, sonst käme
+man nicht zurück. Eine Ausnahme: schlägt die Rechnung fehl, steht der Grund
+auch dann da, denn statt einer Länge gäbe es sonst nur einen Strich.
+
+Die Wahl bleibt im Gerät gespeichert, unter einem eigenen Schlüssel –
+„Zurücksetzen“ nimmt sie nicht mit, denn sie ist eine Einstellung der Ansicht
+und kein Maß am Laufrad.
 
 Gestaltet ist sie wie die Schreibhilfe seit deren Umbau – systemnah statt
 Aktenlage: kühle Flächen, durchgehend Systemschrift, gebrochene Ecken (8–10 px),
