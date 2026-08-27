@@ -1,0 +1,6 @@
+{
+  "name": "speichenrechner-web",
+  "private": true,
+  "type": "module",
+  "description": "Nur damit Node die Dateien unter public/js als ES-Module liest – dieselben Dateien, die der Browser lädt. Es gibt keine Abhängigkeiten und keinen Bauschritt: die Handy-Version besteht aus den Dateien, die hier liegen."
+}
