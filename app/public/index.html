@@ -253,17 +253,6 @@
   </form>
 
   <footer>
-    <!-- Der Schalter steht bei dem, was er schaltet, und im Fuß ist er auf
-         jedem Blatt zu erreichen. Aus heißt aus: weg sind alle kleinen Texte –
-         Erklärungen, Katalogmeldungen, die gerechneten Hinweise, die
-         Fußzeilen. Stehen bleiben die Werte und dieser Schalter, sonst käme
-         man nicht zurück. Die Wahl bleibt gespeichert. -->
-    <div class="karte einstellung">
-      <label class="haken">
-        <span>Hinweistexte anzeigen</span>
-        <input type="checkbox" id="hinweistexte" checked>
-      </label>
-    </div>
     <p class="klein hinweistext">
       Dieselbe Rechnung wie am PC, derselbe Katalog (230 Naben, 17 Felgentypen)
       und dieselben Berechnungsdaten. Beide Fassungen werden gegen 2841 Werte aus der
@@ -275,6 +264,12 @@
     <p class="klein hinweistext">
       Angaben ohne Gewähr – ERD und Nabenmaße vor dem Bestellen nachmessen.
     </p>
+    <!-- Der Schalter ist bewusst kein Möbelstück: eine graue Zeile im Fuß, so
+         klein wie die Texte, die er schaltet, und an derselben Stelle. Eine
+         Karte mit Schiebeschalter stünde auf jedem Blatt als eigener Kasten
+         herum – das wäre eine Änderung am Aufbau, und die war nicht gefragt. -->
+    <button type="button" id="hinweistexte" class="klein schalter"
+            aria-pressed="true">Hinweistexte ausblenden</button>
   </footer>
 </main>
 

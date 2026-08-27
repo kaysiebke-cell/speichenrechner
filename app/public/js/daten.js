@@ -4,7 +4,7 @@
 // es beim nächsten Lauf des Werkzeugs; die Tabelle und naben_zusatz.json
 // sind die Quelle der Wahrheit.
 
-export const FASSUNG = "1.8.3";
+export const FASSUNG = "1.8.4";
 
 export const NABEN = [
 {

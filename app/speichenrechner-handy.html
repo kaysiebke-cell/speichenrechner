@@ -249,9 +249,30 @@ main {
 .ohne-hinweistexte .hinweistext { display: none; }
 .ohne-hinweistexte .hinweistext.dringend { display: block; }
 
-/* Der Schalter im Fuß ist eine Karte wie die Eingabegruppen, nur eine Zeile
-   hoch. */
-.einstellung { margin-bottom: var(--s4); }
+/* Der Schalter ist eine graue Zeile im Fuß, keine Karte und kein
+   Schiebeschalter: so klein wie die Texte, die er schaltet, an derselben
+   Stelle, und ohne eigene Fläche. Ein Kasten stünde auf jedem Blatt als
+   Möbelstück herum. Angefasst wird trotzdem bequem – die Zeile trägt oben und
+   unten Luft, damit ein Daumen sie trifft. */
+.schalter {
+  display: block;
+  margin-top: var(--s3);
+  padding: var(--s2) 0;
+  background: none;
+  border: 0;
+  color: var(--schwach);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.schalter:hover { color: var(--text); }
+
+/* Sind die Texte aus, ist der Fuß nur noch diese eine Zeile – dann fällt auch
+   sein Trennstrich weg, sonst schwebte er über einem leeren Fuß. */
+.ohne-hinweistexte footer { border-top: 0; padding-top: 0; }
 
 /* Errechnete Werte in Schreibmaschinenschrift – so stehen die Ziffern
    untereinander und heben sich von den Erklärtexten ab. Nur die Zahlenzeilen:
@@ -843,17 +864,6 @@ footer { margin-top: var(--s5); }
   </form>
 
   <footer>
-    <!-- Der Schalter steht bei dem, was er schaltet, und im Fuß ist er auf
-         jedem Blatt zu erreichen. Aus heißt aus: weg sind alle kleinen Texte –
-         Erklärungen, Katalogmeldungen, die gerechneten Hinweise, die
-         Fußzeilen. Stehen bleiben die Werte und dieser Schalter, sonst käme
-         man nicht zurück. Die Wahl bleibt gespeichert. -->
-    <div class="karte einstellung">
-      <label class="haken">
-        <span>Hinweistexte anzeigen</span>
-        <input type="checkbox" id="hinweistexte" checked>
-      </label>
-    </div>
     <p class="klein hinweistext">
       Dieselbe Rechnung wie am PC, derselbe Katalog (230 Naben, 17 Felgentypen)
       und dieselben Berechnungsdaten. Beide Fassungen werden gegen 2841 Werte aus der
@@ -865,6 +875,12 @@ footer { margin-top: var(--s5); }
     <p class="klein hinweistext">
       Angaben ohne Gewähr – ERD und Nabenmaße vor dem Bestellen nachmessen.
     </p>
+    <!-- Der Schalter ist bewusst kein Möbelstück: eine graue Zeile im Fuß, so
+         klein wie die Texte, die er schaltet, und an derselben Stelle. Eine
+         Karte mit Schiebeschalter stünde auf jedem Blatt als eigener Kasten
+         herum – das wäre eine Änderung am Aufbau, und die war nicht gefragt. -->
+    <button type="button" id="hinweistexte" class="klein schalter"
+            aria-pressed="true">Hinweistexte ausblenden</button>
   </footer>
 </main>
 
@@ -918,7 +934,7 @@ footer { margin-top: var(--s5); }
 // es beim nächsten Lauf des Werkzeugs; die Tabelle und naben_zusatz.json
 // sind die Quelle der Wahrheit.
 
-const FASSUNG = "1.8.3";
+const FASSUNG = "1.8.4";
 
 const NABEN = [
 {
@@ -5689,10 +5705,16 @@ $("gekoppelt").addEventListener("change", () => {
  * eine Regel im Stylesheet. Weg sind die Erklärungen unter den Karten, die
  * Meldungen zur gewählten Nabe und Felge, die gerechneten Hinweise und die
  * Fußzeilen. Stehen bleiben die Werte und der Schalter.
+ *
+ * Der Knopf sagt, was er tut, nicht was gerade gilt – „ausblenden“, solange
+ * sie dastehen, „einblenden“, wenn sie weg sind. Für die Sprachausgabe steht
+ * der Zustand zusätzlich in `aria-pressed`.
  */
 function hinweistexteZeigen(zeigen) {
   document.body.classList.toggle("ohne-hinweistexte", !zeigen);
-  $("hinweistexte").checked = zeigen;
+  const knopf = $("hinweistexte");
+  knopf.textContent = zeigen ? "Hinweistexte ausblenden" : "Hinweistexte einblenden";
+  knopf.setAttribute("aria-pressed", zeigen ? "true" : "false");
 }
 
 function hinweistexteGemerkt() {
@@ -5703,8 +5725,8 @@ function hinweistexteGemerkt() {
   }
 }
 
-$("hinweistexte").addEventListener("change", () => {
-  const zeigen = $("hinweistexte").checked;
+$("hinweistexte").addEventListener("click", () => {
+  const zeigen = $("hinweistexte").getAttribute("aria-pressed") !== "true";
   hinweistexteZeigen(zeigen);
   try {
     localStorage.setItem(HINWEISTEXTE_SPEICHER, zeigen ? "an" : "aus");
