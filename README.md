@@ -48,7 +48,7 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 **Nichts, was sie nicht braucht.** Geprüft an der gebauten APK:
 
 ```
-Paket            de.speichenrechner.app  1.8.1
+Paket            de.speichenrechner.app  1.8.2
 Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
 enthalten        assets/www/ – index.html, css, 6 Skripte, Icons
 ```
@@ -510,6 +510,13 @@ Am Telefon steht der Kopf mit dem Ergebnis fest, unten die Reiterleiste, und
 nur das Blatt dazwischen rollt: Nabe, Felge, Einspeichung, Speichen. Ab 44 rem
 fällt das Gerüst weg und alle vier stehen zugleich zweispaltig da, wie vor dem
 Umbau.
+
+Unter den Karten stehen kleine Erklärtexte – wo der Flanschabstand gemessen
+wird, wofür der Haken bei der Korrektur gut ist. Wer sie kennt, schaltet sie
+mit **„Erklärungen anzeigen“** im Fuß ab; die Wahl bleibt im Gerät gespeichert
+und „Zurücksetzen“ nimmt sie nicht mit. Weg sind dabei nur die festen
+Erklärungen: was die App zur gewählten Nabe oder Felge meldet und was sie an
+Hinweisen ausrechnet, bleibt stehen.
 
 Gestaltet ist sie wie die Schreibhilfe seit deren Umbau – systemnah statt
 Aktenlage: kühle Flächen, durchgehend Systemschrift, gebrochene Ecken (8–10 px),

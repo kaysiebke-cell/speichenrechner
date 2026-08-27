@@ -223,6 +223,17 @@ main {
 
 .klein { font-size: 0.8125rem; color: var(--schwach); margin: var(--s2) 0 0; line-height: 1.45; }
 
+/* Die Erklärtexte unter den Karten lassen sich abschalten: wer weiß, wo der
+   Flanschabstand gemessen wird, liest es nicht bei jedem Laufrad wieder. Der
+   Schalter dafür steht im Fuß, die Wahl bleibt gespeichert. Weg sind nur die
+   Erklärungen – was die App zur gewählten Nabe oder Felge meldet und was sie
+   an Hinweisen ausrechnet, bleibt stehen. */
+.ohne-erklaerungen .erklaerung { display: none; }
+
+/* Der Schalter im Fuß ist eine Karte wie die Eingabegruppen, nur eine Zeile
+   hoch. */
+.einstellung { margin-bottom: var(--s4); }
+
 /* Errechnete Werte in Schreibmaschinenschrift – so stehen die Ziffern
    untereinander und heben sich von den Erklärtexten ab. Nur die Zahlenzeilen:
    #nabeninfo und #felgeninfo tragen ganze Sätze und bleiben serifenlos. */
