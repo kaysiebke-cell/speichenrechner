@@ -483,8 +483,8 @@ def als_modellreihen(
     """Je Modellreihe **ein** Eintrag: ``(Anzeigetext, Ausführungen)``.
 
     Die Auswahlliste wurde zu lang: 230 Naben, von denen viele nur
-    Achsvarianten derselben Reihe sind – allein die Hope Pro 2 Evo fünfmal.
-    Zusammengefasst bleiben 197 Reihen. Wer eine Reihe wählt, bekommt die
+    Achsvarianten derselben Reihe sind – allein die Hope Pro 4 fünfmal.
+    Zusammengefasst bleiben 182 Reihen, 24 davon mit mehreren Ausführungen. Wer eine Reihe wählt, bekommt die
     Ausführungen darunter; wo es nur eine gibt, merkt man nichts davon.
 
     Sortiert wie die Einzelliste: was Flanschmaße hat, steht vorn – damit

@@ -5,10 +5,17 @@
 #
 #   ./install.sh              Menüeintrag + Desktop-Icon anlegen
 #   ./install.sh --entfernen  beides wieder entfernen
+#   ./install.sh --ohne-pruefung
+#                             anlegen, ohne vorher auf GTK zu prüfen. Für
+#                             Rechner ohne Oberfläche – der Prüflauf legt den
+#                             Eintrag probeweise an, und dort gibt es kein GTK.
 #
 set -euo pipefail
 
 APP_ID="de.speichenrechner.Speichenrechner"
+# Ohne GTK läuft die Anwendung nicht – deshalb wird vor dem Anlegen geprüft.
+# Wer den Eintrag trotzdem will, schaltet die Prüfung ab; siehe oben.
+PRUEFEN=ja
 PROJEKT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Die gemeinsamen Daten (Icon, Menüvorlage) liegen neben pc/ und app/.
 WURZEL="$(cd "$PROJEKT/.." && pwd)"
@@ -55,7 +62,9 @@ pruefe_abhaengigkeiten() {
 }
 
 installieren() {
-    pruefe_abhaengigkeiten
+    if [ "$PRUEFEN" = ja ]; then
+        pruefe_abhaengigkeiten
+    fi
 
     chmod +x "$PROJEKT/speichenrechner.py"
 
@@ -90,6 +99,7 @@ installieren() {
 
 case "${1:-}" in
     --entfernen|--uninstall|-e) entfernen ;;
+    --ohne-pruefung) PRUEFEN=nein; installieren ;;
     "") installieren ;;
     *) echo "Unbekannte Option: $1" >&2; exit 2 ;;
 esac

@@ -1,39 +1,58 @@
 /* Speichenrechner – Handy-Fassung.
  *
- * Gestaltung wie im Aktenlage-Assistenten: Papierton statt Weiß, Petrol als
- * einzige Akzentfarbe, Serifen für Überschriften und die großen Zahlen,
- * flache Kästen (3 px) mit feinem Rahmen und einer Andeutung von Erhebung.
+ * Gestaltung wie in der Schreibhilfe seit deren Umbau: systemnah statt
+ * Aktenlage. Kühle Flächen statt Papierton, durchgehend Systemschrift statt
+ * Serifen, gebrochene Ecken (8–10 px) statt fast rechter Kanten, und Höhe
+ * statt Linien – was obenauf liegt, wirft einen weichen Schatten, statt sich
+ * mit einem Rahmen abzugrenzen. Die App sieht damit aus wie das Gerät, auf
+ * dem sie läuft, und erbt dessen Schriftschnitte.
+ *
+ * Die Namen der Marken bleiben deutsch wie im übrigen Projekt; dahinter
+ * stehen die Werte aus dem Stylesheet der Schreibhilfe, damit beide Apps
+ * dieselbe Sprache sprechen.
  *
  * Hell/Dunkel folgt weiterhin dem Gerät (prefers-color-scheme) – die App
  * bringt keinen eigenen Umschalter mit. Keine Schriften, keine Bibliotheken
- * von außen: die Seite muss ohne Netz laufen. Die Schriftfamilien sind reine
- * Systemschriften, die überall vorhanden sind.
+ * von außen: die Seite muss ohne Netz laufen.
  */
 
 :root {
-  /* Die Variablennamen bleiben deutsch wie im übrigen Projekt; dahinter
-     stehen jetzt die Werte aus dem Aktenlage-Stylesheet. */
-  --grund: #EDECE5;        /* Papier – der Seitenhintergrund */
-  --karte: #F7F6F1;        /* Papier, leicht angehoben – Kästen */
-  --oben: #ffffff;         /* Eingabefelder, damit sie sich abheben */
-  --text: #232930;
-  --schwach: #565f68;
-  --linie: #d8d6cc;
-  --akzent: #2B4C5C;       /* Petrol */
-  --akzent-tief: #1B333F;
-  --gut: #4B7B5D;
-  --warnung: #C08A2E;
-  --warnung-grund: #F5E9D3;
-  --warnung-text: #232930; /* Text bleibt Tinte; die Farbe trägt der Rand */
+  --grund:          #F4F5F7;   /* der Grund, auf dem alles liegt */
+  --karte:          #FFFFFF;   /* Karten: Ergebnis, Eingabegruppen */
+  --tonflaeche:     #ECEEF1;   /* tonale Fläche: Knöpfe ohne Rand */
+  --tonflaeche-tief:#E3E6EA;   /* ausgeschalteter Schiebeschalter */
 
-  --radius: 3px;
+  --text:           #1B1E22;
+  --schwach:        #626A73;
+  --zart:           #98A0A8;   /* nur Platzhalter und gesperrte Felder */
+  --linie:          #E2E5E9;
 
-  /* Dezente Erhebung – gerade so viel, dass der Papier-Charakter bleibt. */
-  --schatten-klein: 0 1px 2px rgba(27, 51, 63, 0.06);
-  --schatten-karte: 0 1px 2px rgba(27, 51, 63, 0.05), 0 2px 6px rgba(27, 51, 63, 0.05);
+  --akzent:         #2F6FD0;   /* die eine Betonfarbe */
+  --akzent-tief:    #24589F;
+  --akzent-sanft:   #E3EDFC;   /* getönte Fläche in der Betonfarbe */
+  --auf-akzent:     #FFFFFF;   /* Schrift auf der Betonfarbe */
 
-  --serif: "Iowan Old Style", "Palatino Linotype", "URW Palladio", Palatino, Georgia, serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Bedeutungsfarben – ein Hinweis muss erkennbar bleiben. */
+  --gut:            #2E7D57;
+  --warnung:        #A8721A;
+  --warnung-grund:  #F8EEDA;
+  --warnung-text:   #1B1E22;
+
+  /* Eine Abstandsskala statt handverlesener Werte. */
+  --s1: 0.25rem; --s2: 0.5rem; --s3: 0.75rem; --s4: 1rem; --s5: 1.5rem;
+
+  /* Ecken: gebrochen, nicht rund. Vier Zahlen, mehr braucht es nicht. */
+  --r-karte: 10px;
+  --r-knopf: 10px;
+  --r-klein:  8px;
+  --r-rund: 999px;   /* nur, wo etwas wirklich rund sein MUSS */
+
+  /* Höhe statt Linien. */
+  --e1: 0 1px 2px rgba(16, 20, 26, 0.07), 0 1px 3px rgba(16, 20, 26, 0.05);
+  --e2: 0 2px 6px rgba(16, 20, 26, 0.08), 0 8px 20px rgba(16, 20, 26, 0.07);
+
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI",
+          Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 
   color-scheme: light;
@@ -41,272 +60,559 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --grund: #1a1c20;
-    --karte: #24272d;
-    --oben: #2b2f36;
-    --text: #e7e9ec;
-    --schwach: #9aa2ac;
-    --linie: #3a3e45;
-    --akzent: #6aa3bd;
-    --akzent-tief: #a4c7d8;
-    --gut: #74b98d;
-    --warnung: #d7a24e;
-    --warnung-grund: #332b1b;
-    --warnung-text: #e7e9ec;
+    --grund:          #121316;
+    --karte:          #1C1E22;
+    --tonflaeche:     #24272C;
+    --tonflaeche-tief:#2C3037;
 
-    /* Im Dunkeln kräftiger, sonst ist von der Erhebung nichts zu sehen. */
-    --schatten-klein: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --schatten-karte: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.3);
+    --text:           #E6E8EB;
+    --schwach:        #9AA1A9;
+    --zart:           #767D85;   /* nur Platzhalter und gesperrte Felder */
+    --linie:          #2B2F35;
+
+    --akzent:         #8AB4F8;
+    --akzent-tief:    #B3CEFB;
+    --akzent-sanft:   #22314A;
+    /* Auf dunklem Grund ist die Betonfarbe hell – die Schrift darauf muss
+       dunkel sein, sonst leuchtet Weiß auf Hellblau. */
+    --auf-akzent:     #0F1620;
+
+    --gut:            #74C79A;
+    --warnung:        #E0B25A;
+    --warnung-grund:  #342B18;
+    --warnung-text:   #E6E8EB;
+
+    /* Im Dunkeln kräftiger, sonst ist von der Höhe nichts zu sehen. */
+    --e1: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --e2: 0 2px 8px rgba(0, 0, 0, 0.5), 0 10px 24px rgba(0, 0, 0, 0.4);
 
     color-scheme: dark;
   }
 
   /* Fallback, falls color-scheme bei den Aufklappmenüs nicht durchgreift. */
-  select, option, optgroup { background: var(--oben); color: var(--text); }
+  select, option, optgroup { background: var(--karte); color: var(--text); }
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  padding: 0 0 2rem;
+  padding: 0 0 var(--s5);
   background: var(--grund);
   color: var(--text);
   font-family: var(--sans);
   font-size: 16px;
-  line-height: 1.45;
+  line-height: 1.5;
   -webkit-text-size-adjust: 100%;
 }
 
-/* Kopfzeile als angehobenes Blatt mit feiner Trennlinie – wie die Topbar
-   im Aktenlage-Assistenten, aber ohne Reiter und Bildmarke. */
-header {
-  padding: 1rem 1rem 0.7rem;
-  padding-top: max(1rem, env(safe-area-inset-top));
-  background: var(--karte);
-  border-bottom: 1px solid var(--linie);
-  box-shadow: var(--schatten-klein);
+/* ----------------------------------------------------------------- Kopf */
+
+/* Der Kopf trägt keinen eigenen Ton und keine Trennlinie: er liegt auf
+   demselben Grund wie alles andere, und was darauf zählt – das Ergebnis –
+   ist eine Karte. Getrennt wird durch Höhe, nicht durch Striche. */
+header { background: var(--grund); }
+
+/* Derselbe Textblock wie unter main, damit Kopf und Formular am breiten
+   Schirm auf einer Linie stehen. */
+.kopfinhalt { max-width: 34rem; margin: 0 auto; padding: 0 var(--s3); }
+
+.kopfzeile {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s3) var(--s1) var(--s2);
+  padding-top: max(var(--s3), env(safe-area-inset-top));
 }
 
 h1 {
   margin: 0;
-  font-family: var(--serif);
-  font-size: 1.4rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.15;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-/* Zweifarbige Wortmarke wie dort: der erste Teil Petrol, der zweite Grün. */
-.wortmarke__a { color: var(--akzent); }
-.wortmarke__b { color: var(--gut); }
+/* Zweifarbige Wortmarke bleibt – nur in den neuen Farben. */
+.wortmarke__a { color: var(--text); }
+.wortmarke__b { color: var(--akzent); }
 
-.unterzeile { margin: 0.15rem 0 0; color: var(--schwach); font-size: 0.78rem; }
+.unterzeile { margin: 0; color: var(--schwach); font-size: 0.8125rem; }
 
-main { max-width: 34rem; margin: 0 auto; padding: 0 1rem; }
+/* „Zurücksetzen“ steht im Kopf: unten stünde es am Ende jedes Blattes. */
+.still {
+  margin-left: auto;
+  flex: none;
+  padding: var(--s2) var(--s3);
+  min-height: 2.75rem;
+  background: none;
+  border: 0;
+  border-radius: var(--r-knopf);
+  color: var(--schwach);
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.still:hover { background: var(--tonflaeche); color: var(--text); }
+
+/* „width: 100%“ ist hier nicht überflüssig, sondern trägt das Layout am
+   Telefon: dort ist body ein Flex-Container, und ein Flex-Kind mit
+   automatischen Rändern quer zur Achse streckt sich nicht – es richtet sich
+   nach seinem Inhalt. Solange die langen Fußtexte dastanden, waren sie das
+   Breiteste auf der Seite und zogen main auf die volle Breite. Ohne sie
+   schrumpfte main auf 322 statt 390 px, und die Eingabekarten standen
+   schmaler da als die Ergebniskarte im Kopf – die bleibt breit, weil header
+   keine automatischen Ränder hat. */
+main {
+  width: 100%;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 0 var(--s3) var(--s3);
+}
 
 /* ------------------------------------------------------------- Ergebnis */
 
-/* Der Ergebniskasten trägt die farbige Kante links – das Aktendeckel-Motiv
-   aus dem Assistenten. Er ist das eine Element, auf das es hier ankommt. */
+/* Das eine Element, auf das es hier ankommt – darum eine eigene Karte, die
+   im Kopf stehen bleibt und auf jedem Blatt zu sehen ist. */
 .ergebnis {
-  position: sticky;
-  top: 0;
-  z-index: 2;
   background: var(--karte);
-  border: 1px solid var(--linie);
-  border-left: 6px solid var(--akzent);
-  border-radius: var(--radius);
-  padding: 0.9rem 1rem;
-  margin: 0.9rem 0 1rem;
-  box-shadow: var(--schatten-karte);
+  border-radius: var(--r-karte);
+  box-shadow: var(--e1);
+  padding: var(--s3) var(--s4) var(--s3);
 }
 
-.seiten { display: flex; gap: 1rem; }
+.seiten { display: flex; gap: var(--s4); }
 .seite { flex: 1 1 0; min-width: 0; }
 
 .beschriftung {
   display: block;
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--schwach);
 }
 
 .seite strong {
-  font-family: var(--serif);
-  font-size: 2.1rem;
-  font-weight: 400;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
-  line-height: 1.1;
-  color: var(--akzent-tief);
+  line-height: 1.15;
+  color: var(--akzent);
 }
 
-.einheit { color: var(--schwach); font-size: 0.85rem; margin-left: 0.2rem; }
+.einheit { color: var(--schwach); font-size: 0.875rem; margin-left: 0.15rem; }
 
 .bestellen {
-  margin: 0.7rem 0 0;
-  padding-top: 0.7rem;
+  margin: var(--s2) 0 0;
+  padding-top: var(--s2);
   border-top: 1px solid var(--linie);
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
 }
 
-/* Warnhinweis: die Farbe trägt der linke Rand, der Text bleibt lesbar. */
+/* Hinweis als getönte Fläche – dieselbe Bauform wie die übrigen Chips und
+   Knöpfe, nur in der Warnfarbe. */
 .hinweis {
-  margin: 0.7rem 0 0;
-  padding: 0.55rem 0.75rem;
+  margin: var(--s2) 0 0;
+  padding: var(--s2) var(--s3);
   background: var(--warnung-grund);
   color: var(--warnung-text);
-  border-left: 4px solid var(--warnung);
-  border-radius: var(--radius);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  border-radius: var(--r-klein);
+  font-size: 0.8125rem;
+  line-height: 1.45;
 }
 
-.klein { font-size: 0.8rem; color: var(--schwach); margin: 0.4rem 0 0; }
+.klein { font-size: 0.8125rem; color: var(--schwach); margin: var(--s2) 0 0; line-height: 1.45; }
+
+/* Die kleinen Texte lassen sich abschalten – alle. Wer weiß, wo der
+   Flanschabstand gemessen wird, liest es nicht bei jedem Laufrad wieder, und
+   am Telefon kostet jede Zeile Platz. Weg sind die Erklärungen unter den
+   Karten, die Meldungen zur gewählten Nabe und Felge, die gerechneten
+   Hinweise und die Fußzeilen. Stehen bleiben die Werte – Längen, Bestellzeile,
+   Kennwerte – und der Schalter selbst, sonst käme man nicht zurück.
+
+   Die eine Ausnahme trägt „dringend“: schlägt die Rechnung fehl, steht statt
+   der Länge ein Strich, und der Grund dafür ist kein Hinweis, sondern das
+   Einzige, was die App dann noch zu sagen hat. */
+.ohne-hinweistexte .hinweistext { display: none; }
+.ohne-hinweistexte .hinweistext.dringend { display: block; }
+
+/* Der Schalter ist eine graue Zeile im Fuß, keine Karte und kein
+   Schiebeschalter: so klein wie die Texte, die er schaltet, an derselben
+   Stelle, und ohne eigene Fläche. Ein Kasten stünde auf jedem Blatt als
+   Möbelstück herum. Angefasst wird trotzdem bequem – die Zeile trägt oben und
+   unten Luft, damit ein Daumen sie trifft. */
+.schalter {
+  display: block;
+  margin-top: var(--s3);
+  padding: var(--s2) 0;
+  background: none;
+  border: 0;
+  color: var(--schwach);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.schalter:hover { color: var(--text); }
+
+/* Sind die Texte aus, ist der Fuß nur noch diese eine Zeile – dann fällt auch
+   sein Trennstrich weg, sonst schwebte er über einem leeren Fuß. */
+.ohne-hinweistexte footer { border-top: 0; padding-top: 0; }
 
 /* Errechnete Werte in Schreibmaschinenschrift – so stehen die Ziffern
    untereinander und heben sich von den Erklärtexten ab. Nur die Zahlenzeilen:
    #nabeninfo und #felgeninfo tragen ganze Sätze und bleiben serifenlos. */
 #genau-links, #genau-rechts, #kennwerte {
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
 }
 /* Eigene Zeile unter der großen Zahl. Als inline-Element hing „exakt“ sonst
    hinter dem „mm“ und der Wert rutschte allein in die nächste Zeile. */
-#genau-links, #genau-rechts { display: block; }
+#genau-links, #genau-rechts { display: block; color: var(--schwach); }
+
+/* Die Kennwerte sind acht bis zehn Zeilen lang. Fest im Kopf würden sie den
+   halben Schirm fressen, weglassen wäre ein Verlust – also aufklappbar.
+   Am breiten Schirm ist der Knopf weg und die Zeilen stehen immer da. */
+.einzelheiten {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  margin-top: var(--s2);
+  padding: var(--s2) var(--s3);
+  background: var(--tonflaeche);
+  border: 0;
+  border-radius: var(--r-knopf);
+  color: var(--schwach);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.einzelheiten:hover { color: var(--text); }
+.einzelheiten .pfeil { transition: transform 0.15s ease; }
+.einzelheiten[aria-expanded="true"] .pfeil { transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .einzelheiten .pfeil, .haken input, .haken input::after { transition: none; }
+}
 
 /* -------------------------------------------------------------- Formular */
 
+/* Die Gruppe selbst ist unsichtbar: sie trägt nur die Überschrift über der
+   Karte. Der Kasten darunter ist die Karte, die Erklärungen stehen wieder
+   auf dem Grund. */
 fieldset {
-  position: relative;
-  background: var(--karte);
-  border: 1px solid var(--linie);
-  border-radius: var(--radius);
-  /* Oben Platz für die Überschrift, die absolut darüber liegt (siehe legend). */
-  padding: 2.9rem 1rem 1rem;
-  margin: 0 0 1rem;
-  box-shadow: var(--schatten-klein);
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--s5);
+  min-width: 0;   /* sonst weigert sich ein fieldset zu schrumpfen */
 }
 
-/* Eine <legend> sitzt von Haus aus AUF dem oberen Rahmen und schneidet ihn
-   dafür auf. Bei den flachen Papierkästen sieht das unruhig aus – der
-   Assistent setzt seine Überschriften als eigene Zeile IM Kasten, bei
-   durchgehendem Rahmen.
-   `position:absolute` nimmt ihr das zuverlässig: aus dem Fluss genommen,
-   schneidet sie nichts mehr auf, und der Platz dafür kommt aus dem
-   padding-top des fieldsets.
-   Zwei Wege, die hier NICHT taugen: `float` schiebt die Felder darunter neben
-   die Überschrift statt unter sie – die Auswahlpaare lagen dann außerhalb des
-   Kastens. Und `display:block` allein genügt Chromium nicht, dort sitzt die
-   Legende weiter auf dem Rahmen. */
 legend {
-  position: absolute;
-  top: 0.85rem;
-  left: 1rem;
-  right: 1rem;
-  padding: 0;
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 1.05rem;
-  font-weight: 400;
-  color: var(--akzent-tief);
+  padding: 0 0 var(--s2) var(--s4);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--schwach);
 }
+
+.karte {
+  background: var(--karte);
+  border-radius: var(--r-karte);
+  box-shadow: var(--e1);
+  overflow: hidden;
+}
+/* Zeilen einer Karte trennt eine Haarlinie, keine Lücke. */
+.karte > * + * { border-top: 1px solid var(--linie); }
+/* Die Kopfzeile „links / rechts“ gehört zur Zeile darunter, nicht darüber. */
+.karte > .kopf + * { border-top: 0; }
 
 .zeile {
   display: grid;
-  grid-template-columns: 1fr 5.5rem 5.5rem;
-  gap: 0.6rem;
+  grid-template-columns: 1fr 5rem 5rem;
+  gap: var(--s2);
   align-items: center;
-  padding: 0.3rem 0;
-  font-size: 0.9rem;
+  padding: var(--s2) var(--s4);
+  min-height: 3rem;
+  font-size: 0.9375rem;
+  margin: 0;
 }
 
 .zeile.kopf {
-  padding: 0 0 0.1rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
+  padding: var(--s3) var(--s4) 0;
+  min-height: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--schwach);
 }
 .zeile.kopf span { text-align: center; }
 .zeile.kopf span:first-child { text-align: left; }
 
-input[type="number"], select {
+/* Der Wert steht rechts in seiner Zeile, ohne Kasten – wie die Auswahlliste
+   daneben. Ein Kasten ist der Vorlage nach dem Textfeld vorbehalten, und
+   zwanzig kleine graue Kästchen untereinander sind eine Wand. Angefasst
+   wird die ganze Zeile: beim Überfahren und beim Tippen legt sich eine
+   getönte Fläche darunter, damit man sieht, dass hier etwas einzugeben ist. */
+input[type="number"] {
   width: 100%;
-  padding: 0.55rem 0.5rem;
+  min-width: 0;
+  padding: 0.35rem 0.4rem;
   font-family: var(--sans);
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-variant-numeric: tabular-nums;
   text-align: right;
   color: var(--text);
-  background: var(--oben);
-  border: 1px solid var(--linie);
-  border-radius: var(--radius);
+  background: transparent;
+  border: 0;
+  border-radius: var(--r-klein);
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
+input[type="number"]:hover { background: var(--tonflaeche); }
+input[type="number"]:focus { background: var(--tonflaeche); }
+/* Die Pfeilchen von Chrome nehmen Platz und stören den rechten Rand. */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-select { text-align: left; grid-column: 2 / 4; }
-
-/* Volle Breite für Katalog-Listen und die Suche. */
-.voll, select.voll, input.voll {
-  width: 100%;
-  grid-column: 1 / 4;
-  margin: 0.3rem 0 0;
-  text-align: left;
-}
-
-/* Zwei Listen nebeneinander – Filter über der Auswahl. */
-.zeile.zwei { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-.zeile.zwei select { grid-column: auto; }
-
+/* Die Suche bleibt ein Kasten: sie ist ein Textfeld über die volle Breite,
+   und genau die trägt in der Vorlage einen. */
 input[type="search"] {
+  width: 100%;
+  min-width: 0;
   padding: 0.55rem 0.6rem;
   font-family: var(--sans);
-  font-size: 1rem;
+  font-size: 0.9375rem;
+  text-align: left;
   color: var(--text);
-  background: var(--oben);
+  background: var(--grund);
   border: 1px solid var(--linie);
-  border-radius: var(--radius);
+  border-radius: var(--r-klein);
+}
+/* Der Platzhalter darf leise bleiben – er ist keine Angabe, sondern eine Lücke. */
+input::placeholder { color: var(--zart); }
+input:disabled { color: var(--zart); }
+
+/* Auswahlzeile: Beschriftung links, Wert rechts – die Liste selbst gehört
+   dem System, samt seinem Pfeil. Kein Kasten: in einer Karte wäre er eine
+   Fläche zu viel. */
+.zeile > select {
+  grid-column: 2 / 4;
+  justify-self: end;
+  max-width: 100%;
+  padding: 0.3rem 0;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  text-align: right;
+  color: var(--schwach);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
 
-input:focus, select:focus, button:focus {
+/* Volle Breite für Katalog-Listen und die Suche – die tragen lange Namen und
+   brauchen den Kasten, damit man sie als Feld erkennt. */
+.zeile.voll { grid-template-columns: 1fr; }
+.zeile.zwei { grid-template-columns: 1fr 1fr; }
+
+.zeile.voll > select, .zeile.zwei > select {
+  grid-column: auto;
+  justify-self: stretch;
+  width: 100%;
+  padding: 0.4rem 0.3rem;
+  text-align: left;
+  color: var(--text);
+  border-radius: var(--r-klein);
+}
+.zeile > select:hover { background: var(--tonflaeche); }
+
+input:focus-visible, select:focus-visible, button:focus-visible {
   outline: 2px solid var(--akzent);
   outline-offset: 1px;
 }
 
-.einheit-feld { color: var(--schwach); font-size: 0.85rem; }
+.einheit-feld { color: var(--schwach); font-size: 0.8125rem; }
 
+/* Schiebeschalter wie im System: Beschriftung links, Schalter rechts. Das
+   Kästchen bleibt ein echtes <input type=checkbox> – Tastatur, Vorlesefunktion
+   und app.js sehen weiter genau das. */
 .haken {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0 0.2rem;
-  font-size: 0.9rem;
-}
-.haken input { width: 1.15rem; height: 1.15rem; accent-color: var(--akzent); }
-
-/* Knöpfe wie im Assistenten: Umriss in Petrol, kein Farbklecks. */
-button.flach {
-  display: block;
-  width: 100%;
-  padding: 0.65rem;
-  font-family: var(--sans);
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--akzent-tief);
-  background: transparent;
-  border: 1.5px solid var(--akzent);
-  border-radius: var(--radius);
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s2) var(--s4);
+  min-height: 3rem;
+  font-size: 0.9375rem;
   cursor: pointer;
 }
-button.flach:hover { background: var(--karte); }
+.haken > span { flex: 1; min-width: 0; }
+.haken input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  position: relative;
+  width: 2.75rem;
+  height: 1.625rem;
+  margin: 0;
+  border-radius: var(--r-rund);
+  background: var(--tonflaeche-tief);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.haken input::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: var(--r-rund);
+  background: var(--karte);
+  box-shadow: var(--e1);
+  transition: transform 0.15s ease;
+}
+.haken input:checked { background: var(--akzent); }
+.haken input:checked::after { transform: translateX(1.125rem); }
 
-footer { margin-top: 1.5rem; }
+footer { margin-top: var(--s5); }
 
-/* Auf breiten Bildschirmen zwei Spalten – am Telefon bleibt es eine. */
+/* ---------------------------------------------------------------- Reiter */
+
+/* Die Leiste unten: vier Abschnitte, einer davon sichtbar. Der offene trägt
+   keinen Strich, sondern eine getönte Fläche hinter dem Zeichen – so machen
+   es Android und iOS selbst. Die Beschriftung steht darunter, weil
+   „Einspeichung“ daneben nicht hinpasst. */
+.reiter {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--grund);
+  padding: var(--s1) var(--s1) 0;
+  padding-bottom: max(var(--s1), env(safe-area-inset-bottom));
+}
+
+.reiter button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  /* 3.25 rem sind gut 50 px – die Fläche, die ein Daumen sicher trifft. */
+  min-height: 3.25rem;
+  padding: var(--s1) 0.15rem var(--s2);
+  background: none;
+  border: 0;
+  color: var(--schwach);
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.reiter .zeichen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 2rem;
+  border-radius: var(--r-rund);
+  transition: background 0.15s ease;
+}
+.reiter button svg { width: 20px; height: 20px; }
+
+.reiter button[aria-selected="true"] { color: var(--akzent-tief); font-weight: 600; }
+.reiter button[aria-selected="true"] .zeichen {
+  background: var(--akzent-sanft);
+  color: var(--akzent-tief);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reiter .zeichen { transition: none; }
+}
+
+/* Ohne Reiterbetrieb (breiter Schirm) verschwindet die Leiste ganz – dafür
+   sorgt die Regel unten. Ein verstecktes Blatt bleibt versteckt. */
+.blatt[hidden] { display: none; }
+
+/* Am Telefon: Kopf und Reiterleiste stehen fest, nur das Blatt dazwischen
+   rollt. Das ist das ganze App-Gerüst – drei Zeilen Flexbox.
+   43.9375rem ist 44rem minus ein Pixel: so greift genau eine der beiden
+   Regeln, nie beide. */
+@media (max-width: 43.9375rem) {
+  html { height: 100%; }
+  body {
+    height: 100vh;      /* für Browser ohne dvh */
+    height: 100dvh;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  header, .reiter { flex: 0 0 auto; }
+  main {
+    flex: 1 1 auto;
+    /* Ohne min-height:0 wächst ein Flex-Kind über den Platz hinaus, statt
+       zu rollen – die Reiterleiste wäre dann aus dem Bild. */
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-top: var(--s3);
+    padding-bottom: var(--s5);
+  }
+  /* Im festen Kopf zählt jede Zeile; die Unterzeile sagt nichts, was die
+     Wortmarke nicht schon sagt. */
+  .unterzeile { display: none; }
+
+  /* Steht auf dem Blatt nur eine Gruppe, nennt der Reiter unten sie bereits –
+     die Überschrift wäre dieselbe Angabe zweimal. Sichtbar bleibt sie, wo
+     zwei Gruppen auf einem Blatt stehen (Speichen und Nippel): dort trennt
+     sie die beiden. Für die Sprachausgabe bleibt sie in jedem Fall da,
+     deshalb weggerückt statt display:none. */
+  .blatt > fieldset:only-of-type > legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Das Kleingedruckte steht unter jedem Blatt – mit Abstand davor liest es
+     sich als Fuß der Seite und nicht als Teil des Formulars. */
+  footer { border-top: 1px solid var(--linie); padding-top: var(--s4); }
+}
+
+/* Auf breiten Bildschirmen zwei Spalten und kein Reiterbetrieb: alle Blätter
+   stehen zugleich da, wie vor dem Umbau. */
 @media (min-width: 44rem) {
   main { max-width: 52rem; }
-  #formular { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
-  #formular > button { grid-column: 1 / 3; }
+  .kopfinhalt { max-width: 52rem; }
+  /* Der Kopf bleibt beim Rollen stehen. Deckend, sonst scheint das Formular
+     hindurch – hier trägt er den Grundton als Fläche. */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    padding-bottom: var(--s3);
+  }
+  #formular { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s4); }
+  /* Die Blätter verschwinden aus dem Aufbau, ihre Gruppen werden selbst zu
+     Rasterfeldern – dieselbe Anordnung wie vor dem Umbau. */
+  .blatt { display: contents; }
+  .reiter, .einzelheiten { display: none; }
 }

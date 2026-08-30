@@ -5,6 +5,10 @@
 fragt beim ersten Mal nach **„Aus dieser Quelle installieren"**, weil die APK mit
 dem Debug-Schlüssel signiert und nicht über den Play Store verteilt ist.
 
+Der Link liefert immer den Stand von `main`: jeder Push, der die App betrifft,
+baut die APK und hängt sie ans Release „neueste". Ein Tag ist dafür nicht mehr
+nötig.
+
 Das ist der Weg. Darunter steht nur noch, was zu tun ist, wenn die
 Installation hakt.
 
@@ -29,8 +33,8 @@ Gerät ablegt.
 ## 2. Als APK aus einem Actions-Lauf
 
 Die fertige APK hängt am [Release](https://github.com/kaysiebke-cell/speichenrechner/releases)
-– das ist der einfache Weg. Wer die APK zu einem bestimmten Stand braucht,
-holt sie direkt aus dem Lauf:
+– das ist der einfache Weg. Wer die APK zu einem Stand braucht, der **nicht**
+auf `main` liegt (ein Branch, ein Pull Request), holt sie direkt aus dem Lauf:
 
 1. **[Actions](https://github.com/kaysiebke-cell/speichenrechner/actions/workflows/android.yml)**
    öffnen.
@@ -43,24 +47,36 @@ Am Handy fragt Android beim ersten Mal nach der Erlaubnis
 **„Aus dieser Quelle installieren"** – die APK ist mit dem Debug-Schlüssel
 signiert, nicht über den Play Store verteilt.
 
+### Woher der Download-Link seine APK nimmt
+
+Jeder Push auf `main`, der die App betrifft, baut die APK **und** hängt sie an
+das rollende Release **„neueste"**, das dabei als *Latest* markiert wird.
+Genau dorthin zeigt `releases/latest/download/speichenrechner.apk`. Der Link
+oben liefert damit immer den Stand von `main` – ohne dass jemand einen Tag
+setzen muss.
+
+Das war einmal anders und hat gekostet: Eine fertige Änderung lag auf `main`,
+gebaut und grün, aber der Download-Link zeigte weiter auf das letzte getaggte
+Release und damit auf einen fünf Tage alten Stand. Wer die APK lud, bekam
+seine Änderung nicht – und nichts an der Seite sagte, warum.
+
+Zu erkennen ist der Stand an der Fußzeile der App: dort steht die Fassung.
+(Sind die Hinweistexte abgeschaltet, ist auch sie weg – dann den Schalter im
+Fuß kurz umlegen.)
+
 ### Feste Fassungen mit Release
 
-Ein Tag erzeugt zusätzlich ein Release, an dem die APK direkt hängt – ohne ZIP
-und ohne Anmeldung bei GitHub:
+Für einen Stand, den man wiederfinden will, gibt es weiterhin den Tag:
 
 ```bash
 git tag v1.5.0
 git push origin v1.5.0
 ```
 
-Danach liegt sie unter
-[Releases](https://github.com/kaysiebke-cell/speichenrechner/releases).
-Der Ablauf hängt die APK als `speichenrechner.apk` an – unter genau dem Namen,
-den die Download-Links oben erwarten – und die Einzeldatei gleich dazu.
-
-**Wichtig:** Erst der Tag erzeugt eine neue APK zum Herunterladen. Ein Push
-allein baut zwar eine, aber nur als Artifact unter „Actions"; der Link oben
-zeigt weiter auf die Fassung des letzten Tags.
+Danach liegt er als eigenes Release unter
+[Releases](https://github.com/kaysiebke-cell/speichenrechner/releases), mit
+APK und Einzeldatei daran. Nötig für den Download-Link ist er nicht mehr; der
+zeigt beim nächsten Push auf `main` wieder auf „neueste".
 
 ## Was die App darf
 

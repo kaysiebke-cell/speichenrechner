@@ -4,8 +4,9 @@
 
 **➡️ [speichenrechner.apk herunterladen](https://github.com/kaysiebke-cell/speichenrechner/releases/latest/download/speichenrechner.apk)**
 
-Der Link führt immer auf die neueste veröffentlichte Fassung – er zeigte
-vorher auf ein festes Release und veraltete mit jeder Änderung.
+Der Link führt immer auf den Stand von `main`: jeder Push, der die App
+betrifft, baut die APK und hängt sie ans rollende Release „neueste". Ein Tag
+ist dafür nicht nötig.
 
 Antippen, installieren, fertig — danach liegt der Speichenrechner als App im
 Menü. 3,3 MB, läuft ohne Netz, **verlangt kein Internet, keine Dateien, keinen
@@ -13,7 +14,7 @@ Standort**. Android fragt beim ersten Mal nach „Aus dieser Quelle installieren
 weil die APK mit dem Debug-Schlüssel signiert und nicht über den Play Store
 verteilt ist.
 
-Drin ist alles: Rechnung, 230 Naben, 17 Felgentypen, Skizzen.
+Drin ist alles: Rechnung, 230 Naben, 17 Felgentypen.
 Anleitung samt Stolpersteinen: **[APK-HERUNTERLADEN.md](doku/APK-HERUNTERLADEN.md)**
 
 **PC:**
@@ -48,9 +49,9 @@ gepflegte Kataloge wären der Anfang vom Auseinanderdriften.
 **Nichts, was sie nicht braucht.** Geprüft an der gebauten APK:
 
 ```
-Paket            de.speichenrechner.app  1.7.0
+Paket            de.speichenrechner.app  1.8.5
 Berechtigungen   kein INTERNET, kein Speicher, kein Standort, keine Kamera
-enthalten        assets/www/ – index.html, css, 5 Skripte, Icons
+enthalten        assets/www/ – index.html, css, 6 Skripte, Icons
 ```
 
 Gerechnet wird auf dem Gerät. Die einzige Berechtigung im Paket heißt
@@ -71,10 +72,11 @@ Dann `http://<PC-IP>:8765/` am Handy öffnen. Dieselben Dateien liegen unter
 
 ![Speichenrechner am Handy, hell und dunkel](doku/bilder/screenshot-handy.png)
 
-So sieht die Handy-Fassung aus: Papierton statt Weiß, Petrol als einzige
-Akzentfarbe, Serifen für die Überschriften und die beiden Längen, flache Kästen
-mit feinem Rahmen – dieselbe Handschrift wie im Aktenlage-Assistenten. Ob hell
-oder dunkel, entscheidet das Gerät.
+So sieht die Handy-Fassung aus: ein Blatt je Bildschirm, gewechselt über die
+Reiterleiste unten, das Ergebnis fest darüber. Gestaltet wie die Schreibhilfe
+seit deren Umbau – systemnah statt Aktenlage: kühle Flächen, durchgehend
+Systemschrift, gebrochene Ecken, und Höhe statt Rahmen. Ob hell oder dunkel,
+entscheidet das Gerät.
 
 Am PC sieht es anders aus, und das mit Absicht – dort folgt die Anwendung dem
 eingestellten Mint-Theme:
@@ -183,79 +185,48 @@ und Speichenton. Plausibilitätsprobleme (unmögliche Kreuzungszahl, ungewöhnli
 ERD, große Seitendifferenz) werden als Hinweis eingeblendet, dazu kommt eine
 fachliche Einschätzung zu Speichenwinkel und Spannungsverhältnis.
 
-Wer nicht weiß, was genau zu messen ist, klickt das Augen-Symbol neben der
-Überschrift **Nabe** oder **Felge** – oder direkt auf den Reiter **Messen**. Die
-**Übersicht** zeigt alle drei Maße in einem Bild – die klassische Skizze mit
-`a` (Flanschabstand ab Nabenmitte), `d` (Flansch-Lochkreis) und `D` (ERD).
-Daneben liegt für jedes Maß eine eigene Skizze mit erkennbaren Bauteilen: Nabe
-von der Seite für Flansch-Ø und Flanschabstand, zwei Felgenprofile im Schnitt
-für den ERD. Die
-Maßlinien tragen die **tatsächlich eingegebenen Werte**, und die gezeichnete
-Nabe übernimmt die Verhältnisse: ein Hinterrad zeigt seinen kurzen rechten
-Abstand auch als kurzen Abstand. Klickt man in ein Eingabefeld, schaltet die
-Ansicht von selbst auf das passende Maß.
-
-Die Nabe entsteht als **Drehteil-Kontur** – eine Linie über Achsstummel,
-Endkappe, Lagersitz, Flansch, Taille und Freilaufkörper und zurück. Deshalb
-sind die Flansche angeformt und nicht angeklebt. Die Felge ist entsprechend
-Blech: Kontur in Wandstärke gezeichnet, mit Öse am Nippelsitz. Die Farben
-kommen aus dem Theme – der Nabenkörper trägt den Akzent, Freilauf und Achse
-bleiben neutral, ein senkrechter Verlauf macht daraus ein rundes Bauteil. Feste
-Farbwerte gibt es nicht, damit jedes Theme passt.
-
-**Gezeichnet wird, was gewählt ist.** Bauart und Ritzelaufnahme kommen aus der
-Vorlage oder dem Nabenkatalog und bestimmen die Form:
-
-| Bauart / Aufnahme | Antriebsseite | Nabenschale |
-|---|---|---|
-| Vorderrad | nichts, rechts wie links abgesetzt | schlank |
-| Dynamo | nichts | dick – darin sitzt der Generator |
-| Hinterrad + Kassette / Steckritzel / Steckzahnkranz | Freilaufkörper mit Längsverzahnung | schlank |
-| Hinterrad + Schraubkranz / Schraubritzel / Singlespeed | Gewindestummel | schlank |
-| Nabenschaltung | Gewindestummel – **nie** ein Kassettenkörper | dick – darin sitzt das Getriebe |
-
-Bei einer Getriebenabe sitzt das Ritzel auf einem kurzen Stummel, auch wenn die
-Tabelle „Steckritzel“ nennt; ein Kassettenkörper wäre dort falsch. Die
-Nabenschale ist gedeckelt: bei kleinem Lochkreis wird der Körper nie dicker als
-der Flansch, sonst verschwände der Flansch darin.
-
-Auf die Speichenlänge hat das **keinen** Einfluss – die hängt allein an der
-Geometrie. Ein Test hält das fest.
+Wer nicht weiß, was genau zu messen ist, öffnet den Reiter **Messen /
+Vergleich**: dort stehen die eingegebenen Maße als Klartext beieinander –
+Flanschabstand und Flansch-Ø je Seite, ERD und Versatz. Die Buchstaben, die in
+der Fachliteratur dafür stehen: `a` der Flanschabstand ab Nabenmitte, `d` der
+Flansch-Lochkreis, `D` der ERD.
 
 Über die Kopfleiste lässt sich das Ergebnis in die Zwischenablage kopieren oder
-als Textdatei sichern, über das Menü die aktuelle Skizze als PNG, PDF oder SVG
-exportieren. Häufig gebrauchte Naben und Felgen lassen sich als eigene Vorlage
+als Textdatei sichern. Häufig gebrauchte Naben und Felgen lassen sich als eigene Vorlage
 speichern; die zuletzt eingegebenen Werte stehen beim nächsten Start wieder da.
 
 ### Aufteilung des Fensters
 
-Links stehen die Eingaben in zwei Reitern – **Laufrad** (Nabe, Felge,
-Einspeichung) und **Speichen** (Bauart, Nippel, Korrektur). So bleibt das
-Nötigste auf einem Blick, ohne dass das Fenster in die Höhe wächst.
-
-Rechts liegen die Ergebnisse; Länge, Bestellmenge und Warnungen sind immer
-sichtbar, der Rest steckt in Reitern:
+Ganz oben stehen die beiden Längen, ganz unten die Hinweise – beides bleibt
+immer sichtbar. Dazwischen liegt die Arbeit in vier Reitern:
 
 | Reiter | Was er zeigt |
 |---|---|
-| **Speichenbild** | Aufsicht aufs Rad: Kreuzungsmuster beider Seiten, eine Speiche hervorgehoben, dazu der Sehnenwinkel an der Nabe |
-| **Querschnitt** | Maßstäblicher Ausschnitt am Nabenbereich: Flanschabstände, Nabenkörper und die Speichen mit ihrem echten Winkel |
-| **Messen** | Übersicht mit `a`, `d`, `D` plus je eine Skizze pro Maß, alle mit den eingegebenen Werten – folgt dem Eingabefeld, in dem man gerade steht |
-| **Vergleich** | Tabelle über 0- bis 4-fach gekreuzt – was eine andere Kreuzungszahl an Länge und Winkel ausmacht |
-| **Spannung** | Spannungsverhältnis der Seiten, Dehnung, Speichenton und Gewicht |
+| **Laufrad** | Nabe, Felge und Einspeichung – alles, was die Länge bestimmt |
+| **Speichen / Spannung** | Speichenbauart, Nippel und Korrektur, dazu Spannungsverhältnis, Dehnung, Speichenton und Gewicht |
+| **Messen / Vergleich** | die eingegebenen Maße als Klartext, darunter die Tabelle über 0- bis 4-fach gekreuzt |
 | **Bewertung** | fachliche Einschätzung zu Winkel, Spannung und Kreuzungszahl |
-
-Beide Spalten lassen sich rollen und schrumpfen, die Trennlinie richtet sich
-nach dem Platzbedarf der Eingabefelder.
-
-![Querschnitt](doku/bilder/querschnitt.png)
 
 ### Nabenkatalog
 
-Die Auswahlliste im Abschnitt **Nabe** enthält neben den Vorlagen auch 218
-Modelle von 14 Herstellern (Hope, SON, Shimano, Rohloff, SRAM,
-Sturmey-Archer, Enviolo, Pinion, Shutter Precision, Supernova, Kindernay,
-Classified, Effigear, Fichtel & Sachs) – kein zweites Fenster, kein Menü.
+Die Auswahlliste im Abschnitt **Nabe** enthält neben den Vorlagen den ganzen
+Nabenkatalog – kein zweites Fenster, kein Menü. Von den 230 Naben sind 215
+einspeichbar; die übrigen 15 sind Tretlager-Getriebe, siehe unten. Sie kommen
+von 17 Herstellern: Classified, Enviolo, Fichtel & Sachs, Formula, Hope,
+Joytech, Kindernay, KT, Phil Wood, Quando, Rohloff, Shimano, Shutter
+Precision, SON, SRAM, Sturmey-Archer und Supernova.
+
+**Je Modellreihe steht ein Eintrag**, sonst wird die Liste zur Wand: aus 215
+Naben werden so 182 Zeilen. Hinter 24 davon steckt mehr als eine Ausführung –
+die Hope Pro 4 etwa fünf, die sich nur in der Achse unterscheiden. Dann
+erscheint nach der Wahl darunter die Zeile *Ausführung*; bei den übrigen 158
+Reihen merkt man von der Zusammenfassung nichts.
+
+Die Zeile nennt **nur den Namen**, dazu ein Häkchen, wenn sich die Nabe ohne
+Nachmessen rechnen lässt. Einbaubreite, Lochzahl, Achstyp, Bremsaufnahme und
+Freilauftyp standen einmal mit darin – bei zweihundert Zeilen untereinander
+findet man den Namen dann nicht mehr. Sie stehen jetzt als Hinweis unter der
+Liste, sobald eine Nabe gewählt ist.
 
 Darüber stehen zwei Filter – **Nabenart** und **Hersteller** –, die die Liste
 kurz halten. Sie gelten für **alles** in der Liste, auch für die mitgelieferten
@@ -275,12 +246,12 @@ SON-Dynamo unter *Dynamo* wie unter *Vorderrad*.
 | Vorderrad | 90 | Hope, SON, Shimano, Shutter Precision, SRAM, Sturmey-Archer, Supernova |
 | Nabenschaltung | 73 | Classified, Enviolo, Fichtel & Sachs, Kindernay, Rohloff, Shimano, SRAM, Sturmey-Archer |
 | Dynamo | 69 | SON, Shimano, Shutter Precision, SRAM, Sturmey-Archer, Supernova |
-| Hinterrad | 40 | Hope, Shimano |
-| Kassette | 34 | Classified, Hope, Kindernay, Shimano, SRAM |
+| Hinterrad | 52 | Formula, Hope, Joytech, KT, Phil Wood, Quando, Shimano |
+| Kassette | 35 | Classified, Hope, Kindernay, Shimano, SRAM |
 | Schraubritzel | 26 | Rohloff |
+| Schraubkranz | 17 | Formula, Hope, Joytech, KT, Phil Wood, Quando, Sturmey-Archer |
 | Steckritzel | 17 | Shimano, Sturmey-Archer |
 | Steckzahnkranz | 9 | Enviolo |
-| Schraubkranz | 6 | Hope, Sturmey-Archer |
 | Singlespeed | 5 | Hope |
 
 Die Bauart kommt aus dem Tabellenblatt, die Ritzelaufnahme aus der Spalte
@@ -293,30 +264,24 @@ Effigear-Systeme dahinter haben kein Speichenloch. Im Katalog bleiben sie
 erhalten und sind im Fenster *Nabentabelle* zu sehen – nur eben nicht dort, wo
 man eine Nabe zum Einspeichen wählt.
 
-> Was die Tabelle nicht führt, kann kein Filter zeigen. Von Shimano, SRAM und
-> Sturmey-Archer stehen dort nur Dynamo- und Nabenschaltungsblätter – deren
-> gewöhnliche Naben mit Schraubkranz fehlen also. Über *Menü → Nabentabelle
-> bearbeiten … → Nabe hinzufügen* lassen sie sich ergänzen, ohne die
-> Excel-Datei anzufassen.
+> Was die Tabelle nicht führt, kann kein Filter zeigen. Über *Menü →
+> Nabentabelle bearbeiten … → Nabe hinzufügen* lässt sich Fehlendes ergänzen,
+> ohne die Excel-Datei anzufassen – die acht OEM-Schraubkranznaben von
+> Joytech, Quando, Formula und KT stehen genau deshalb in
+> `data/naben_zusatz.json`.
 
-Der Freilauftyp steht auch in der Auswahlliste, gekürzt auf die Standards –
+Der Freilauftyp steht im Hinweis unter der Liste, gekürzt auf die Standards –
 aus „Shimano HG (9–11-fach), Shimano Micro Spline (12-fach) und SRAM XD“ wird
-`HG · Micro Spline · XD`. Gesucht wird über den vollen Text, `micro spline`
-findet also alle passenden Naben.
-
-> Dass unter *Kassette* und *Vorderrad* nur Hope steht, liegt an der Tabelle:
-> sie führt von Shimano, SRAM und Sturmey-Archer ausschließlich Dynamo- und
-> Nabenschaltungsblätter, keine gewöhnlichen Naben. Kommt ein Blatt mit
-> Shimano-Kassettennaben dazu, tauchen sie ohne weiteres Zutun unter
-> *Kassette* auf.
+`HG · Micro Spline · XD`. Gesucht wird trotzdem über den vollen Text,
+`micro spline` findet also alle passenden Naben.
 
 Die Liste ist **eintippbar**: „son disc“ oder „boost“ filtert sofort, egal an
-welcher Stelle im Namen der Begriff steht. Jede Zeile zeigt Modell,
-Einbaubreite, Lochzahl und Bremsaufnahme.
+welcher Stelle im Namen der Begriff steht.
 
-**72 Naben sind rechenfertig** – sie führen auch Flanschabstand und Flansch-Ø
-und stehen deshalb oben in der Liste, gekennzeichnet mit „✓ mit Flanschmaßen“.
-Ein Klick genügt, die Länge steht sofort da.
+**73 Naben sind rechenfertig** – sie führen auch Flanschabstand und Flansch-Ø
+und stehen deshalb oben in der Liste, am Häkchen erkennbar. Sie verteilen sich
+auf 54 Modellreihen; innerhalb einer Reihe steht ebenfalls vorn, was sich
+rechnen lässt. Ein Klick genügt, die Länge steht sofort da.
 
 Bei den übrigen setzt der Rechner Speichenloch-Ø und Lochzahl, merkt sich die
 Einbaubreite für die Umrechnung „Flanschabstand aus Einbaubreite …“ und trägt
@@ -399,13 +364,10 @@ Bauformen aus `quellen/felgen.xlsx`, aufgeteilt in *Bauform*, *Material*
 und *Einsatzbereich*. Die Klappliste darüber schränkt auf eine Kategorie ein,
 wie beim Nabenkatalog.
 
-Der Typ ändert die Speichenlänge **nicht**. Er ändert drei andere Dinge:
+Der Typ ändert die Speichenlänge **nicht**. Er ändert zwei andere Dinge:
 
 * Unter der Auswahl steht, was die Tabelle über ihn sagt – Beschreibung,
   Werkstoff, Ösung, Einsatzbereich, verfügbare Kindergrößen.
-* Die Messskizze **D – ERD** zeichnet das Profil dieser Bauform: eine
-  Aero-Felge ist hoch, eine Flachbettfelge flach und einwandig, eine hakenlose
-  Felge endet ohne Wulsthaken, eine geöste Felge zeigt ihre Öse am Nippelsitz.
 * Der Rechner sagt etwas dazu: eine einwandige Felge ohne Ösen bekommt den
   Hinweis auf Unterlegscheiben, Carbon den Verweis auf die Herstellerangabe,
   Stahl die Warnung vor zu hoher Spannung.
@@ -519,7 +481,7 @@ Antriebsseite immer **innen** liegen. Die drei Beispiele stehen als Tests in
 
 ## Handy-Version
 
-In `app/public/` liegt eine Web-Fassung: eine Seite, ein Stylesheet, zwei
+In `app/public/` liegt eine Web-Fassung: eine Seite, ein Stylesheet, sechs
 JavaScript-Dateien. **Kein Bauschritt, keine Abhängigkeiten, nichts von einem
 fremden Server** – dieselbe Regel wie bei der PC-Anwendung. Ein Service Worker
 legt die ganze Anwendung in den Cache, damit sie ohne Empfang rechnet; in der
@@ -536,6 +498,13 @@ beschrieben: über den Browser mit „Zum Startbildschirm hinzufügen", oder als
 APK, die GitHub bei jedem Push baut (`.github/workflows/android.yml`). Die APK
 verlangt keine einzige Berechtigung – kein Netz, keine Dateien.
 
+Jeder Push auf `main` hängt die frisch gebaute APK ans rollende Release
+**„neueste"** und markiert es als *Latest*; der Download-Link zeigt also immer
+auf den Stand von `main`. Vorher hing er am letzten Tag – eine fertige,
+gebaute Änderung lag auf `main`, und die heruntergeladene APK war trotzdem
+fünf Tage alt, ohne dass irgendetwas darauf hinwies. Tags gibt es weiterhin,
+aber nur noch für Stände, die man wiederfinden will.
+
 Im Browser läuft sie über GitHub Pages:
 
 **https://kaysiebke-cell.github.io/speichenrechner/**
@@ -545,11 +514,36 @@ Branch `gh-pages`, von dem Pages ausliefert. Auf dem Handy dann
 „Zum Startbildschirm hinzufügen“ – danach startet sie wie eine App, im
 Vollbild und ohne Adresszeile, und rechnet auch ohne Empfang weiter.
 
-Die Handy-Fassung ist gestaltet wie der Aktenlage-Assistent: Papierton statt
-Weiß, Petrol als einzige Akzentfarbe, Serifen für Überschriften und die großen
-Zahlen, flache Kästen mit feinem Rahmen. Ob hell oder dunkel, entscheidet
-weiterhin das Gerät über `prefers-color-scheme`; einen eigenen Umschalter gibt
-es nicht. Anders als am PC, wo die Anwendung dem Mint-Theme folgt.
+Am Telefon steht der Kopf mit dem Ergebnis fest, unten die Reiterleiste, und
+nur das Blatt dazwischen rollt: Nabe, Felge, Einspeichung, Speichen. Ab 44 rem
+fällt das Gerüst weg und alle vier stehen zugleich zweispaltig da, wie vor dem
+Umbau.
+
+Überall stehen kleine Texte – wo der Flanschabstand gemessen wird, was die
+gewählte Nabe mitbringt, was an der Einspeichung auffällt. Wer sie kennt,
+schaltet sie mit **„Hinweistexte ausblenden“** im Fuß ab. Dann sind sie
+**alle** weg: die Erklärungen unter den Karten, die Meldungen zu Nabe und
+Felge, die gerechneten Hinweise und die Fußzeilen samt Fassungsnummer. Stehen
+bleiben die Werte – Längen, Bestellzeile, Kennwerte – und die eine graue Zeile,
+die zurückschaltet. Eine Ausnahme: schlägt die Rechnung fehl, steht der Grund
+auch dann da, denn statt einer Länge gäbe es sonst nur einen Strich.
+
+Der Schalter ist bewusst **keine Karte und kein Schiebeschalter**, sondern
+eine graue Zeile im Fuß – so klein wie die Texte, die sie schaltet, und an
+derselben Stelle. Als Karte stand er auf jedem Blatt als eigener Kasten herum:
+eine Änderung am Aufbau, die niemand bestellt hatte, und beim Ausblenden blieb
+er als einziges Möbelstück mitten auf dem Blatt zurück.
+
+Die Wahl bleibt im Gerät gespeichert, unter einem eigenen Schlüssel –
+„Zurücksetzen“ nimmt sie nicht mit, denn sie ist eine Einstellung der Ansicht
+und kein Maß am Laufrad.
+
+Gestaltet ist sie wie die Schreibhilfe seit deren Umbau – systemnah statt
+Aktenlage: kühle Flächen, durchgehend Systemschrift, gebrochene Ecken (8–10 px),
+und Höhe statt Linien. Die App sieht damit aus wie das Gerät, auf dem sie läuft.
+Ob hell oder dunkel, entscheidet weiterhin das Gerät über
+`prefers-color-scheme`; einen eigenen Umschalter gibt es nicht. Anders als am
+PC, wo die Anwendung dem Mint-Theme folgt.
 
 ### Dieselbe Rechnung zweimal – und wie sie zusammenbleibt
 
@@ -594,17 +588,10 @@ anfasst.
 
 Drin: Eingaben, Längen und Kennwerte, die dringendsten Hinweise, der
 **Nabenkatalog mit 230 Naben** samt Filtern und Suche, die **Felgentypen** mit
-Beschreibung und Spannungswarnung, die Vorlagen – und die **Skizzen**.
+Beschreibung und Spannungswarnung, die Vorlagen – und die Speichenphysik
+(Dehnung, Speichenton, Gewicht), die unter „Einzelheiten“ steht.
 
-Die Skizzen sind dieselben Formen wie am PC, nur als SVG statt Cairo: die Nabe
-als Drehteil-Kontur, die Felge als Blech in Wandstärke. Bauart und
-Ritzelaufnahme bestimmen auch hier, was rechts sitzt – Freilaufkörper,
-Gewindestummel oder nichts – und Dynamo wie Nabenschaltung bekommen die dicke
-Schale. `app/public/js/zeichnung.js` trägt dieselben Zahlen wie
-`pc/speichenrechner/ui/bauteile.py`.
-
-Es fehlen: der Tabellen-Editor, der Kreuzungsvergleich und die Speichenphysik
-(Dehnung, Ton, Gewicht).
+Es fehlen: der Tabellen-Editor und der Kreuzungsvergleich.
 
 ### Der Cache-Stolperstein
 
@@ -731,22 +718,24 @@ pc/                          PC-Anwendung – alles, was nur sie betrifft
     bericht.py               Ergebnis als Text
     formatierung.py          Zahlen in deutscher Schreibweise
     pfade.py                 Ablageorte nach XDG-Standard
-    ui/                      GTK-Oberfläche und alle Zeichnungen
+    ui/                      GTK-Oberfläche
 app/                         Online- und Handy-Fassung – für sich lauffähig
   public/                    Web-App – ohne Bauschritt, ohne Fremdcode
-    index.html               eine Seite, Ergebnis oben
-    css/stil.css             Aktenlage-Gestaltung, hell/dunkel nach Gerät
+    index.html               vier Blätter, Ergebnis fest im Kopf
+    css/stil.css             systemnahe Gestaltung, hell/dunkel nach Gerät
     js/rechnen.js            dieselben Formeln wie berechnung.py
     js/speiche.js            dieselben Formeln wie speiche.py
     js/katalog.js            dieselbe Auswertung wie tabelle.py und katalog.py
     js/daten.js              erzeugt aus data/ – nicht von Hand ändern
     js/app.js                Oberfläche verdrahten
+    js/reiter.js             Reiterleiste unten – nur am schmalen Schirm
     sw.js                    Service Worker: läuft ohne Netz
+  speichenrechner-handy.html alles in einer Datei – der Weg ohne Server
   android/                   dünne Hülle um public/ (WebView, keine Rechte)
 data/                        gemeinsame Daten – bewusst in keiner der beiden
   naben_katalog.json         218 Naben aus der Herstellertabelle
   naben_zusatz.json          12 nachgetragene Naben mit Quellenangabe
-  naben_modellreihen.json    Zuordnung Nabe → Modellreihe
+  naben_modellreihen.json    fasst Achsvarianten zu Modellreihen zusammen
   felgen_katalog.json        17 Felgentypen in drei Kategorien
   pruefwerte.json            Prüfwerte – Band zwischen PC und Handy
 werkzeuge/
@@ -757,9 +746,12 @@ werkzeuge/
   modellreihen_erzeugen.py   erzeugt die Modellreihen aus der Zuordnungstabelle
   pruefwerte_erzeugen.py     rechnet die Prüffälle in Python vor
   pruefwerte_js.mjs          hält die JavaScript-Fassung darauf fest
+  einzeldatei_erzeugen.py    packt public/ in die eine HTML-Datei
 tests/                       Tests beider Fassungen
-quellen/naben.xlsx      Herstellertabelle – Quelle des Nabenkatalogs
-quellen/felgen.xlsx     Felgentabelle – Quelle der Felgentypen
+quellen/
+  naben_modelle.xlsx         Herstellertabelle – Quelle des Nabenkatalogs
+  naben_modellreihen.xlsx    Zuordnung der Naben zu Modellreihen
+  felgen.xlsx                Felgentabelle – Quelle der Felgentypen
 ```
 
 Eigene Vorlagen und die zuletzt benutzten Werte liegen in

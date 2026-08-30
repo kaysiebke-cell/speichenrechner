@@ -43,9 +43,15 @@ class TestInstallationsskript(unittest.TestCase):
                 vorlage.read_text(encoding="utf-8"), encoding="utf-8")
             (projekt / "pc" / "install.sh").write_text(self.inhalt, encoding="utf-8")
 
+            # Ohne „--ohne-pruefung“ bricht das Skript an der GTK-Prüfung ab,
+            # bevor es den Eintrag schreibt – auf einem Rechner ohne Oberfläche
+            # prüfte dieser Test also nichts und schlug immer fehl.
             umgebung = {"HOME": ordner, "PATH": "/usr/bin:/bin", "XDG_DATA_HOME": ordner}
-            subprocess.run(["bash", str(projekt / "pc" / "install.sh")],
-                           env=umgebung, capture_output=True, check=False)
+            lauf = subprocess.run(
+                ["bash", str(projekt / "pc" / "install.sh"), "--ohne-pruefung"],
+                env=umgebung, capture_output=True, text=True, check=False)
+            self.assertEqual(lauf.returncode, 0,
+                             f"install.sh brach ab:\n{lauf.stderr}")
 
             eintrag = Path(ordner) / "applications" / "de.speichenrechner.Speichenrechner.desktop"
             self.assertTrue(eintrag.exists(), "Menüeintrag wurde nicht angelegt")

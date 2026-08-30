@@ -11,8 +11,14 @@ import {
   herstellerMitAnzahl, listentext, lochzahlen, speichenlochMm, suche,
 } from "./katalog.js";
 import { FASSUNG, FELGEN_VORLAGEN, NABEN_VORLAGEN } from "./daten.js";
+import { reiterAufbauen } from "./reiter.js";
 
 const SPEICHER = "speichenrechner.eingaben";
+
+/** Ob die kleinen Texte stehen. Keine Eingabe, sondern eine Einstellung der
+    Ansicht – deshalb ein eigener Schlüssel, den „Zurücksetzen“ nicht
+    mitnimmt. */
+const HINWEISTEXTE_SPEICHER = "speichenrechner.hinweistexte";
 
 /** Länge eines gewöhnlichen Nippels in mm – dieselbe Regel wie in modelle.py. */
 const NIPPEL_STANDARD = 12.0;
@@ -147,6 +153,9 @@ function anzeigen() {
     anzeige.kennwerte.textContent = "";
     anzeige.hinweis.textContent = fehler.message;
     anzeige.hinweis.hidden = false;
+    // „dringend“ hebt das Ausblenden auf: ohne Länge ist diese Meldung das
+    // Einzige, was die App noch zu sagen hat.
+    anzeige.hinweis.classList.add("dringend");
     return;
   }
 
@@ -183,6 +192,7 @@ function anzeigen() {
 
 
   const meldungen = hinweise(eingabe, ergebnis);
+  anzeige.hinweis.classList.remove("dringend");
   anzeige.hinweis.textContent = meldungen.join("  ");
   anzeige.hinweis.hidden = meldungen.length === 0;
 
@@ -426,6 +436,44 @@ $("gekoppelt").addEventListener("change", () => {
   anzeigen();
 });
 
+/**
+ * Schaltet die kleinen Texte an oder ab – alle, die mit „hinweistext“
+ * ausgezeichnet sind.
+ *
+ * Der Schalter im Fuß setzt eine Marke am `body`; das Ausblenden selbst macht
+ * eine Regel im Stylesheet. Weg sind die Erklärungen unter den Karten, die
+ * Meldungen zur gewählten Nabe und Felge, die gerechneten Hinweise und die
+ * Fußzeilen. Stehen bleiben die Werte und der Schalter.
+ *
+ * Der Knopf sagt, was er tut, nicht was gerade gilt – „ausblenden“, solange
+ * sie dastehen, „einblenden“, wenn sie weg sind. Für die Sprachausgabe steht
+ * der Zustand zusätzlich in `aria-pressed`.
+ */
+function hinweistexteZeigen(zeigen) {
+  document.body.classList.toggle("ohne-hinweistexte", !zeigen);
+  const knopf = $("hinweistexte");
+  knopf.textContent = zeigen ? "Hinweistexte ausblenden" : "Hinweistexte einblenden";
+  knopf.setAttribute("aria-pressed", zeigen ? "true" : "false");
+}
+
+function hinweistexteGemerkt() {
+  try {
+    return localStorage.getItem(HINWEISTEXTE_SPEICHER) !== "aus";
+  } catch (_fehler) {
+    return true;   // Privater Modus o. Ä. – dann eben wie beim ersten Start.
+  }
+}
+
+$("hinweistexte").addEventListener("click", () => {
+  const zeigen = $("hinweistexte").getAttribute("aria-pressed") !== "true";
+  hinweistexteZeigen(zeigen);
+  try {
+    localStorage.setItem(HINWEISTEXTE_SPEICHER, zeigen ? "an" : "aus");
+  } catch (_fehler) {
+    // Ohne Gedächtnis stehen sie beim nächsten Start wieder da.
+  }
+});
+
 $("zuruecksetzen").addEventListener("click", () => {
   try {
     localStorage.removeItem(SPEICHER);
@@ -439,9 +487,13 @@ $("fassung").textContent = `Fassung ${FASSUNG} · ${alleNaben().length} Naben, `
 
 katalogAufbauen();
 laden();
+hinweistexteZeigen(hinweistexteGemerkt());
 nippelAbzugSetzen();
 $("kreuzungen-rechts").disabled = $("gekoppelt").checked;
 anzeigen();
+
+// Reiterleiste und Kennwerte-Knopf – nur am schmalen Schirm, siehe reiter.js.
+reiterAufbauen();
 
 // Ohne Netz nutzbar: der Service Worker legt die Seite in den Cache.
 if ("serviceWorker" in navigator) {
